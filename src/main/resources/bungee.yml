@@ -1,0 +1,29 @@
+name: DoubleTimeCommands
+main: xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands
+version: 0.0.1
+
+commands:
+  friend:
+    description: "Friends are nice."
+    aliases: ["f","friends"]
+    usage: /<command>
+  party:
+    description: "Make party with your friends!"
+    aliases: ["p"]
+    usage: /<command>
+  gnick:
+    description: "Set nickname."
+    aliases: ["gsetnick"]
+    usage: /<command>
+  gunnick:
+    description: "Reset nickname."
+    aliases: ["gresetnick"]
+    usage: /<command>
+  rank:
+    description: "Sets their rank."
+    usage: /<command>
+    permission: doubletimecommands.rank
+permissions:
+  doubletimecommands.party.reset:
+    description: "Allows reinitialize party"
+    default: false
