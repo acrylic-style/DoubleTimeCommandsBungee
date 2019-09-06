@@ -7,7 +7,7 @@ import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.event.PreLoginEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
@@ -39,11 +39,10 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 	}
 
 	@EventHandler
-	public void onPreLogin(PreLoginEvent event) {
-		event.getConnection().disconnect(new TextComponent("What"));
+	public void onLogin(ServerConnectedEvent event) {
 		try {
 			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
-			UUID uuid = event.getConnection().getUniqueId();
+			UUID uuid = event.getPlayer().getUniqueId();
 			String path = "players." + uuid + ".ban.";
 			boolean banned = config.configuration.getBoolean(path + "banned", false);
 			if (!banned) return; // allow login
@@ -62,9 +61,9 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 			stackedMessage.add(new TextComponent(ChatColor.GRAY + "Reason: " + ChatColor.WHITE + reason + "\n\n"));
 			if (reason.equalsIgnoreCase("None")) stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Note: Reason was 'None', please report it to our staff!\n"));
 			stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + config.configuration.getString(path + "banId", "#????????")));
-			event.getConnection().disconnect(stackedMessage.toArray(new TextComponent[0]));
+			event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
 		} catch (Exception e) {
-			event.getConnection().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please try again later."));
+			event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please try again later."));
 		}
 	}
 }
