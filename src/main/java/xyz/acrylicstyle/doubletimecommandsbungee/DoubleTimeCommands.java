@@ -61,6 +61,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 			stackedMessage.add(new TextComponent(ChatColor.GRAY + "Reason: " + ChatColor.WHITE + reason + "\n\n"));
 			if (reason.equalsIgnoreCase("None")) stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Note: Reason was 'None', please report it to our staff!\n"));
 			stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + config.configuration.getString(path + "banId", "#????????")));
+			event.getConnection().disconnect(stackedMessage.toArray(new TextComponent[0]));
 		} catch (Exception e) {
 			event.getConnection().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please try again later."));
 		}
