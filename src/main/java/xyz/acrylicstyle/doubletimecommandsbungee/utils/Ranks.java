@@ -44,9 +44,9 @@ public enum Ranks {
 		case PIGP:
 		case MVPP:
 		case VIPP:
-			return this.plusColor + "+";
+			return this.plusColor + "+" + this.defaultColor;
 		case MVPPP:
-			return this.plusColor + "++";
+			return this.plusColor + "++" + this.defaultColor;
 		default:
 			return "";
 		}
