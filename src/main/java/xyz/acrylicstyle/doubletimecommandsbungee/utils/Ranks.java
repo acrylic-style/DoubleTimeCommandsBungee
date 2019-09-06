@@ -1,5 +1,7 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
+import java.util.regex.Pattern;
+
 import net.md_5.bungee.api.ChatColor;
 import xyz.acrylicstyle.doubletimecommandsbungee.annotations.NonNull;
 import xyz.acrylicstyle.doubletimecommandsbungee.annotations.Nullable;
@@ -51,7 +53,7 @@ public enum Ranks {
 	}
 
 	public String replacePlus(String name) {
-		return name.replaceFirst("+", this.getPlus());
+		return name.replaceFirst(Pattern.quote("+"), this.getPlus());
 	}
 
 	@NonNull
