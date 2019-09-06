@@ -48,12 +48,12 @@ public enum Ranks {
 		case MVPPP:
 			return this.plusColor + "++";
 		default:
-			return null;
+			return "";
 		}
 	}
 
 	public String replacePlus(String name) {
-		return name.replaceFirst(Pattern.quote("+"), Pattern.quote(this.getPlus()));
+		return name.replaceFirst(Pattern.quote("+"), this.getPlus());
 	}
 
 	@NonNull
