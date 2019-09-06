@@ -30,7 +30,15 @@ public class Rank extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "That player is currently offline."));
 			return;
 		}
+		if (ps.getUniqueId() == ((ProxiedPlayer)sender).getUniqueId() && PlayerUtils.getRank(((ProxiedPlayer)sender).getUniqueId()) != Ranks.OWNER) {
+			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't change the rank yourself!"));
+			return;
+		}
 		String ucRank = args[0].toUpperCase(Locale.ROOT);
+		if (ucRank.equalsIgnoreCase("OWNER") && sender instanceof ProxiedPlayer) {
+			sender.sendMessage(new TextComponent(ChatColor.RED + "This command must run from console."));
+			return;
+		}
 		try {
 			Ranks.valueOf(ucRank);
 		} catch (IllegalArgumentException e) {
