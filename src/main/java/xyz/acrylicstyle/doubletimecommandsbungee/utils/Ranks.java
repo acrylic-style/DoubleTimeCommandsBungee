@@ -7,21 +7,21 @@ import xyz.acrylicstyle.doubletimecommandsbungee.annotations.NonNull;
 import xyz.acrylicstyle.doubletimecommandsbungee.annotations.Nullable;
 
 public enum Ranks {
-	OWNER("[OWNER]", "OWNER", ChatColor.RED, null, false, true, false),
-	ADMIN("[ADMIN]", "ADMIN", ChatColor.RED, null, false, true, false),
-	MODERATOR("[MOD]", "MOD", ChatColor.DARK_GREEN, null, false, true, false),
-	HELPER("[HELPER]", "HELPER", ChatColor.BLUE, null, false, true, false),
-	BUILDTEAM("[BUILD TEAM]", "BUILD TEAM", ChatColor.DARK_AQUA, null, false, true, false),
-	PIGP("[PIG+]", "PIG+", ChatColor.LIGHT_PURPLE, ChatColor.GOLD, true, false, false),
-	PIG("[PIG]", "PIG", ChatColor.LIGHT_PURPLE, null, false, false, false),
-	YOUTUBE("[YOUTUBE]", "YOUTUBE", ChatColor.RED, null, false, false, false),
-	MVPPP("[MVP+]", "MVP+", ChatColor.GOLD, ChatColor.RED, true, false, true),
-	MVPP("[MVP+]", "MVP+", ChatColor.AQUA, ChatColor.RED, true, false, true),
-	MVP("[MVP]", "MVP", ChatColor.AQUA, null, false, false, true),
-	VIPP("[VIP+]", "VIP+", ChatColor.GREEN, ChatColor.GOLD, false, false, true),
-	VIP("[VIP]", "VIP", ChatColor.GREEN, null, false, false, true),
-	SAND("[SAND]", "SAND", ChatColor.YELLOW, null, false, true, false),
-	DEFAULT("", "Default", ChatColor.GRAY, null, false, false, false);
+	OWNER("[OWNER] ", "OWNER", ChatColor.RED, null, false, true, false),
+	ADMIN("[ADMIN] ", "ADMIN", ChatColor.RED, null, false, true, false),
+	MODERATOR("[MOD] ", "MOD", ChatColor.DARK_GREEN, null, false, true, false),
+	HELPER("[HELPER] ", "HELPER", ChatColor.BLUE, null, false, true, false),
+	BUILDTEAM("[BUILD TEAM] ", "BUILD TEAM", ChatColor.DARK_AQUA, null, false, true, false),
+	PIGP("[PIG+] ", "PIG+", ChatColor.LIGHT_PURPLE, ChatColor.GOLD, true, false, false),
+	PIG("[PIG] ", "PIG", ChatColor.LIGHT_PURPLE, null, false, false, false),
+	YOUTUBE("[YOUTUBE] ", "YOUTUBE", ChatColor.RED, null, false, false, false),
+	MVPPP("[MVP+] ", "MVP+", ChatColor.GOLD, ChatColor.RED, true, false, true),
+	MVPP("[MVP+] ", "MVP+", ChatColor.AQUA, ChatColor.RED, true, false, true),
+	MVP("[MVP] ", "MVP", ChatColor.AQUA, null, false, false, true),
+	VIPP("[VIP+] ", "VIP+", ChatColor.GREEN, ChatColor.GOLD, false, false, true),
+	VIP("[VIP] ", "VIP", ChatColor.GREEN, null, false, false, true),
+	SAND("[SAND] ", "SAND", ChatColor.YELLOW, null, false, true, false),
+	DEFAULT(" ", "Default", ChatColor.GRAY, null, false, false, false);
 
 	@NonNull
 	public final String prefix;

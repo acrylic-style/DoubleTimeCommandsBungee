@@ -28,7 +28,7 @@ public class PlayerUtils {
 		try {
 			String rankString = ConfigProvider.getString("players." + player.getUniqueId() + ".rank", "DEFAULT", "DoubleTimeCommands");
 			Ranks rank = Ranks.valueOf(rankString);
-			return rank.getPrefix() + " " + player.getName();
+			return rank.getPrefix() + player.getName();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return ChatColor.GRAY + player.getName();
@@ -39,10 +39,16 @@ public class PlayerUtils {
 		try {
 			String rankString = ConfigProvider.getString("players." + player.getUniqueId() + ".rank", "DEFAULT", "DoubleTimeCommands");
 			Ranks rank = Ranks.valueOf(rankString);
-			return rank.getPrefix() + " " + player.getName();
+			return rank.getPrefix() + player.getName();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return ChatColor.GRAY + player.getName();
 		}
+	}
+
+	public static Ranks getRank(UUID uuid) {
+		try {
+			return Ranks.valueOf(ConfigProvider.getString("players." + uuid + ".rank", "DEFAULT", "DoubleTimeCommands"));
+		} catch (Exception e) { return Ranks.DEFAULT; }
 	}
 }
