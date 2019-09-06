@@ -20,10 +20,6 @@ public class Rank extends Command {
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
-		if (!(sender instanceof ProxiedPlayer)) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "This command must run from in-game."));
-			return;
-		}
 		if (!Utils.must(Ranks.ADMIN, sender)) return;
 		if (args.length <= 1) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <new rank> <player>"));
