@@ -32,7 +32,9 @@ public class Rank extends Command {
 			return;
 		}
 		String ucRank = args[0].toUpperCase(Locale.ROOT);
-		if (Ranks.valueOf(ucRank) == null) {
+		try {
+			Ranks.valueOf(ucRank);
+		} catch (IllegalArgumentException e) {
 			String ranks = "";
 			for (Ranks rank : Ranks.values()) ranks += rank.name() + ", ";
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify defined ranks! ("+ ranks +")"));
