@@ -21,7 +21,7 @@ public enum Ranks {
 	VIPP("[VIP+] ", "VIP+", ChatColor.GREEN, ChatColor.GOLD, false, false, true),
 	VIP("[VIP] ", "VIP", ChatColor.GREEN, null, false, false, true),
 	SAND("[SAND] ", "SAND", ChatColor.YELLOW, null, false, true, false),
-	DEFAULT(" ", "Default", ChatColor.GRAY, null, false, false, false);
+	DEFAULT("", "Default", ChatColor.GRAY, null, false, false, false);
 
 	@NonNull
 	public final String prefix;
