@@ -49,7 +49,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 			String reason = config.configuration.getString(path + "reason", "None");
 			long expires = config.configuration.getLong(path + "expires", -1);
 			long currentTimestamp = System.currentTimeMillis();
-			long days = Math.round(((long) expires/86400000L)*10L)/10;
+			long days = Math.round(((long) (expires-currentTimestamp)/86400000L)*10L)/10;
 			if (expires <= currentTimestamp) {
 				Utils.unban(uuid);
 				return;
