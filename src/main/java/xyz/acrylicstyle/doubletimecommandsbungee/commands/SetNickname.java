@@ -6,6 +6,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 public class SetNickname extends Command {
 	public SetNickname() {
@@ -14,10 +16,7 @@ public class SetNickname extends Command {
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
-		if (!(sender instanceof ProxiedPlayer)) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "This command must run from in-game."));
-			return;
-		}
+		if (!Utils.must(Ranks.VIP, sender)) return;
 		if (args.length == 0) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 1 more argument! (new nick)"));
 			return;

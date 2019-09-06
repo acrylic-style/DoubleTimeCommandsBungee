@@ -11,10 +11,11 @@ import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 public class Rank extends Command {
 	public Rank() {
-		super("rank", "doubletimecommands.rank");
+		super("rank");
 	}
 
 	@Override
@@ -23,6 +24,7 @@ public class Rank extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "" + ChatColor.BOLD + "This command must run from in-game."));
 			return;
 		}
+		if (!Utils.must(Ranks.ADMIN, sender)) return;
 		if (args.length <= 1) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <new rank> <player>"));
 			return;

@@ -1,6 +1,5 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +19,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 public class Party extends Command {
 	/**
@@ -173,16 +174,7 @@ public class Party extends Command {
 				Timer timer = new Timer();
 				timer.schedule(task, 2000);
 			}  else if (args[0].equalsIgnoreCase("reset")) {
-				try {
-					if (sender instanceof ProxiedPlayer) if (!sender.getPermissions().contains("doubletimecommands.party.reset") || ConfigProvider.getString("owner", "", "DoubleTimeCommands").equalsIgnoreCase(((ProxiedPlayer) sender).getUniqueId().toString())) {
-						sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-						sender.sendMessage(new TextComponent(ChatColor.RED + "You don't have permission to do that!"));
-						sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-						return;
-					}
-				} catch (IOException e) {
-					return; // ;-;
-				}
+				if (!Utils.must(Ranks.ADMIN, sender)) return;
 				invites = new HashMap<UUID, List<UUID>>();
 				party = new HashMap<UUID, List<UUID>>();
 				memberOf = new HashMap<UUID, UUID>();
