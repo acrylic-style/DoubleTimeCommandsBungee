@@ -44,7 +44,7 @@ public class Kick extends Command {
 		cmdArgsList.addAll(Arrays.asList(args));
 		cmdArgsList.remove(0);
 		for (String a : cmdArgsList) message += a + " ";
-		ps.disconnect(new TextComponent(ChatColor.RED + "You've kicked with reason: " + message));
+		ps.disconnect(new TextComponent(ChatColor.RED + "You have been kicked from server!\n" + ChatColor.GRAY + "Reason: " + message));
 		sender.sendMessage(new TextComponent(ChatColor.GREEN + "Kicked " + ps.getName() + " with reason: " + message));
 	}
 }
