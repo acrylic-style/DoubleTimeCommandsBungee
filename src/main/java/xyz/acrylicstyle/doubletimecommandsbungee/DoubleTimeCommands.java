@@ -40,6 +40,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
 	@EventHandler
 	public void onPreLogin(PreLoginEvent event) {
+		event.getConnection().disconnect(new TextComponent("What"));
 		try {
 			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 			UUID uuid = event.getConnection().getUniqueId();
