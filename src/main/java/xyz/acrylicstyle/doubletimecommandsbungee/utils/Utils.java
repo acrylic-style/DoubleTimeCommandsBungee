@@ -70,7 +70,7 @@ public class Utils {
 	public static void ban(UUID uuid, UUID executor, String reason, long expires) throws IOException {
 		String id = Utils.generateBanID();
 		ConfigProvider.setThenSave("players." + uuid + ".ban.banned", true, "DoubleTimeCommands");
-		ConfigProvider.setThenSave("players." + uuid + ".ban.executor", executor, "DoubleTimeCommands");
+		ConfigProvider.setThenSave("players." + uuid + ".ban.executor", executor.toString(), "DoubleTimeCommands");
 		ConfigProvider.setThenSave("players." + uuid + ".ban.reason", reason, "DoubleTimeCommands");
 		ConfigProvider.setThenSave("players." + uuid + ".ban.expires", expires, "DoubleTimeCommands");
 		ConfigProvider.setThenSave("players." + uuid + ".ban.banId", id, "DoubleTimeCommands");
