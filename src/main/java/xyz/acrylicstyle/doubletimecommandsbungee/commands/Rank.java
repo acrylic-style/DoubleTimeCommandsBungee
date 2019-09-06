@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 
 public class Rank extends Command {
@@ -28,7 +29,7 @@ public class Rank extends Command {
 		}
 		ProxiedPlayer ps = ProxyServer.getInstance().getPlayer(args[1]);
 		if (ps == null) {
-			sender.sendMessage(new TextComponent("That player is currently offline."));
+			sender.sendMessage(new TextComponent(ChatColor.RED + "That player is currently offline."));
 			return;
 		}
 		String ucRank = args[0].toUpperCase(Locale.ROOT);
@@ -43,10 +44,10 @@ public class Rank extends Command {
 		try {
 			ConfigProvider.setThenSave("players." + ps.getUniqueId() + ".rank", ucRank, "DoubleTimeCommands");
 		} catch (Exception e) {
-			sender.sendMessage(new TextComponent("There was an unknown error while modifying rank!"));
+			sender.sendMessage(new TextComponent(ChatColor.RED + "There was an unknown error while modifying rank!"));
 			e.printStackTrace();
 			return;
 		}
-		sender.sendMessage(new TextComponent(ChatColor.GREEN + ps.getName() + " is now: " + Ranks.valueOf(ucRank).getPrefix() + " " + ps.getName()));
+		sender.sendMessage(new TextComponent(ChatColor.GREEN + ps.getName() + " is now: " + PlayerUtils.getName(ps)));
 	}
 }
