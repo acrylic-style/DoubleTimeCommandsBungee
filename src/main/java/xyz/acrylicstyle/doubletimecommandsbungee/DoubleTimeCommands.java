@@ -1,28 +1,19 @@
 package xyz.acrylicstyle.doubletimecommandsbungee;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Ban;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Friend;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Kick;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Party;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Rank;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.ResetNickname;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.SetNickname;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Tell;
-import xyz.acrylicstyle.doubletimecommandsbungee.commands.Unban;
+import xyz.acrylicstyle.doubletimecommandsbungee.commands.*;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
 	@Override
