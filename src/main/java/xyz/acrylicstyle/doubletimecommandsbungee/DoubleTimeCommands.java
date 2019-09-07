@@ -7,6 +7,7 @@ import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -39,7 +40,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 	}
 
 	@EventHandler
-	public void onLogin(ServerConnectedEvent event) {
+	public void onLogin(PostLoginEvent event) {
 		try {
 			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 			UUID uuid = event.getPlayer().getUniqueId();
@@ -54,7 +55,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 				Utils.unban(uuid);
 				return;
 			}
-			boolean perm = expires <= -1 ? true : false;
+			boolean perm = expires <= -1;
 			Collection<TextComponent> stackedMessage = new ArrayList<TextComponent>();
 			if (perm) stackedMessage.add(new TextComponent(ChatColor.RED + "You are permanently banned from this server!\n\n"));
 			if (!perm) stackedMessage.add(new TextComponent(ChatColor.RED + "You are temporarily banned for " + ChatColor.WHITE + days + " days " + ChatColor.RED + "from this server!\n\n"));
