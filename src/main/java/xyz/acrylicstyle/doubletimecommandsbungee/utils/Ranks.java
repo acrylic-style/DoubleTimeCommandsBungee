@@ -9,9 +9,9 @@ import xyz.acrylicstyle.doubletimecommandsbungee.annotations.Nullable;
 public enum Ranks {
 	OWNER("[OWNER] ", "OWNER", ChatColor.RED, null, false, true, false),
 	ADMIN("[ADMIN] ", "ADMIN", ChatColor.RED, null, false, true, false),
+	BUILDTEAM("[BUILD TEAM] ", "BUILD TEAM", ChatColor.DARK_AQUA, null, false, true, false),
 	MODERATOR("[MOD] ", "MOD", ChatColor.DARK_GREEN, null, false, true, false),
 	HELPER("[HELPER] ", "HELPER", ChatColor.BLUE, null, false, true, false),
-	BUILDTEAM("[BUILD TEAM] ", "BUILD TEAM", ChatColor.DARK_AQUA, null, false, true, false),
 	PIGP("[PIG+] ", "PIG+", ChatColor.LIGHT_PURPLE, ChatColor.GOLD, true, false, false),
 	PIG("[PIG] ", "PIG", ChatColor.LIGHT_PURPLE, null, false, false, false),
 	YOUTUBE("[YOUTUBE] ", "YOUTUBE", ChatColor.RED, null, false, false, false),
