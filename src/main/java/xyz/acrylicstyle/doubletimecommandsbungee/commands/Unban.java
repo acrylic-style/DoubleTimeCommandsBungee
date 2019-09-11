@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -11,9 +12,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
-import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
-import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
-import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.*;
 
 public class Unban extends Command {
 	public Unban() {
@@ -27,23 +26,20 @@ public class Unban extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 1 more argument! <player>"));
 			return;
 		}
-		UUID uuid;
-		try {
-			uuid = PlayerUtils.getByName(args[0]).toUUID();
-			if (!ConfigProvider.getBoolean("players." + uuid + ".ban.banned", false, "DoubleTimeCommands")) {
+		final UUID[] uuid = new UUID[1];
+		if (!Utils.run(() -> {
+			uuid[0] = PlayerUtils.getByName(args[0]).toUUID();
+			if (!ConfigProvider.getBoolean("players." + uuid[0] + ".ban.banned", false, "DoubleTimeCommands")) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "They're not banned in the past!"));
-				return;
 			}
-		} catch (IllegalArgumentException | IOException | ParseException e) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "A unknown error has occurred while fetching UUID!"));
-			e.printStackTrace();
-			return;
-		}
-		if (uuid == ((ProxiedPlayer)sender).getUniqueId()) {
+		}, sender, Errors.UNABLE_TO_FETCH_UUID)) return;
+		if (uuid[0] == ((ProxiedPlayer)sender).getUniqueId()) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't do that. Illegal."));
 			return;
 		}
-		Utils.unban(uuid); // destroy their ban info :thinking:
+		if (!Utils.run(() -> {
+			Utils.unban(uuid[0]);
+		}, sender, Errors.IO_ERROR)) return;
 		sender.sendMessage(new TextComponent(ChatColor.GREEN + "You've unbanned " + args[0] + "!"));
 	}
 }

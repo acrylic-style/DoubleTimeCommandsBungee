@@ -43,7 +43,6 @@ public class Party extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		// sender.sendMessage(new TextComponent("" + ChatColor.RED + ChatColor.BOLD + "NOTE: This command is in BETA."));
 		if (!(args.length >= 1 && args[0].equalsIgnoreCase("reset"))) {
 			if (!(sender instanceof ProxiedPlayer)) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "This command must be run from in-game."));

@@ -66,7 +66,6 @@ public class Ban extends Command {
 					sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
 				} catch (NumberFormatException e) {
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Time must be number."));
-					return;
 				}
 			}
 		} catch (IOException e) {

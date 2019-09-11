@@ -10,7 +10,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 public class Tell extends Command {
 	public Tell() {
@@ -36,12 +38,16 @@ public class Tell extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a message!"));
 			return;
 		}
-		String message = "";
-		List<String> cmdArgsList = new ArrayList<String>();
-		cmdArgsList.addAll(Arrays.asList(args));
-		cmdArgsList.remove(0);
-		for (String a : cmdArgsList) message += a + " ";
-		sender.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "To " + PlayerUtils.getName(player) + ChatColor.WHITE + ": " + ChatColor.GRAY + message));
-		player.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "From " + PlayerUtils.getName((ProxiedPlayer) sender) + ChatColor.WHITE + ": " + ChatColor.GRAY + message));
+		final String[] message = {""};
+		if (!Utils.run((nope) -> {
+			List<String> cmdArgsList = new ArrayList<String>();
+			cmdArgsList.addAll(Arrays.asList(args));
+			cmdArgsList.remove(0);
+			for (String a : cmdArgsList) message[0] += a + " ";
+		}, sender, Errors.ARGS_ANALYSIS_FAILED)) return;
+		Utils.run((nope) -> {
+			sender.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "To " + PlayerUtils.getName(player) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
+			player.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "From " + PlayerUtils.getName((ProxiedPlayer) sender) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
+		}, sender, Errors.COULD_NOT_SEND_MESSAGE);
 	}
 }

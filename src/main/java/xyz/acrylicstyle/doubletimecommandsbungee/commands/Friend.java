@@ -21,12 +21,16 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 public class Friend extends Command {
 	public Friend() {
 		super("friend", null, "f", "friends");
 	}
+
+	private ConfigProvider config = null;
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
@@ -54,15 +58,9 @@ public class Friend extends Command {
 				sender.sendMessage(new TextComponent(help));
 			} else if (args[0].equalsIgnoreCase("list")) {
 				new Thread(() -> {
-					ConfigProvider config = null;
-					try {
+					if (!Utils.run(() -> {
 						config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
-					} catch (Exception e) {
-						e.printStackTrace();
-						e.getCause().printStackTrace();
-						sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't read config! Please try again later."));
-						return;
-					}
+					}, sender, Errors.COULD_NOT_READ_CONFIG)) return;
 					List<String> friends = Arrays.asList(config.getList("players." + playerSender.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
 					int i = (args.length >= 2 ? Integer.parseInt(args[1])*8 : 0)-1;
 					String f1 = null;
@@ -82,7 +80,7 @@ public class Friend extends Command {
 						f6 = friends.get(i+6);
 						f7 = friends.get(i+7);
 						f8 = friends.get(i+8);
-					} catch (Exception justIgnore) {}
+					} catch (Exception ignored) {}
 					if (f1 == null) {
 						sender.sendMessage(new TextComponent("§cYou don't have any friends!"));
 						return;
@@ -95,7 +93,7 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof1) + " " + (((Connection) (pf1 == null ? pof1 : pf1)).isConnected() ? ChatColor.AQUA + "is playing on " + pf1.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f2 == null) {
 							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof2 = new ProxiedOfflinePlayer(UUID.fromString(f2));
@@ -103,7 +101,7 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof2) + " " + (((Connection) (pf2 == null ? pof2 : pf2)).isConnected() ? ChatColor.AQUA + "is playing on " + pf2.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f3 == null) {
 							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof3 = new ProxiedOfflinePlayer(UUID.fromString(f3));
@@ -111,7 +109,7 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof3) + " " + (((Connection) (pf3 == null ? pof3 : pf3)).isConnected() ? ChatColor.AQUA + "is playing on " + pf3.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f4 == null) {
 							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof4 = new ProxiedOfflinePlayer(UUID.fromString(f4));
@@ -119,7 +117,7 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof4) + " " + (((Connection) (pf4 == null ? pof4 : pf4)).isConnected() ? ChatColor.AQUA + "is playing on " + pf4.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f5 == null) {
 							sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(UUID.fromString(f5));
@@ -127,7 +125,7 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (((Connection) (pf5 == null ? pof5 : pf5)).isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f6 == null) {
 							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof6 = new ProxiedOfflinePlayer(UUID.fromString(f6));
@@ -143,14 +141,14 @@ public class Friend extends Command {
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof7) + " " + (((Connection) (pf7 == null ? pof7 : pf7)).isConnected() ? ChatColor.AQUA + "is playing on " + pf7.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f8 == null) {
 							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
+							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof8 = new ProxiedOfflinePlayer(UUID.fromString(f8));
 						ProxiedPlayer pf8 = ProxyServer.getInstance().getPlayer(UUID.fromString(f8));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof8) + " " + (((Connection) (pf8 == null ? pof8 : pf8)).isConnected() ? ChatColor.AQUA + "is playing on " + pf8.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
-						stackedMessages.forEach(text -> sender.sendMessage(text));
+						stackedMessages.forEach(sender::sendMessage);
 					} catch (NullPointerException | IllegalArgumentException e) {
 						e.printStackTrace();
 						if (e.getCause() != null) e.getCause().printStackTrace();
@@ -233,15 +231,7 @@ public class Friend extends Command {
 					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
 					return;
 				}
-				ConfigProvider config = null;
-				try {
-					config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
-				} catch (Exception e) {
-					e.printStackTrace();
-					e.getCause().printStackTrace();
-					sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't read config! Please try again later."));
-					return;
-				}
+				if (!Utils.run(() -> config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml"), sender, Errors.COULD_NOT_READ_CONFIG)) return;
 				List<String> friends = Arrays.asList(config.getList("players." + player.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
 				if (friends.contains(playerSender.getUniqueId().toString())) {
 					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
@@ -315,6 +305,5 @@ public class Friend extends Command {
 		} else {
 			sender.sendMessage(new TextComponent(help));
 		}
-		return;
 	}
 }

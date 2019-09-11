@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
@@ -21,22 +22,11 @@ public class SetNickname extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 1 more argument! (new nick)"));
 			return;
 		}
-		try {
+		if (!Utils.run(() -> {
 			ConfigProvider.setThenSave("players." + ((ProxiedPlayer)sender).getUniqueId() + ".nick", args[0], "DoubleTimeCommands");
-		} catch (Exception e) {
-			e.printStackTrace();
-			e.getCause().printStackTrace();
-			sender.sendMessage(new TextComponent(ChatColor.RED + "Error while saving prefix! Please try again later."));
-			return;
-		}
-		try {
 			final String nick = ConfigProvider.getString("players." + ((ProxiedPlayer)sender).getUniqueId() + ".nick", ((ProxiedPlayer)sender).getName(), "DoubleTimeCommands");
 			((ProxiedPlayer)sender).setDisplayName(ChatColor.translateAlternateColorCodes('&', nick));
-		} catch(Exception e) {
-			e.printStackTrace();
-			e.getCause().printStackTrace();
-			sender.sendMessage(new TextComponent(ChatColor.RED + "Error while setting your name! Please try again later."));
-		}
+		}, sender, Errors.COULD_NOT_SAVE_CONFIG)) return;
 		sender.sendMessage(new TextComponent(ChatColor.GREEN + "Your nick has been set to: \"" + ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', args[0]) + ChatColor.RESET + ChatColor.GREEN + "\""));
 		sender.sendMessage(new TextComponent(ChatColor.GRAY + "To reset your nick, type /gunnick."));
 		return;

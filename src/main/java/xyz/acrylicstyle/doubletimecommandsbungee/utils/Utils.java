@@ -23,23 +23,59 @@ public class Utils {
 	 * @param consumer Consumer without any args. <b>It won't pass any arguments.</b>
 	 */
 	public static void runAsync(Consumer<?> consumer) {
-		ProxyServer.getInstance().getScheduler().runAsync(Utils.getPlugin(), new Runnable() {
-			public void run() {
-				consumer.accept(null);
-			}
-		});
+		ProxyServer.getInstance().getScheduler().runAsync(Utils.getPlugin(), () -> consumer.accept(null));
 	}
 
 	/**
 	 * @param consumer Consumer without any args. <b>It won't pass any arguments.</b>
 	 */
 	public static void run(Consumer<?> consumer) {
-		ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), new Runnable() {
-			public void run() {
-				consumer.accept(null);
-			}
-		}, 1, TimeUnit.NANOSECONDS);
+		ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> consumer.accept(null), 1, TimeUnit.NANOSECONDS);
 	}
+
+	/**
+	 * @param consumer Consumer without any args. <b>It won't pass any arguments.</b>
+	 */
+	public static <T extends CommandSender> boolean run(Consumer<?> consumer, T player, Errors error) {
+		final boolean[] type = {true};
+		try {
+			ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> {
+				try {
+					consumer.accept(null);
+				} catch (Throwable e) {
+					e.printStackTrace();
+					Utils.sendError(player, error);
+					type[0] = false;
+				}
+			}, 1, TimeUnit.NANOSECONDS);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Utils.sendError(player, Errors.SCHEDULER_ERROR);
+			type[0] = false;
+		}
+		return type[0];
+	}
+
+	public static <T extends CommandSender> boolean run(ThrowableRunnable consumer, T player, Errors error) {
+		final boolean[] type = {true};
+		try {
+			ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> {
+				try {
+					consumer.run();
+				} catch (Throwable e) {
+					e.printStackTrace();
+					Utils.sendError(player, error);
+					type[0] = false;
+				}
+			}, 1, TimeUnit.NANOSECONDS);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Utils.sendError(player, Errors.SCHEDULER_ERROR);
+			type[0] = false;
+		}
+		return type[0];
+	}
+
 
 	public static Plugin getPlugin() {
 		return ProxyServer.getInstance().getPluginManager().getPlugin("DoubleTimeCommands");
@@ -76,23 +112,25 @@ public class Utils {
 		ConfigProvider.setThenSave("players." + uuid + ".ban.banId", id, "DoubleTimeCommands");
 	}
 
-	public static void unban(UUID uuid) {
-		try {
-			ConfigProvider.setThenSave("players." + uuid + ".ban", null, "DoubleTimeCommands");
-		} catch (Exception ignore) {}
+	public static void unban(UUID uuid) throws IOException {
+		ConfigProvider.setThenSave("players." + uuid + ".ban", null, "DoubleTimeCommands");
 	}
 
-	public static String generateAlphaNumericString(int length) {
+	private static String generateAlphaNumericString() {
 		String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		StringBuilder sb = new StringBuilder(length);
-		for (int i = 0; i < length; i++) {
+		StringBuilder sb = new StringBuilder(8);
+		for (int i = 0; i < 8; i++) {
 			int index = (int) (alphaNumericString.length() * Math.random());
 			sb.append(alphaNumericString.charAt(index));
 		}
 		return sb.toString();
 	}
 
-	public static String generateBanID() {
-		return "#" + Utils.generateAlphaNumericString(8);
+	private static String generateBanID() {
+		return "#" + Utils.generateAlphaNumericString();
+	}
+
+	public static <T extends CommandSender> void sendError(T player, Errors error) {
+		player.sendMessage(new TextComponent(ChatColor.RED + "Couldn't run this command! Please try again later. (" + error.toString() + ")"));
 	}
 }
