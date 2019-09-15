@@ -18,6 +18,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
@@ -27,15 +28,15 @@ public class Party extends Command {
 	 * invites.get(receiver's uuid).contains(sender's uuid)
 	 * invites.put(receiver's uuid, [List])
 	 **/
-	public static HashMap<UUID, List<UUID>> invites = new HashMap<UUID, List<UUID>>();
+	private static HashMap<UUID, List<UUID>> invites = new HashMap<>();
 	/**
 	 * Party leader, Party members includes party leader.
 	 */
-	public static HashMap<UUID, List<UUID>> party = new HashMap<UUID, List<UUID>>();
+	private static HashMap<UUID, List<UUID>> party = new HashMap<>();
 	/**
 	 * sender's uuid, party leader's uuid
 	 */
-	public static HashMap<UUID, UUID> memberOf = new HashMap<UUID, UUID>();
+	private static HashMap<UUID, UUID> memberOf = new HashMap<>();
 
 	public Party() {
 		super("party", null, "p");
@@ -130,8 +131,11 @@ public class Party extends Command {
 					return;
 				}
 				ps.sendMessage(new TextComponent(ChatColor.GRAY + "Warping party members..."));
-				List<UUID> members = new ArrayList<UUID>();
-				members.addAll(party.get(ps.getUniqueId()));
+				ArrayList<UUID> members = new ArrayList<>();
+				if (!members.addAll(party.get(ps.getUniqueId()))) {
+					Utils.sendError(ps, Errors.ARRAYLIST_ERROR);
+					return;
+				}
 				members.remove(ps.getUniqueId()); // remove yourself
 				members.forEach(uuid -> {
 					try {
@@ -145,7 +149,7 @@ public class Party extends Command {
 						e.getCause().printStackTrace();
 					}
 				});
-				Collection<TextComponent> stackedMessages = new ArrayList<TextComponent>();
+				Collection<TextComponent> stackedMessages = new ArrayList<>();
 				stackedMessages.add(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
 				TimerTask task = new TimerTask() {
 					public void run() {
@@ -167,16 +171,16 @@ public class Party extends Command {
 						members.add(ps.getUniqueId());
 						party.put(ps.getUniqueId(), members);
 						stackedMessages.add(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-						stackedMessages.forEach(text -> sender.sendMessage(text));
+						stackedMessages.forEach(sender::sendMessage);
 					}
 				};
 				Timer timer = new Timer();
 				timer.schedule(task, 2000);
 			}  else if (args[0].equalsIgnoreCase("reset")) {
 				if (!Utils.must(Ranks.ADMIN, sender)) return;
-				invites = new HashMap<UUID, List<UUID>>();
-				party = new HashMap<UUID, List<UUID>>();
-				memberOf = new HashMap<UUID, UUID>();
+				invites = new HashMap<>();
+				party = new HashMap<>();
+				memberOf = new HashMap<>();
 				sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
 				sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Parties has been reset."));
 				sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
@@ -190,10 +194,10 @@ public class Party extends Command {
 					return;
 				}
 				memberOf.put(ps.getUniqueId(), ps.getUniqueId());
-				List<UUID> newMembers = new ArrayList<UUID>();
+				List<UUID> newMembers = new ArrayList<>();
 				newMembers.add(ps.getUniqueId());
-				if (party.get(ps.getUniqueId()) == null) party.put(ps.getUniqueId(), newMembers);
-				if (invites.get(player.getUniqueId()) == null) invites.put(player.getUniqueId(), new ArrayList<UUID>());
+				party.putIfAbsent(ps.getUniqueId(), newMembers);
+				invites.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
 				if (invites.get(player.getUniqueId()).contains(ps.getUniqueId())) {
 					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You already sent friend request to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + "! Wait for them to accept!"));
@@ -221,11 +225,11 @@ public class Party extends Command {
 							if (party.get(ps.getUniqueId()).contains(player.getUniqueId())) {
 								return;
 							}
-							List<UUID> members = new ArrayList<UUID>();
+							List<UUID> members = new ArrayList<>();
 							members.addAll(party.get(ps.getUniqueId()));
 							members.remove(player.getUniqueId());
 							party.put(player.getUniqueId(), members);
-							List<UUID> inv = new ArrayList<UUID>();
+							List<UUID> inv = new ArrayList<>();
 							inv.addAll(invites.get(player.getUniqueId()));
 							inv.remove(ps.getUniqueId());
 							invites.put(player.getUniqueId(), inv);
