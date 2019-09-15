@@ -32,6 +32,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Unban());
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Kick());
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Hub());
+		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Play());
 	}
 
 	@EventHandler
