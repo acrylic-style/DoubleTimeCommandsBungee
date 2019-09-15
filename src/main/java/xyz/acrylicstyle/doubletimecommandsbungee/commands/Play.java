@@ -56,7 +56,6 @@ public class Play extends Command {
             if ((server.startsWith(finalGamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
         });
         AtomicBoolean connected = new AtomicBoolean(false);
-        Collections.shuffle(servers, new Random()); // shuffle all servers
         String finalFormat = format;
         String before = player.getServer().getInfo().getName();
         AtomicInteger checked = new AtomicInteger();
