@@ -42,6 +42,9 @@ public class Play extends Command {
         } else if (args[0].equalsIgnoreCase("ze") || args[0].equalsIgnoreCase("zombieescape")) {
             gamePrefix = "ZOMBIEESCAPE";
             format = ChatColor.DARK_GREEN + "Sending to %s!";
+        } else if (args[0].equalsIgnoreCase("rush") || args[0].equalsIgnoreCase("rushv2")) {
+            gamePrefix = "RUSH";
+            format = ChatColor.GREEN + "Sending to %s! Let's rush!";
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify valid game!"));
             return;
