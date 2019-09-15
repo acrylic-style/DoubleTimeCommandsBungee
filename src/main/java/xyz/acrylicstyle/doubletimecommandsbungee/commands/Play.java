@@ -33,17 +33,22 @@ public class Play extends Command {
             return;
         }
         String gamePrefix;
+        boolean shuffle;
         String format = ChatColor.GREEN + "Sending to %s!";
         if (args[0].equalsIgnoreCase("bw") || args[0].equalsIgnoreCase("bedwars") || args[0].equalsIgnoreCase("bed")) {
             gamePrefix = "BEDWARS";
+            shuffle = false;
         } else if (args[0].equalsIgnoreCase("hp") || args[0].equalsIgnoreCase("hotpotato") || args[0].equalsIgnoreCase("potato")) {
             gamePrefix = "HOTPOTATO";
+            shuffle = false;
             format = ChatColor.GOLD + "Sending to %s!";
         } else if (args[0].equalsIgnoreCase("ze") || args[0].equalsIgnoreCase("zombieescape")) {
             gamePrefix = "ZOMBIEESCAPE";
+            shuffle = false;
             format = ChatColor.DARK_GREEN + "Sending to %s!";
         } else if (args[0].equalsIgnoreCase("rush") || args[0].equalsIgnoreCase("rushv2")) {
             gamePrefix = "RUSH";
+            shuffle = false;
             format = ChatColor.GREEN + "Sending to %s! Let's rush!";
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify valid game!"));
@@ -56,6 +61,7 @@ public class Play extends Command {
             if ((server.startsWith(finalGamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
         });
         AtomicBoolean connected = new AtomicBoolean(false);
+        if (shuffle) Collections.shuffle(servers, new Random()); // shuffle all servers
         String finalFormat = format;
         String before = player.getServer().getInfo().getName();
         AtomicInteger checked = new AtomicInteger();
