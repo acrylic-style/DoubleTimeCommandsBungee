@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Play extends Command {
     public Play() {
@@ -55,16 +56,16 @@ public class Play extends Command {
         Collections.shuffle(servers, new Random()); // shuffle all servers
         String finalFormat = format;
         String before = player.getServer().getInfo().getName();
+        AtomicInteger checked = new AtomicInteger();
         servers.forEach(info -> info.ping((result, error) -> {
+            checked.getAndIncrement();
             if (error == null && !connected.get() && result.getPlayers().getMax() > result.getPlayers().getOnline()) {
                 connected.set(true);
                 player.sendMessage(new TextComponent(String.format(finalFormat, info.getName())));
                 player.connect(info); // connect to *random* *online* *lobby* server
             }
-        }));
-        ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> {
-            if (!connected.get() && before.equalsIgnoreCase(player.getServer().getInfo().getName()))
+            if (!connected.get() && before.equalsIgnoreCase(player.getServer().getInfo().getName()) && checked.get() >= servers.size())
                 player.sendMessage(new TextComponent(ChatColor.RED + "We couldn't find available server!"));
-        }, 5, TimeUnit.SECONDS);
+        }));
     }
 }
