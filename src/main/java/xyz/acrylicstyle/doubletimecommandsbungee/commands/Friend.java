@@ -42,7 +42,7 @@ public class Friend extends Command {
 		}
 		final ProxiedPlayer playerSender = (ProxiedPlayer) sender;
 		String help =
-				"§9------------------------------------------------------------\n" +
+				"§9--------------------------------------------------\n" +
 				"§aFriend Commands:\n" +
 				"§e/f help §7- §bPrints this help message\n" +
 				"§e/f add §7- §bAdd a player as a friend\n" +
@@ -52,7 +52,7 @@ public class Friend extends Command {
 				"§e/f remove §7- §bRemove a player from your friends\n" +
 				"§e/f removeall §7- §bRemove all players from your friends\n" +
 				"§e/f requests §7- §bView incoming friend requests\n" +
-				"§9------------------------------------------------------------";
+				"§9--------------------------------------------------";
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help")) {
 				sender.sendMessage(new TextComponent(help));
@@ -87,12 +87,12 @@ public class Friend extends Command {
 					}
 					Collection<TextComponent> stackedMessages = new ArrayList<TextComponent>();
 					try {
-						stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+						stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 						ProxiedOfflinePlayer pof1 = new ProxiedOfflinePlayer(UUID.fromString(f1));
 						ProxiedPlayer pf1 = ProxyServer.getInstance().getPlayer(UUID.fromString(f1));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof1) + " " + (((Connection) (pf1 == null ? pof1 : pf1)).isConnected() ? ChatColor.AQUA + "is playing on " + pf1.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f2 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
@@ -100,7 +100,7 @@ public class Friend extends Command {
 						ProxiedPlayer pf2 = ProxyServer.getInstance().getPlayer(UUID.fromString(f2));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof2) + " " + (((Connection) (pf2 == null ? pof2 : pf2)).isConnected() ? ChatColor.AQUA + "is playing on " + pf2.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f3 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
@@ -108,7 +108,7 @@ public class Friend extends Command {
 						ProxiedPlayer pf3 = ProxyServer.getInstance().getPlayer(UUID.fromString(f3));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof3) + " " + (((Connection) (pf3 == null ? pof3 : pf3)).isConnected() ? ChatColor.AQUA + "is playing on " + pf3.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f4 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
@@ -116,7 +116,7 @@ public class Friend extends Command {
 						ProxiedPlayer pf4 = ProxyServer.getInstance().getPlayer(UUID.fromString(f4));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof4) + " " + (((Connection) (pf4 == null ? pof4 : pf4)).isConnected() ? ChatColor.AQUA + "is playing on " + pf4.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f5 == null) {
-							sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+							sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
@@ -124,7 +124,7 @@ public class Friend extends Command {
 						ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(UUID.fromString(f5));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (((Connection) (pf5 == null ? pof5 : pf5)).isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f6 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
@@ -132,7 +132,7 @@ public class Friend extends Command {
 						ProxiedPlayer pf6 = ProxyServer.getInstance().getPlayer(UUID.fromString(f6));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof6) + " " + (((Connection) (pf6 == null ? pof6 : pf6)).isConnected() ? ChatColor.AQUA + "is playing on " + pf6.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f7 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(text -> sender.sendMessage(text));
 							return;
 						}
@@ -140,14 +140,14 @@ public class Friend extends Command {
 						ProxiedPlayer pf7 = ProxyServer.getInstance().getPlayer(UUID.fromString(f7));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof7) + " " + (((Connection) (pf7 == null ? pof7 : pf7)).isConnected() ? ChatColor.AQUA + "is playing on " + pf7.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 						if (f8 == null) {
-							stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
 						ProxiedOfflinePlayer pof8 = new ProxiedOfflinePlayer(UUID.fromString(f8));
 						ProxiedPlayer pf8 = ProxyServer.getInstance().getPlayer(UUID.fromString(f8));
 						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof8) + " " + (((Connection) (pf8 == null ? pof8 : pf8)).isConnected() ? ChatColor.AQUA + "is playing on " + pf8.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						stackedMessages.add(new TextComponent("§9------------------------------------------------------------"));
+						stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 						stackedMessages.forEach(sender::sendMessage);
 					} catch (NullPointerException | IllegalArgumentException e) {
 						e.printStackTrace();
@@ -165,9 +165,9 @@ public class Friend extends Command {
 					List<String> friends = Arrays.asList(config.getList("players." + playerSender.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
 					List<String> theirFriends = Arrays.asList(config.getList("players." + player.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
 					if (!friends.contains(player.getUniqueId().toString())) {
-						sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+						sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 						sender.sendMessage(new TextComponent("§cYou aren't friend with " + PlayerUtils.getName(player) + "§r§c!"));
-						sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+						sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 						return;
 					}
 				} catch (Exception e) {
@@ -186,9 +186,9 @@ public class Friend extends Command {
 					for (Object rawData : config.getList("players." + playerSender.getUniqueId() + ".friend.requests", new ArrayList<String>()))
 						requests.add(rawData.toString());
 					if (!requests.contains(player.getUniqueId().toString())) {
-						sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+						sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 						sender.sendMessage(new TextComponent("§cThey didn't send you friend request!"));
-						sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+						sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 						return;
 					}
 					requests.remove(player.getUniqueId().toString());
@@ -201,12 +201,12 @@ public class Friend extends Command {
 					following.add(playerSender.getUniqueId().toString());
 					config.set("players." + playerSender.getUniqueId() + ".friend.friends", followers);
 					config.set("players." + player.getUniqueId() + ".friend.friends", following);
-					sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
 					sender.sendMessage(new TextComponent("§aYou are now friend with " + PlayerUtils.getName(player)));
-					sender.sendMessage(new TextComponent("§9------------------------------------------------------------"));
-					player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
+					player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					player.sendMessage(new TextComponent(ChatColor.GREEN + "You are now friend with " + PlayerUtils.getName((ProxiedPlayer)sender)));
-					player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					config.save();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -214,38 +214,38 @@ public class Friend extends Command {
 			} else {
 				final ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[0].equalsIgnoreCase("add") && args.length == 2 ? args[1] : args[0]);
 				if (player == null) {
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Unable to find that player!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
 				if (!player.isConnected()) {
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.RED + "That player is offline!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
 				if (player.getUniqueId().compareTo(playerSender.getUniqueId()) == 0) {
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You can't add yourself as a friend!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
 				if (!Utils.run(() -> config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml"), sender, Errors.COULD_NOT_READ_CONFIG)) return;
 				List<String> friends = Arrays.asList(config.getList("players." + player.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
 				if (friends.contains(playerSender.getUniqueId().toString())) {
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.RED + "You are already friend with that player!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
 				List<?> rawRequests = config.getList("players." + player.getUniqueId() + ".friend.requests", new ArrayList<Object>());
 				List<String> requests = new ArrayList<String>();
 				for (Object rawData : rawRequests) requests.add(rawData.toString());
 				if (requests.contains(playerSender.getUniqueId().toString())) {
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You already sent friend request to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + "! Wait for them to accept!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
 				requests.add(playerSender.getUniqueId().toString());
@@ -254,15 +254,15 @@ public class Friend extends Command {
 					config.save();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					sender.sendMessage(new TextComponent(ChatColor.RED + "There was error while saving config! Please try again later!"));
-					sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+					sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 					return;
 				}
-				sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+				sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 				sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You sent friend request to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + "! They have 5 minutes to accept."));
-				sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-				player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+				sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+				player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 				player.sendMessage(new TextComponent(ChatColor.YELLOW + "You received friend request from " + PlayerUtils.getName((ProxiedPlayer)sender) + ChatColor.RESET + ChatColor.YELLOW + "!"));
 				TextComponent dialog = new TextComponent("" + ChatColor.GREEN + ChatColor.BOLD + "[ACCEPT]");
 				dialog.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "Accept the friend request and add to your/their friend list.").create()));
@@ -273,7 +273,7 @@ public class Friend extends Command {
 				dialog.addExtra("" + ChatColor.RESET + ChatColor.GRAY + " - ");
 				dialog.addExtra(deny);
 				player.sendMessage(dialog);
-				player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+				player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 				TimerTask task = new TimerTask() {
 					public void run() {
 						try {
@@ -286,12 +286,12 @@ public class Friend extends Command {
 							requests.remove(playerSender.getUniqueId().toString());
 							config.set("players." + player.getUniqueId() + ".friend.requests", requests);
 							config.save();
-							sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+							sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 							sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Your friend request to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
-							sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-							player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+							sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+							player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 							player.sendMessage(new TextComponent(ChatColor.YELLOW + "Your friend request from " + PlayerUtils.getName((ProxiedPlayer)sender) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
-							player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+							player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
 						} catch(Exception e) {
 							ProxyServer.getInstance().getLogger().severe("Error while handling expired friend request:");
 							e.printStackTrace();
