@@ -48,25 +48,23 @@ public class Ban extends Command {
 				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " permanently."));
 				return;
 			}
-			if (args.length >= 4) {
-				try {
-					long expires = System.currentTimeMillis();
-					if (args[3].equalsIgnoreCase("d")) {
-						expires = expires + (Integer.parseInt(args[2]) * Utils.DAY);
-					} else if (args[3].equalsIgnoreCase("h")) {
-						expires = expires + (Integer.parseInt(args[2]) * Utils.HOUR);
-					} else if (args[3].equalsIgnoreCase("m")) {
-						expires = expires + (Integer.parseInt(args[2]) * Utils.MINUTE);
-					} else {
-						sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
-						return;
-					}
-					Utils.ban(ps.getUniqueId(), ((ProxiedPlayer)sender).getUniqueId(), args[1], expires);
-					ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
-					sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
-				} catch (NumberFormatException e) {
-					sender.sendMessage(new TextComponent(ChatColor.RED + "Time must be number."));
+			try {
+				long expires = System.currentTimeMillis();
+				if (args[3].equalsIgnoreCase("d")) {
+					expires = expires + (Integer.parseInt(args[2]) * Utils.DAY);
+				} else if (args[3].equalsIgnoreCase("h")) {
+					expires = expires + (Integer.parseInt(args[2]) * Utils.HOUR);
+				} else if (args[3].equalsIgnoreCase("m")) {
+					expires = expires + (Integer.parseInt(args[2]) * Utils.MINUTE);
+				} else {
+					sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
+					return;
 				}
+				Utils.ban(ps.getUniqueId(), ((ProxiedPlayer)sender).getUniqueId(), args[1], expires);
+				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
+				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
+			} catch (NumberFormatException e) {
+				sender.sendMessage(new TextComponent(ChatColor.RED + "Time must be number."));
 			}
 		} catch (IOException e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Unable to ban that player!"));
