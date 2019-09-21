@@ -5,6 +5,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -16,6 +18,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
@@ -45,7 +48,41 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 	}
 
 	@EventHandler
-	public void onLogin(PostLoginEvent event) {
+	public void onLogin(LoginEvent event) {
+		try {
+			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
+			List<String> friends = config.configuration.getStringList("players." + event.getConnection().getUniqueId() + ".friend.friends");
+			friends.forEach(uuid -> {
+				ProxiedPlayer player = ProxyServer.getInstance().getPlayer(UUID.fromString(uuid));
+				if (player != null) {
+					player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+				}
+			});
+		} catch (Exception e) {
+			ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
+			e.printStackTrace();
+		}
+	}
+
+	@EventHandler
+	public void onLeave(PlayerDisconnectEvent event) {
+		try {
+			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
+			List<String> friends = config.configuration.getStringList("players." + event.getPlayer().getUniqueId() + ".friend.friends");
+			friends.forEach(uuid -> {
+				ProxiedPlayer player = ProxyServer.getInstance().getPlayer(UUID.fromString(uuid));
+				if (player != null) {
+					player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
+				}
+			});
+		} catch (Exception e) {
+			ProxyServer.getInstance().getLogger().warning("Couldn't send disconnect message!");
+			e.printStackTrace();
+		}
+	}
+
+	@EventHandler
+	public void onPostLogin(PostLoginEvent event) {
 		try {
 			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 			UUID uuid = event.getPlayer().getUniqueId();
