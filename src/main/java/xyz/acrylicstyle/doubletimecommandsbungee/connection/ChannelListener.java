@@ -14,7 +14,7 @@ public class ChannelListener implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
         ProxyServer.getInstance().getLogger().info("Received message from bukkit, tag is: " + e.getTag());
-        if (e.getTag().equalsIgnoreCase("bungeecord:main")) {
+        if (e.getTag().equalsIgnoreCase("dtc:rank")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String channel = in.readUTF();
