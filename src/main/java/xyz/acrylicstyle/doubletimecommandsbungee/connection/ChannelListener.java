@@ -11,13 +11,14 @@ import java.io.*;
 import java.util.UUID;
 
 public class ChannelListener implements Listener {
-
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
+        ProxyServer.getInstance().getLogger().info("Received message from bukkit, tag is: " + e.getTag());
         if (e.getTag().equalsIgnoreCase("bungeecord:main")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
-                String channel = in.readUTF(); // channel we delivered
+                String channel = in.readUTF();
+                ProxyServer.getInstance().getLogger().info("Channel: " + channel);
                 if (channel.equals("rank")) {
                     ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
                     String input = in.readUTF();
@@ -26,7 +27,6 @@ public class ChannelListener implements Listener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-
         }
     }
 
