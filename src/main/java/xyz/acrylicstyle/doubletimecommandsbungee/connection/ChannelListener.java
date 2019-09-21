@@ -14,7 +14,7 @@ public class ChannelListener implements Listener {
 
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        if (e.getTag().equalsIgnoreCase("BungeeCord")) {
+        if (e.getTag().equalsIgnoreCase("bungeecord:main")) {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String channel = in.readUTF(); // channel we delivered
@@ -39,7 +39,7 @@ public class ChannelListener implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        server.sendData("Rank", stream.toByteArray());
+        server.sendData("dtc:rank", stream.toByteArray());
 
     }
 }
