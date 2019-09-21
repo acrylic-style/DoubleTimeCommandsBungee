@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 import xyz.acrylicstyle.doubletimecommandsbungee.commands.*;
+import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
@@ -36,6 +37,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Kick());
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Hub());
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Play());
+		ProxyServer.getInstance().getPluginManager().registerListener(this, new ChannelListener());
+		ProxyServer.getInstance().registerChannel("Rank");
 	}
 
 	@EventHandler
