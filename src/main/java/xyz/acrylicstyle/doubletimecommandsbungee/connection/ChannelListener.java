@@ -20,6 +20,7 @@ public class ChannelListener implements Listener {
                 String subchannel = in.readUTF(); // it'll be player's uuid see PluginChannelListener#sendToBungeeCord
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
                 ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
+                String input = in.readUTF();
                 sendToBukkit(subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
             } catch (IOException e1) {
                 e1.printStackTrace();
