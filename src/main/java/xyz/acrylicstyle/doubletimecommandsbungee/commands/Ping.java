@@ -26,6 +26,6 @@ public class Ping extends Command {
         else if (ping <= 250) message = "" + ChatColor.GOLD + ping;
         else if (ping <= 350) message = "" + ChatColor.RED + ping;
         else message = "" + ChatColor.DARK_RED + ping;
-        ps.sendMessage(new TextComponent(ChatColor.GREEN + "Ping: " + message));
+        ps.sendMessage(new TextComponent(ChatColor.GREEN + "Ping: " + message + "ms"));
     }
 }
