@@ -37,6 +37,7 @@ public class Play extends Command {
         String format = ChatColor.GREEN + "Sending to %s!";
         Collection<String, Object[]> config = DoubleTimeCommands.config.getConfigSectionValue("games", Object[].class);
         if (config.containsKey(args[0])) {
+            ProxyServer.getInstance().getLogger().info("test:" + config.get(args[0]));
             gamePrefix = (String) config.get(args[0])[0];
             if (config.get(args[0]).length >= 2) shuffle = (Boolean) config.get(args[0])[1];
             if (config.get(args[0]).length >= 3) format = (String) config.get(args[0])[2];

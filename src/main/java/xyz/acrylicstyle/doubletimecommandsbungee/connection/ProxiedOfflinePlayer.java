@@ -27,7 +27,7 @@ public class ProxiedOfflinePlayer implements IProxiedOfflinePlayer {
 	public String getNameFromUUID(UUID uuid) {
 		try {
 			return PlayerUtils.getByUUID(uuid).toUsername();
-		} catch (IllegalArgumentException | IOException | ParseException e) {}
+		} catch (IllegalArgumentException | IOException | ParseException ignored) {}
 		return null;
 	}
 
@@ -42,10 +42,9 @@ public class ProxiedOfflinePlayer implements IProxiedOfflinePlayer {
 
 	public static String getName(ProxiedPlayer player, UUID uuid) {
 		try {
-			return (player.getName() == null || player == null) ? PlayerUtils.getByUUID(uuid).toUsername() : player.getName();
-		} catch (Exception ignore) {
-			ignore.printStackTrace();
-		}
+			return (player == null || player.getName() == null) ? PlayerUtils.getByUUID(uuid).toUsername() : player.getName();
+		} catch (Exception ignore) {}
+		assert player != null;
 		return player.getName();
 	}
 
@@ -54,7 +53,6 @@ public class ProxiedOfflinePlayer implements IProxiedOfflinePlayer {
 		try {
 			return PlayerUtils.getByUUID(this.getUniqueId()).toUsername();
 		} catch (Exception ignore) {
-			ignore.printStackTrace();
 			return null;
 		}
 	}

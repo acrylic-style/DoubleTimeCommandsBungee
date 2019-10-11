@@ -68,7 +68,7 @@ public class ConfigProvider {
 		Collection<String, T> collection = new Collection<>();
 		CollectionList<String> keys = new CollectionList<>(o.getKeys());
 		for (String key : keys) {
-			ProxyServer.getInstance().getLogger().info("key: " + key);
+			ProxyServer.getInstance().getLogger().info("value: " + o.get(path + '.' + key));
 			collection.put(key, (T) o.get(path + '.' + key));
 		}
 		return collection;
