@@ -17,10 +17,6 @@ public class Ping extends Command {
             sender.sendMessage(new TextComponent(ChatColor.RED + "This command must be run from in-game."));
             return;
         }
-        if (args.length == 0) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify game!"));
-            return;
-        }
         ProxiedPlayer ps = (ProxiedPlayer) sender;
         int ping = ps.getPing();
         String message;
