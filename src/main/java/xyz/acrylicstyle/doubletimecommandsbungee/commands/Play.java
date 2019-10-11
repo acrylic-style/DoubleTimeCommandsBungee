@@ -10,10 +10,7 @@ import net.md_5.bungee.api.plugin.Command;
 import util.Collection;
 import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +34,7 @@ public class Play extends Command {
         String format = ChatColor.GREEN + "Sending to %s!";
         Collection<String, Object[]> config = DoubleTimeCommands.config.getConfigSectionValue("games", Object[].class);
         if (config.containsKey(args[0])) {
-            ProxyServer.getInstance().getLogger().info("test:" + config.get(args[0]));
+            ProxyServer.getInstance().getLogger().info("test:" + Arrays.toString(config.get(args[0])));
             gamePrefix = (String) config.get(args[0])[0];
             if (config.get(args[0]).length >= 2) shuffle = (Boolean) config.get(args[0])[1];
             if (config.get(args[0]).length >= 3) format = (String) config.get(args[0])[2];
