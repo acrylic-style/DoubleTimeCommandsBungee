@@ -3,11 +3,17 @@ package xyz.acrylicstyle.doubletimecommandsbungee.providers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+
+import util.Collection;
+import util.CollectionList;
 
 public class ConfigProvider {
 
@@ -41,6 +47,31 @@ public class ConfigProvider {
 	public void setThenSave(String path, Object value) throws IOException {
 		this.set(path, value);
 		this.save();
+	}
+
+	public Collection<String, Object> getConfigSectionValue(String path) {
+		Configuration o = this.configuration.getSection(path);
+		if (o == null) return null;
+		Collection<String, Object> collection = new Collection<>();
+		CollectionList<String> keys = new CollectionList<>(o.getKeys());
+		for (String key : keys) {
+			ProxyServer.getInstance().getLogger().info("key: " + key);
+			collection.put(key, o.get(path + '.' + key));
+		}
+		return collection;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> Collection<String, T> getConfigSectionValue(String path, Class<T> t) {
+		Configuration o = this.configuration.getSection(path);
+		if (o == null) return null;
+		Collection<String, T> collection = new Collection<>();
+		CollectionList<String> keys = new CollectionList<>(o.getKeys());
+		for (String key : keys) {
+			ProxyServer.getInstance().getLogger().info("key: " + key);
+			collection.put(key, (T) o.get(path + '.' + key));
+		}
+		return collection;
 	}
 
 	public static void setThenSave(String path, Object value, File file) throws IOException {

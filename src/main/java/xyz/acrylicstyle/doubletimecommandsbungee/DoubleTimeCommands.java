@@ -17,14 +17,24 @@ import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
+	public static ConfigProvider config;
+
 	@Override
 	public void onEnable() {
+		try {
+			config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
+		} catch (IOException e) {
+			e.printStackTrace();
+			ProxyServer.getInstance().getLogger().severe("Couldn't load config!");
+			return;
+		}
 		ProxyServer.getInstance().getPluginManager().registerListener(this, this);
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Party());
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new Friend());

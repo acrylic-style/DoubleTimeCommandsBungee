@@ -34,5 +34,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.8" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: de.exceptionflug:protocolize-api:1.4.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: de.exceptionflug:protocolize-world:1.4.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: xyz.acrylicstyle:Util:0.2.1" level="project" />
   </component>
 </module>

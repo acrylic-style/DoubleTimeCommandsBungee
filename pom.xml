@@ -51,6 +51,10 @@
       <id>bungeecord-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
+    <repository>
+      <id>acrylic-style</id>
+      <url>https://repo.acrylicstyle.xyz/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -104,6 +108,11 @@
       <artifactId>protocolize-world</artifactId>
       <version>1.4.6-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>xyz.acrylicstyle</groupId>
+      <artifactId>Util</artifactId>
+      <version>0.2.1</version>
     </dependency>
   </dependencies>
 </project>

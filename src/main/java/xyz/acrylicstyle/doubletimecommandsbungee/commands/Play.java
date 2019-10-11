@@ -7,6 +7,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import util.Collection;
+import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,23 +33,13 @@ public class Play extends Command {
             return;
         }
         String gamePrefix;
-        boolean shuffle;
+        boolean shuffle = false;
         String format = ChatColor.GREEN + "Sending to %s!";
-        if (args[0].equalsIgnoreCase("bw") || args[0].equalsIgnoreCase("bedwars") || args[0].equalsIgnoreCase("bed")) {
-            gamePrefix = "BEDWARS";
-            shuffle = false;
-        } else if (args[0].equalsIgnoreCase("hp") || args[0].equalsIgnoreCase("hotpotato") || args[0].equalsIgnoreCase("potato")) {
-            gamePrefix = "HOTPOTATO";
-            shuffle = false;
-            format = ChatColor.GOLD + "Sending to %s!";
-        } else if (args[0].equalsIgnoreCase("ze") || args[0].equalsIgnoreCase("zombieescape")) {
-            gamePrefix = "ZOMBIEESCAPE";
-            shuffle = false;
-            format = ChatColor.DARK_GREEN + "Sending to %s!";
-        } else if (args[0].equalsIgnoreCase("rush") || args[0].equalsIgnoreCase("rushv2")) {
-            gamePrefix = "RUSH";
-            shuffle = false;
-            format = ChatColor.GREEN + "Sending to %s! Let's rush!";
+        Collection<String, Object[]> config = DoubleTimeCommands.config.getConfigSectionValue("games", Object[].class);
+        if (config.containsKey(args[0])) {
+            gamePrefix = (String) config.get(args[0])[0];
+            if (config.get(args[0]).length >= 2) shuffle = (Boolean) config.get(args[0])[1];
+            if (config.get(args[0]).length >= 3) format = (String) config.get(args[0])[2];
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify valid game!"));
             return;
