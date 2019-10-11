@@ -32,12 +32,11 @@ public class Play extends Command {
         String gamePrefix;
         boolean shuffle = false;
         String format = ChatColor.GREEN + "Sending to %s!";
-        Collection<String, Object[]> config = DoubleTimeCommands.config.getConfigSectionValue("games", Object[].class);
+        Collection<String, ArrayList> config = DoubleTimeCommands.config.getConfigSectionValue("games", ArrayList.class);
         if (config.containsKey(args[0])) {
-            ProxyServer.getInstance().getLogger().info("test:" + Arrays.toString(config.get(args[0])));
-            gamePrefix = (String) config.get(args[0])[0];
-            if (config.get(args[0]).length >= 2) shuffle = (Boolean) config.get(args[0])[1];
-            if (config.get(args[0]).length >= 3) format = (String) config.get(args[0])[2];
+            gamePrefix = (String) config.get(args[0]).get(0);
+            if (config.get(args[0]).size() >= 2) shuffle = (Boolean) config.get(args[0]).get(1);
+            if (config.get(args[0]).size() >= 3) format = (String) config.get(args[0]).get(2);
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify valid game!"));
             return;
