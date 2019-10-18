@@ -18,6 +18,6 @@ public class WhereAmI extends Command {
             return;
         }
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        player.sendMessage(new TextComponent(ChatColor.GREEN + "You are playing at " + ChatColor.AQUA + player.getServer().getInfo().getName()));
+        player.sendMessage(new TextComponent(ChatColor.GREEN + "You are currently playing at " + ChatColor.AQUA + player.getServer().getInfo().getName() + ChatColor.GREEN + "!"));
     }
 }
