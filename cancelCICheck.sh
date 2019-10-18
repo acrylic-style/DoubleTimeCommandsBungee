@@ -1,5 +1,5 @@
-TITLE=$(git show --pretty=format:%s -s HEAD)
-if [[ "$TITLE" == \/\/* ]]; then
+TITLE="$(git show --pretty=format:%s -s HEAD)"
+if [[ "$TITLE" == "//"* ]]; then
   false
 else
   true
