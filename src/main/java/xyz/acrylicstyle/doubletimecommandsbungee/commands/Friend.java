@@ -88,65 +88,15 @@ public class Friend extends Command {
 					Collection<TextComponent> stackedMessages = new ArrayList<TextComponent>();
 					try {
 						stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-						ProxiedOfflinePlayer pof1 = new ProxiedOfflinePlayer(UUID.fromString(f1));
-						ProxiedPlayer pf1 = ProxyServer.getInstance().getPlayer(UUID.fromString(f1));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof1) + " " + (((Connection) (pf1 == null ? pof1 : pf1)).isConnected() ? ChatColor.AQUA + "is playing on " + pf1.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f2 == null) {
-							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(sender::sendMessage);
-							return;
-						}
-						ProxiedOfflinePlayer pof2 = new ProxiedOfflinePlayer(UUID.fromString(f2));
-						ProxiedPlayer pf2 = ProxyServer.getInstance().getPlayer(UUID.fromString(f2));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof2) + " " + (((Connection) (pf2 == null ? pof2 : pf2)).isConnected() ? ChatColor.AQUA + "is playing on " + pf2.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f3 == null) {
-							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(sender::sendMessage);
-							return;
-						}
-						ProxiedOfflinePlayer pof3 = new ProxiedOfflinePlayer(UUID.fromString(f3));
-						ProxiedPlayer pf3 = ProxyServer.getInstance().getPlayer(UUID.fromString(f3));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof3) + " " + (((Connection) (pf3 == null ? pof3 : pf3)).isConnected() ? ChatColor.AQUA + "is playing on " + pf3.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f4 == null) {
-							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(sender::sendMessage);
-							return;
-						}
-						ProxiedOfflinePlayer pof4 = new ProxiedOfflinePlayer(UUID.fromString(f4));
-						ProxiedPlayer pf4 = ProxyServer.getInstance().getPlayer(UUID.fromString(f4));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof4) + " " + (((Connection) (pf4 == null ? pof4 : pf4)).isConnected() ? ChatColor.AQUA + "is playing on " + pf4.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f5 == null) {
-							sender.sendMessage(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(sender::sendMessage);
-							return;
-						}
-						ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(UUID.fromString(f5));
-						ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(UUID.fromString(f5));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (((Connection) (pf5 == null ? pof5 : pf5)).isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f6 == null) {
-							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(sender::sendMessage);
-							return;
-						}
-						ProxiedOfflinePlayer pof6 = new ProxiedOfflinePlayer(UUID.fromString(f6));
-						ProxiedPlayer pf6 = ProxyServer.getInstance().getPlayer(UUID.fromString(f6));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof6) + " " + (((Connection) (pf6 == null ? pof6 : pf6)).isConnected() ? ChatColor.AQUA + "is playing on " + pf6.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
-						if (f7 == null) {
-							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
-							stackedMessages.forEach(text -> sender.sendMessage(text));
-							return;
-						}
-						ProxiedOfflinePlayer pof7 = new ProxiedOfflinePlayer(UUID.fromString(f7));
-						ProxiedPlayer pf7 = ProxyServer.getInstance().getPlayer(UUID.fromString(f7));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof7) + " " + (((Connection) (pf7 == null ? pof7 : pf7)).isConnected() ? ChatColor.AQUA + "is playing on " + pf7.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
+						getProxiedOfflinePlayer(f1, stackedMessages);
+						if (isNull(sender, f2, f3, f4, stackedMessages)) return;
+						if (isNull(sender, f5, f6, f7, stackedMessages)) return;
 						if (f8 == null) {
 							stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 							stackedMessages.forEach(sender::sendMessage);
 							return;
 						}
-						ProxiedOfflinePlayer pof8 = new ProxiedOfflinePlayer(UUID.fromString(f8));
-						ProxiedPlayer pf8 = ProxyServer.getInstance().getPlayer(UUID.fromString(f8));
-						stackedMessages.add(new TextComponent(PlayerUtils.getName(pof8) + " " + (((Connection) (pf8 == null ? pof8 : pf8)).isConnected() ? ChatColor.AQUA + "is playing on " + pf8.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
+						getProxiedOfflinePlayer(f8, stackedMessages);
 						stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 						stackedMessages.forEach(sender::sendMessage);
 					} catch (NullPointerException | IllegalArgumentException e) {
@@ -305,5 +255,27 @@ public class Friend extends Command {
 		} else {
 			sender.sendMessage(new TextComponent(help));
 		}
+	}
+
+	private boolean isNull(CommandSender sender, String f5, String f6, String f7, Collection<TextComponent> stackedMessages) {
+		if (sendMessage(sender, f5, stackedMessages)) return true;
+		if (sendMessage(sender, f6, stackedMessages)) return true;
+		return sendMessage(sender, f7, stackedMessages);
+	}
+
+	private boolean sendMessage(CommandSender sender, String f5, Collection<TextComponent> stackedMessages) {
+		if (f5 == null) {
+			stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
+			stackedMessages.forEach(sender::sendMessage);
+			return true;
+		}
+		getProxiedOfflinePlayer(f5, stackedMessages);
+		return false;
+	}
+
+	private void getProxiedOfflinePlayer(String f5, Collection<TextComponent> stackedMessages) {
+		ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(UUID.fromString(f5));
+		ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(UUID.fromString(f5));
+		stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (((Connection) (pf5 == null ? pof5 : pf5)).isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 	}
 }
