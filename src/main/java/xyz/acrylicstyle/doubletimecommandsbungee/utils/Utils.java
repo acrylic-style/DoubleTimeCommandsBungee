@@ -1,17 +1,23 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ConnectedPlayer;
+import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import util.Collection;
+import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 
 public class Utils {
@@ -132,5 +138,40 @@ public class Utils {
 
 	public static <T extends CommandSender> void sendError(T player, Errors error) {
 		player.sendMessage(new TextComponent(ChatColor.RED + "Couldn't run this command! Please try again later. (" + error.toString() + ")"));
+	}
+
+	public static void transferPlayer(ProxiedPlayer player, String game) {
+		String gamePrefix;
+		boolean shuffle = false;
+		String format = ChatColor.GREEN + "Sending to %s!";
+		Collection<String, ArrayList> config = DoubleTimeCommands.config.getConfigSectionValue("games", ArrayList.class);
+		if (config.containsKey(game)) {
+			gamePrefix = (String) config.get(game).get(0);
+			if (config.get(game).size() >= 2) shuffle = (Boolean) config.get(game).get(1);
+			if (config.get(game).size() >= 3) format = (String) config.get(game).get(2);
+		} else {
+			player.sendMessage(new TextComponent(ChatColor.RED + "Please specify valid game!"));
+			return;
+		}
+		ArrayList<ServerInfo> servers = new ArrayList<>();
+		String finalGamePrefix = gamePrefix;
+		ProxyServer.getInstance().getServers().forEach((server, info) -> {
+			if ((server.startsWith(finalGamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
+		});
+		AtomicBoolean connected = new AtomicBoolean(false);
+		if (shuffle) Collections.shuffle(servers, new Random()); // shuffle all servers
+		String finalFormat = format;
+		String before = player.getServer().getInfo().getName();
+		AtomicInteger checked = new AtomicInteger();
+		servers.forEach(info -> info.ping((result, error) -> {
+			checked.getAndIncrement();
+			if (error == null && !connected.get() && result.getPlayers().getMax() > result.getPlayers().getOnline()) {
+				connected.set(true);
+				player.sendMessage(new TextComponent(String.format(finalFormat, info.getName())));
+				player.connect(info); // connect to *random* *online* *lobby* server
+			}
+			if (!connected.get() && before.equalsIgnoreCase(player.getServer().getInfo().getName()) && checked.get() >= servers.size())
+				player.sendMessage(new TextComponent(ChatColor.RED + "We couldn't find available server!"));
+		}));
 	}
 }

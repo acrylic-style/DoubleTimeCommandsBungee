@@ -6,6 +6,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.io.*;
 import java.util.UUID;
@@ -20,8 +21,20 @@ public class ChannelListener implements Listener {
                 String subchannel = in.readUTF(); // it'll be player's uuid see PluginChannelListener#sendToBungeeCord
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
                 ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
-                String input = in.readUTF();
+                in.readUTF();
                 sendToBukkit(subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("commons:transfer")) {
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
+            try {
+                String subchannel = in.readUTF();
+                ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
+                ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
+                String input = in.readUTF();
+                Utils.transferPlayer(ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)), input);
+                sendToBukkit(subchannel, "", server);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
