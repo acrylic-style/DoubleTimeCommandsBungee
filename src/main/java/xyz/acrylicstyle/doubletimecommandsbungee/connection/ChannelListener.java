@@ -22,7 +22,7 @@ public class ChannelListener implements Listener {
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
                 ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
                 in.readUTF();
-                sendToBukkit(subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
+                sendToBukkit(e.getTag(), subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -34,14 +34,14 @@ public class ChannelListener implements Listener {
                 ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
                 String input = in.readUTF();
                 Utils.transferPlayer(ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)), input);
-                sendToBukkit(subchannel, "", server);
+                sendToBukkit(e.getTag(), subchannel, "", server);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
     }
 
-    private void sendToBukkit(String subchannel, String message, ServerInfo server) {
+    private void sendToBukkit(String tag, String subchannel, String message, ServerInfo server) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
         try {
@@ -50,6 +50,6 @@ public class ChannelListener implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        server.sendData("dtc:rank", stream.toByteArray()); // channel = tag
+        server.sendData(tag, stream.toByteArray()); // channel = tag
     }
 }
