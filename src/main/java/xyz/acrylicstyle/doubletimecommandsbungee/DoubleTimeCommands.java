@@ -3,6 +3,7 @@ package xyz.acrylicstyle.doubletimecommandsbungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.LoginEvent;
@@ -11,6 +12,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
+import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.commands.*;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
@@ -18,10 +20,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
 	public static ConfigProvider config;
@@ -83,6 +82,12 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 	@EventHandler
 	public void onLeave(PlayerDisconnectEvent event) {
 		try {
+			ArrayList<ServerInfo> servers = new ArrayList<>();
+			ProxyServer.getInstance().getServers().forEach((server, info) -> {
+				if ((server.startsWith("LOBBY") || server.startsWith("lobby"))) servers.add(info);
+			});
+			Collections.shuffle(servers, new Random()); // shuffle all servers
+			event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
 			ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 			List<String> friends = config.configuration.getStringList("players." + event.getPlayer().getUniqueId() + ".friend.friends");
 			friends.forEach(uuid -> {
