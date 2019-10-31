@@ -3,16 +3,24 @@ package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 public class Friend extends Command {
 	public Friend() {
@@ -23,27 +31,25 @@ public class Friend extends Command {
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
-		//TextComponent text1 = new TextComponent("This command must be used in-game.");
-		TextComponent text1 = new TextComponent("dont use this please.");
+		TextComponent text1 = new TextComponent("This command must be used in-game.");
 		text1.setColor(ChatColor.RED);
-		//if (!(sender instanceof ProxiedPlayer)) {
+		if (!(sender instanceof ProxiedPlayer)) {
 			sender.sendMessage(text1);
 			return;
-		//}
-		/*
+		}
 		final ProxiedPlayer playerSender = (ProxiedPlayer) sender;
 		String help =
 				"§9--------------------------------------------------\n" +
-				"§aFriend Commands:\n" +
-				"§e/f help §7- §bPrints this help message\n" +
-				"§e/f add §7- §bAdd a player as a friend\n" +
-				"§e/f accept §7- §bAccept a friend request\n" +
-				"§e/f deny §7- §bDecline a friend request\n" +
-				"§e/f list §7- §bList your friends\n" +
-				"§e/f remove §7- §bRemove a player from your friends\n" +
-				"§e/f removeall §7- §bRemove all players from your friends\n" +
-				"§e/f requests §7- §bView incoming friend requests\n" +
-				"§9--------------------------------------------------";
+						"§aFriend Commands:\n" +
+						"§e/f help §7- §bPrints this help message\n" +
+						"§e/f add §7- §bAdd a player as a friend\n" +
+						"§e/f accept §7- §bAccept a friend request\n" +
+						"§e/f deny §7- §bDecline a friend request\n" +
+						"§e/f list §7- §bList your friends\n" +
+						"§e/f remove §7- §bRemove a player from your friends\n" +
+						"§e/f removeall §7- §bRemove all players from your friends\n" +
+						"§e/f requests §7- §bView incoming friend requests\n" +
+						"§9--------------------------------------------------";
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help")) {
 				sender.sendMessage(new TextComponent(help));
@@ -250,7 +256,7 @@ public class Friend extends Command {
 			}
 		} else {
 			sender.sendMessage(new TextComponent(help));
-		}*/
+		}
 	}
 
 	private boolean isNull(CommandSender sender, UUID f5, UUID f6, UUID f7, Collection<TextComponent> stackedMessages) {
