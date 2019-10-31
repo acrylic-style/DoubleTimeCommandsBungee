@@ -58,7 +58,7 @@ public class Friend extends Command {
 					if (!Utils.run(() -> {
 						config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 					}, sender, Errors.COULD_NOT_READ_CONFIG)) return;
-					CollectionList<UUID> friends = null;
+					CollectionList<UUID> friends = new CollectionList<>();
 					try {
 						friends = SqlUtils.getFriends(((ProxiedPlayer)(sender)).getUniqueId());
 					} catch (SQLException e) {
