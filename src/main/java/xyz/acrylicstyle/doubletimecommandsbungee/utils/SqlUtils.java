@@ -122,6 +122,7 @@ public final class SqlUtils {
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;"); // it's completely safe... i wish.
+        result.next();
         String rank1;
         try {
             rank1 = result.getString("rank");
