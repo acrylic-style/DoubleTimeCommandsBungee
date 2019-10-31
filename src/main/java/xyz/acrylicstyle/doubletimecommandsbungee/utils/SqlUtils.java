@@ -111,9 +111,25 @@ public final class SqlUtils {
         preparedStatement.executeUpdate();
     }
 
+    public static void removeFriend(UUID player1, UUID player2) throws SQLException {
+        Validate.notNull(player1, player2);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friends where player=?, player2=?;");
+        preparedStatement.setString(1, player1.toString());
+        preparedStatement.setString(2, player2.toString());
+        preparedStatement.executeUpdate();
+    }
+
     public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friend_requests values (default, ?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into \" + database + \".friend_requests values (?, ?);");
+        preparedStatement.setString(1, player1.toString());
+        preparedStatement.setString(2, player2.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static void removeFriendRequest(UUID player1, UUID player2) throws SQLException {
+        Validate.notNull(player1, player2);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friend_requests where player=?, player2=?;");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
@@ -121,7 +137,7 @@ public final class SqlUtils {
 
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;"); // it's completely safe... i wish.
+        ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
         result.next();
         String rank1;
         try {
