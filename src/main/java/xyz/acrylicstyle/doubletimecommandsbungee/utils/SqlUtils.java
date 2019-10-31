@@ -107,19 +107,19 @@ public final class SqlUtils {
 
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select rank from players where player=" + uuid.toString() + " limit 1;"); // it's completely safe... i wish.
+        ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;"); // it's completely safe... i wish.
         Ranks rank = Ranks.valueOf(result.getString("rank") == null ? "DEFAULT" : result.getString("rank"));
         result.close();
         return rank;
     }
 
     public static void setRank(UUID uuid, Ranks rank) throws SQLException {
-        connection.get().createStatement().executeUpdate("update players set rank=" + rank.name() + " where player=" + uuid.toString() + ";");
+        connection.get().createStatement().executeUpdate("update players set rank='" + rank.name() + "' where player='" + uuid.toString() + "';");
     }
 
     public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select * from bans where player=" + uuid.toString() + " order by expires DESC;");
+        ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires DESC;");
         CollectionList<Ban> bans = new CollectionList<>();
         while (result.next()) {
             int id = result.getInt("id");
