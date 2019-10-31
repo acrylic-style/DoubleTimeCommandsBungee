@@ -112,7 +112,7 @@ public final class SqlUtils {
 
     public static void removeFriend(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friends where player=?, player2=?;");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friends where player=? and player2=?;");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
@@ -128,7 +128,7 @@ public final class SqlUtils {
 
     public static void removeFriendRequest(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friend_requests where player=?, player2=?;");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friend_requests where player=? and player2=?;");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
