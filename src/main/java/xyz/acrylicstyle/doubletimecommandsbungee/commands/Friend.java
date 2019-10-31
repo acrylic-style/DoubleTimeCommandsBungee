@@ -1,29 +1,18 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
-import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
-import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public class Friend extends Command {
 	public Friend() {
@@ -34,12 +23,14 @@ public class Friend extends Command {
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
-		TextComponent text1 = new TextComponent("This command must be used in-game.");
+		//TextComponent text1 = new TextComponent("This command must be used in-game.");
+		TextComponent text1 = new TextComponent("dont use this please.");
 		text1.setColor(ChatColor.RED);
-		if (!(sender instanceof ProxiedPlayer)) {
+		//if (!(sender instanceof ProxiedPlayer)) {
 			sender.sendMessage(text1);
 			return;
-		}
+		//}
+		/*
 		final ProxiedPlayer playerSender = (ProxiedPlayer) sender;
 		String help =
 				"§9--------------------------------------------------\n" +
@@ -61,16 +52,21 @@ public class Friend extends Command {
 					if (!Utils.run(() -> {
 						config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
 					}, sender, Errors.COULD_NOT_READ_CONFIG)) return;
-					List<String> friends = Arrays.asList(config.getList("players." + playerSender.getUniqueId() + ".friend.friends", new ArrayList<Object>()).toArray(new String[0]));
+					CollectionList<UUID> friends = null;
+					try {
+						friends = SqlUtils.getFriends(((ProxiedPlayer)(sender)).getUniqueId());
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 					int i = (args.length >= 2 ? Integer.parseInt(args[1])*8 : 0)-1;
-					String f1 = null;
-					String f2 = null;
-					String f3 = null;
-					String f4 = null;
-					String f5 = null;
-					String f6 = null;
-					String f7 = null;
-					String f8 = null;
+					UUID f1 = null;
+					UUID f2 = null;
+					UUID f3 = null;
+					UUID f4 = null;
+					UUID f5 = null;
+					UUID f6 = null;
+					UUID f7 = null;
+					UUID f8 = null;
 					try {
 						f1 = friends.get(i+1);
 						f2 = friends.get(i+2);
@@ -143,8 +139,8 @@ public class Friend extends Command {
 					}
 					requests.remove(player.getUniqueId().toString());
 					config.set("players." + playerSender.getUniqueId() + ".friend.requests", requests);
-					List<String> followers = new ArrayList<String>();
-					List<String> following = new ArrayList<String>();
+					List<String> followers = new ArrayList<>();
+					List<String> following = new ArrayList<>();
 					followers.addAll(Arrays.asList(config.getList("players." + playerSender.getUniqueId() + ".friend.friends", new ArrayList<String>()).toArray(new String[0])));
 					following.addAll(Arrays.asList(config.getList("players." + player.getUniqueId() + ".friend.friends", new ArrayList<String>()).toArray(new String[0])));
 					followers.add(player.getUniqueId().toString());
@@ -254,16 +250,16 @@ public class Friend extends Command {
 			}
 		} else {
 			sender.sendMessage(new TextComponent(help));
-		}
+		}*/
 	}
 
-	private boolean isNull(CommandSender sender, String f5, String f6, String f7, Collection<TextComponent> stackedMessages) {
+	private boolean isNull(CommandSender sender, UUID f5, UUID f6, UUID f7, Collection<TextComponent> stackedMessages) {
 		if (sendMessage(sender, f5, stackedMessages)) return true;
 		if (sendMessage(sender, f6, stackedMessages)) return true;
 		return sendMessage(sender, f7, stackedMessages);
 	}
 
-	private boolean sendMessage(CommandSender sender, String f5, Collection<TextComponent> stackedMessages) {
+	private boolean sendMessage(CommandSender sender, UUID f5, Collection<TextComponent> stackedMessages) {
 		if (f5 == null) {
 			stackedMessages.add(new TextComponent("§9--------------------------------------------------"));
 			stackedMessages.forEach(sender::sendMessage);
@@ -273,9 +269,9 @@ public class Friend extends Command {
 		return false;
 	}
 
-	private void getProxiedOfflinePlayer(String f5, Collection<TextComponent> stackedMessages) {
-		ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(UUID.fromString(f5));
-		ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(UUID.fromString(f5));
+	private void getProxiedOfflinePlayer(UUID f5, Collection<TextComponent> stackedMessages) {
+		ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(f5);
+		ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(f5);
 		stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (((Connection) (pf5 == null ? pof5 : pf5)).isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
 	}
 }

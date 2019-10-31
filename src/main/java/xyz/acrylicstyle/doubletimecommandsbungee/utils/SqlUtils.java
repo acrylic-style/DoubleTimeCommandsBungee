@@ -71,6 +71,15 @@ public final class SqlUtils {
                 "    );");
     }
 
+    public static Player createPlayer(UUID uuid, Ranks rank) throws SQLException {
+        Validate.notNull(uuid, rank);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".players values (?, ?);");
+        preparedStatement.setString(1, uuid.toString());
+        preparedStatement.setString(2, rank.name());
+        preparedStatement.executeUpdate();
+        return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
+    }
+
     public static CollectionList<UUID> getFriends(UUID uuid) throws SQLException {
         return getUUIDs(uuid, "select player2 from friends where player=", "player2");
     }
