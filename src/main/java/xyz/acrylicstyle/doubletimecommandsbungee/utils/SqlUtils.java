@@ -42,11 +42,11 @@ public final class SqlUtils {
     public static void sync(boolean force) throws SQLException {
         if (connection.get() == null) throw new IllegalStateException("Connection haven't made.");
         Statement statement = connection.get().createStatement();
-        if (force) statement.executeQuery("drop table bans if exists;");
-        if (force) statement.executeQuery("drop table players if exists;");
-        if (force) statement.executeQuery("drop table friends if exists;");
-        if (force) statement.executeQuery("drop table friend_requests if exists;");
-        statement.executeQuery("CREATE TABLE bans (\n" +
+        if (force) statement.executeUpdate("drop table bans if exists;");
+        if (force) statement.executeUpdate("drop table players if exists;");
+        if (force) statement.executeUpdate("drop table friends if exists;");
+        if (force) statement.executeUpdate("drop table friend_requests if exists;");
+        statement.executeUpdate("CREATE TABLE bans (\n" +
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666),\n" +
@@ -54,17 +54,17 @@ public final class SqlUtils {
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    ) if not exists ;");
-        statement.executeQuery("CREATE TABLE players (\n" +
+        statement.executeUpdate("CREATE TABLE players (\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        rank VARCHAR(100),\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    ) if not exists ;");
-        statement.executeQuery("CREATE TABLE friends (\n" +
+        statement.executeUpdate("CREATE TABLE friends (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
                 "    ) if not exists ;");
-        statement.executeQuery("CREATE TABLE friend_requests (\n" +
+        statement.executeUpdate("CREATE TABLE friend_requests (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
@@ -86,7 +86,7 @@ public final class SqlUtils {
         preparedStatement.setString(2, reason);
         preparedStatement.setInt(3, expires);
         preparedStatement.setString(4, executor.toString());
-        preparedStatement.execute();
+        preparedStatement.executeUpdate();
     }
 
     public static void addFriend(UUID player1, UUID player2) throws SQLException {
@@ -94,7 +94,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friends values (?, ?);");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
-        preparedStatement.execute();
+        preparedStatement.executeUpdate();
     }
 
     public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
@@ -102,7 +102,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friend_requests values (default, ?, ?);");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
-        preparedStatement.execute();
+        preparedStatement.executeUpdate();
     }
 
     public static Ranks getRank(UUID uuid) throws SQLException {
@@ -114,7 +114,7 @@ public final class SqlUtils {
     }
 
     public static void setRank(UUID uuid, Ranks rank) throws SQLException {
-        connection.get().createStatement().executeQuery("update players set rank=" + rank.name() + " where player=" + uuid.toString() + ";").close();
+        connection.get().createStatement().executeUpdate("update players set rank=" + rank.name() + " where player=" + uuid.toString() + ";");
     }
 
     public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
