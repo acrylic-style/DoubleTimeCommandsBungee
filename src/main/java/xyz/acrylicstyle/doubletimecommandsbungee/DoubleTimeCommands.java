@@ -48,7 +48,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         String user = config.configuration.getString("database.user");
         String password = config.configuration.getString("database.password");
         if (database == null || user == null || password == null) {
-            ProxyServer.getInstance().getLogger().severe("Can't connect to the database because name, user, or password is not defined at config file.");
+            ProxyServer.getInstance().getLogger().severe("Can't connect to the database because name, user, or password is not defined at config file. (database.host, database.name, database.user, and database.password are configurable)");
             return;
         }
         try {
