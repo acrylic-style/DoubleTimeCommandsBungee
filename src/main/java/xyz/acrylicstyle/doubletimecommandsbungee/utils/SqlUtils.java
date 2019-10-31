@@ -83,14 +83,31 @@ public final class SqlUtils {
         preparedStatement.setString(3, name);
         preparedStatement.setString(4, uuid.toString());
         preparedStatement.executeUpdate();
+        preparedStatement = connection.get().prepareStatement("update players set id=? where player=?;");
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
         return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
     }
 
+    public static String getName(UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select name from players where player=? limit 1;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        String name = result.getString("name");
+        result.close();
+        return name;
+    }
+
     public static CollectionList<UUID> getFriends(UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friends where player=", "player2");
     }
 
     public static CollectionList<UUID> getFriendRequests(UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
@@ -163,7 +180,7 @@ public final class SqlUtils {
 
     public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires DESC;");
+        ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires;"); // DESC
         CollectionList<Ban> bans = new CollectionList<>();
         while (result.next()) {
             int id = result.getInt("id");

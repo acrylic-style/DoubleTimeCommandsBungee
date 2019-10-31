@@ -293,9 +293,13 @@ public class Friend extends Command {
     }
 
     private void getProxiedOfflinePlayer(UUID f5, Collection<TextComponent> stackedMessages) {
-        ProxiedOfflinePlayer pof5 = new ProxiedOfflinePlayer(f5);
         ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(f5);
         assert pf5 != null;
-        stackedMessages.add(new TextComponent(PlayerUtils.getName(pof5) + " " + (pf5.isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
+        try {
+            stackedMessages.add(new TextComponent(SqlUtils.getName(f5) + " " + (pf5.isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
+        } catch (SQLException e) {
+            ProxyServer.getInstance().getLogger().severe("Couldn't fetch name for " + f5 + "!");
+            e.printStackTrace();
+        }
     }
 }
