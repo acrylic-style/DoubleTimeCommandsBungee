@@ -42,33 +42,33 @@ public final class SqlUtils {
     public static void sync(boolean force) throws SQLException {
         if (connection.get() == null) throw new IllegalStateException("Connection haven't made.");
         Statement statement = connection.get().createStatement();
-        if (force) statement.executeUpdate("drop table bans if exists;");
-        if (force) statement.executeUpdate("drop table players if exists;");
-        if (force) statement.executeUpdate("drop table friends if exists;");
-        if (force) statement.executeUpdate("drop table friend_requests if exists;");
-        statement.executeUpdate("CREATE TABLE bans (\n" +
+        if (force) statement.executeUpdate("drop table if exists bans;");
+        if (force) statement.executeUpdate("drop table if exists players;");
+        if (force) statement.executeUpdate("drop table if exists friends;");
+        if (force) statement.executeUpdate("drop table if exists friend_requests;");
+        statement.executeUpdate("CREATE TABLE if not exists bans (\n" +
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666),\n" +
                 "        expires INT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
-                "    ) if not exists ;");
-        statement.executeUpdate("CREATE TABLE players (\n" +
+                "    );");
+        statement.executeUpdate("CREATE TABLE if not exists players (\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        rank VARCHAR(100),\n" +
                 "        PRIMARY KEY (player)\n" +
-                "    ) if not exists ;");
-        statement.executeUpdate("CREATE TABLE friends (\n" +
+                "    );");
+        statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
-                "    ) if not exists ;");
-        statement.executeUpdate("CREATE TABLE friend_requests (\n" +
+                "    );");
+        statement.executeUpdate("CREATE TABLE if not exists friend_requests (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
-                "    ) if not exists ;");
+                "    );");
     }
 
     public static CollectionList<UUID> getFriends(UUID uuid) throws SQLException {
