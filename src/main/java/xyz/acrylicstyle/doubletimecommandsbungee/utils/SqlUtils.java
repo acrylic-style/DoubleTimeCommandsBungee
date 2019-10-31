@@ -145,7 +145,7 @@ public final class SqlUtils {
     private static CollectionList<UUID> getUUIDs(UUID uuid, String query, String s) throws SQLException {
         Statement statement = connection.get().createStatement();
         CollectionList<UUID> uuids = new CollectionList<>();
-        ResultSet result = statement.executeQuery(query + uuid.toString() + ";");
+        ResultSet result = statement.executeQuery(query + "'" + uuid.toString() + "';");
         while (result.next()) {
             String player = result.getString(s);
             uuids.put(UUID.fromString(player));
