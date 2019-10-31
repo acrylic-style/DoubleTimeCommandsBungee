@@ -19,6 +19,7 @@ public final class SqlUtils {
     public static Connection connect(String host, String database, String user, String password) throws SQLException {
         if (!init.get()) throw new IllegalStateException("Driver isn't loaded! (Did you call SqlUtils#loadDriver?)");
         String url =  "jdbc:mysql://" + host + "/" + database;
+        SqlUtils.database = database;
         connection.set(DriverManager.getConnection(url, user, password));
         sync();
         return connection.get();
@@ -50,6 +51,7 @@ public final class SqlUtils {
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666),\n" +
                 "        expires INT(255) NOT NULL,\n" +
+                "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    ) if not exists ;");
         statement.executeQuery("CREATE TABLE players (\n" +
@@ -77,12 +79,42 @@ public final class SqlUtils {
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
+    public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
+        Validate.notNull(player, expires);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friends values (default, ?, ?, ?, ?);");
+        preparedStatement.setString(1, player.toString());
+        preparedStatement.setString(2, reason);
+        preparedStatement.setInt(3, expires);
+        preparedStatement.setString(4, executor.toString());
+        preparedStatement.execute();
+    }
+
+    public static void addFriend(UUID player1, UUID player2) throws SQLException {
+        Validate.notNull(player1, player2);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friends values (?, ?);");
+        preparedStatement.setString(1, player1.toString());
+        preparedStatement.setString(2, player2.toString());
+        preparedStatement.execute();
+    }
+
+    public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
+        Validate.notNull(player1, player2);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friend_requests values (default, ?, ?);");
+        preparedStatement.setString(1, player1.toString());
+        preparedStatement.setString(2, player2.toString());
+        preparedStatement.execute();
+    }
+
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player=" + uuid.toString() + " limit 1;"); // it's completely safe... i wish.
         Ranks rank = Ranks.valueOf(result.getString("rank") == null ? "DEFAULT" : result.getString("rank"));
         result.close();
         return rank;
+    }
+
+    public static void setRank(UUID uuid, Ranks rank) throws SQLException {
+        connection.get().createStatement().executeQuery("update players set rank=" + rank.name() + " where player=" + uuid.toString() + ";").close();
     }
 
     public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
@@ -120,4 +152,5 @@ public final class SqlUtils {
     private SqlUtils() {}
     private static final AtomicReference<Connection> connection = new AtomicReference<>();
     private static final AtomicBoolean init = new AtomicBoolean(false);
+    private static String database = null;
 }

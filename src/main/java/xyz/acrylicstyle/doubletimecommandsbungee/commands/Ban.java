@@ -1,7 +1,5 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.io.IOException;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -11,6 +9,8 @@ import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+
+import java.sql.SQLException;
 
 public class Ban extends Command {
 	public Ban() {
@@ -25,7 +25,7 @@ public class Ban extends Command {
 		}
 		if (!Utils.must(Ranks.MODERATOR, sender)) return;
 		if (args.length < 2) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <player> <reason> [<expires> <d/h/m>]"));
+			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <player> <reason> [<expires> <m/h/d>]"));
 			return;
 		}
 		ProxiedPlayer ps = ProxyServer.getInstance().getPlayer(args[0]);
@@ -43,7 +43,7 @@ public class Ban extends Command {
 		}
 		try {
 			if (args.length <= 3) {
-				Utils.ban(ps.getUniqueId(), ((ProxiedPlayer)sender).getUniqueId(), args[1]);
+				Utils.ban(ps.getUniqueId(), args[1], ((ProxiedPlayer)sender).getUniqueId());
 				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
 				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " permanently."));
 				return;
@@ -60,13 +60,13 @@ public class Ban extends Command {
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
 					return;
 				}
-				Utils.ban(ps.getUniqueId(), ((ProxiedPlayer)sender).getUniqueId(), args[1], expires);
+				Utils.ban(ps.getUniqueId(), args[1], expires, ((ProxiedPlayer)sender).getUniqueId());
 				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
 				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
 			} catch (NumberFormatException e) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "Time must be number."));
 			}
-		} catch (IOException e) {
+		} catch (SQLException e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Unable to ban that player!"));
 			e.printStackTrace();
 		}

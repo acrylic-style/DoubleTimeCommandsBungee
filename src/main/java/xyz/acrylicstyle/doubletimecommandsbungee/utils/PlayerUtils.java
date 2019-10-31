@@ -1,11 +1,10 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
-import java.util.UUID;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
-import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+
+import java.util.UUID;
 
 public class PlayerUtils {
 	/**
@@ -26,8 +25,7 @@ public class PlayerUtils {
 
 	public static String getName(ProxiedPlayer player) {
 		try {
-			String rankString = ConfigProvider.getString("players." + player.getUniqueId() + ".rank", "DEFAULT", "DoubleTimeCommands");
-			Ranks rank = Ranks.valueOf(rankString);
+			Ranks rank = SqlUtils.getRank(player.getUniqueId());
 			return rank.getPrefix() + player.getName();
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -37,8 +35,7 @@ public class PlayerUtils {
 
 	public static String getName(ProxiedOfflinePlayer player) {
 		try {
-			String rankString = ConfigProvider.getString("players." + player.getUniqueId() + ".rank", "DEFAULT", "DoubleTimeCommands");
-			Ranks rank = Ranks.valueOf(rankString);
+			Ranks rank = SqlUtils.getRank(player.getUniqueId());
 			return rank.getPrefix() + player.getName();
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -48,7 +45,7 @@ public class PlayerUtils {
 
 	public static Ranks getRank(UUID uuid) {
 		try {
-			return Ranks.valueOf(ConfigProvider.getString("players." + uuid + ".rank", "DEFAULT", "DoubleTimeCommands"));
+			return SqlUtils.getRank(uuid);
 		} catch (Exception e) { return Ranks.DEFAULT; }
 	}
 }

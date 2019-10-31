@@ -1,17 +1,17 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.util.Locale;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+
+import java.util.Locale;
 
 public class Rank extends Command {
 	public Rank() {
@@ -48,7 +48,7 @@ public class Rank extends Command {
 			return;
 		}
 		try {
-			ConfigProvider.setThenSave("players." + ps.getUniqueId() + ".rank", ucRank, "DoubleTimeCommands");
+			SqlUtils.setRank(ps.getUniqueId(), Ranks.valueOf(ucRank));
 		} catch (Exception e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "There was an unknown error while modifying rank!"));
 			e.printStackTrace();

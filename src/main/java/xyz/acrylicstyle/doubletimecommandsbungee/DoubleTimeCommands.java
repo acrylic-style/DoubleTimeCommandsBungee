@@ -99,13 +99,10 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onLogin(LoginEvent event) {
         try {
-            ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
-            List<String> friends = config.configuration.getStringList("players." + event.getConnection().getUniqueId() + ".friend.friends");
+            CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
             friends.forEach(uuid -> {
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(UUID.fromString(uuid));
-                if (player != null) {
-                    player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
-                }
+                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+                if (player != null) player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
             });
         } catch (Exception e) {
             ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
@@ -122,13 +119,10 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             });
             Collections.shuffle(servers, new Random()); // shuffle all servers
             event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
-            ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
-            List<String> friends = config.configuration.getStringList("players." + event.getPlayer().getUniqueId() + ".friend.friends");
+            CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(UUID.fromString(uuid));
-                if (player != null) {
-                    player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
-                }
+                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+                if (player != null) player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
             });
         } catch (Exception e) {
             ProxyServer.getInstance().getLogger().warning("Couldn't send disconnect message!");
@@ -139,29 +133,26 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onPostLogin(PostLoginEvent event) {
         try {
-            ConfigProvider config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
             UUID uuid = event.getPlayer().getUniqueId();
-            String path = "players." + uuid + ".ban.";
-            boolean banned = config.configuration.getBoolean(path + "banned", false);
-            if (!banned) return; // allow login
-            String reason = config.configuration.getString(path + "reason", "None");
-            long expires = config.configuration.getLong(path + "expires", -1);
+            CollectionList<xyz.acrylicstyle.doubletimecommandsbungee.types.Ban> bans = SqlUtils.getBan(uuid);
+            if (bans.size() <= 0) return;
+            xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = bans.valuesArray()[bans.size()-1];
+            String reason = lastBan.getReason();
+            int expires = lastBan.getExpires();
             long currentTimestamp = System.currentTimeMillis();
             long days = Math.round(((float) (expires-currentTimestamp)/86400000F)*10L)/10;
-            if (expires > 0 && expires <= currentTimestamp) {
-                Utils.unban(uuid);
-                return;
-            }
+            if (expires > 0 && expires <= currentTimestamp) return;
             boolean perm = expires <= -1;
             Collection<TextComponent> stackedMessage = new ArrayList<>();
             if (perm) stackedMessage.add(new TextComponent(ChatColor.RED + "You are permanently banned from this server!\n\n"));
             if (!perm) stackedMessage.add(new TextComponent(ChatColor.RED + "You are temporarily banned for " + ChatColor.WHITE + days + " days " + ChatColor.RED + "from this server!\n\n"));
             stackedMessage.add(new TextComponent(ChatColor.GRAY + "Reason: " + ChatColor.WHITE + reason + "\n\n"));
             if (reason.equalsIgnoreCase("None")) stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Note: Reason was 'None', please report it to our staff!\n"));
-            stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + config.configuration.getString(path + "banId", "#????????")));
+            stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + lastBan.getBanId()));
             event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
         } catch (Exception e) {
-            event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please try again later."));
+            event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please report this to admins!"));
+            e.printStackTrace();
         }
     }
 }

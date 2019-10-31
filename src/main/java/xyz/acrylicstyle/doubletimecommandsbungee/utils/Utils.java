@@ -1,12 +1,5 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -16,7 +9,13 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import util.Collection;
 import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
-import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class Utils {
     public final static int DAY = 86400000;
@@ -95,35 +94,12 @@ public class Utils {
         return true;
     }
 
-    public static void ban(UUID uuid, UUID executor, String reason) throws IOException {
-        Utils.ban(uuid, executor, reason, -1); // -1 means never
+    public static void ban(UUID uuid, String reason, UUID executor) throws SQLException {
+        Utils.ban(uuid, reason, -1, executor); // -1 means never
     }
 
-    public static void ban(UUID uuid, UUID executor, String reason, long expires) throws IOException {
-        String id = Utils.generateBanID();
-        ConfigProvider.setThenSave("players." + uuid + ".ban.banned", true, "DoubleTimeCommands");
-        ConfigProvider.setThenSave("players." + uuid + ".ban.executor", executor.toString(), "DoubleTimeCommands");
-        ConfigProvider.setThenSave("players." + uuid + ".ban.reason", reason, "DoubleTimeCommands");
-        ConfigProvider.setThenSave("players." + uuid + ".ban.expires", expires, "DoubleTimeCommands");
-        ConfigProvider.setThenSave("players." + uuid + ".ban.banId", id, "DoubleTimeCommands");
-    }
-
-    public static void unban(UUID uuid) throws IOException {
-        ConfigProvider.setThenSave("players." + uuid + ".ban", null, "DoubleTimeCommands");
-    }
-
-    private static String generateAlphaNumericString() {
-        String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder(8);
-        for (int i = 0; i < 8; i++) {
-            int index = (int) (alphaNumericString.length() * Math.random());
-            sb.append(alphaNumericString.charAt(index));
-        }
-        return sb.toString();
-    }
-
-    private static String generateBanID() {
-        return "#" + Utils.generateAlphaNumericString();
+    public static void ban(UUID uuid, String reason, long expires, UUID executor) throws SQLException {
+        SqlUtils.addBan(uuid, reason, (int) expires, executor);
     }
 
     public static <T extends CommandSender> void sendError(T player, Errors error) {
