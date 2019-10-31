@@ -56,7 +56,7 @@ public final class SqlUtils {
         statement.executeUpdate("CREATE TABLE if not exists players (\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        rank VARCHAR(100) default 'DEFAULT',\n" +
-                "        name VARCHAR(100) NOT NULL,\n" +
+                "        id VARCHAR(100) NOT NULL,\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -73,7 +73,7 @@ public final class SqlUtils {
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
         Validate.notNull(uuid, rank);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, 'name')\n" +
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id)\n" +
                 "select * from (select ?, ?, ?) as tmp\n" +
                 "where not exists (\n" +
                 "    select player from players where player = ?\n" +
@@ -170,9 +170,9 @@ public final class SqlUtils {
             UUID player = UUID.fromString(result.getString("player"));
             String reason = result.getString("reason");
             int expires = result.getInt("expires");
-            result.close();
             bans.put(new Ban(id, player, reason, expires));
         }
+        result.close();
         return bans;
     }
 
