@@ -19,7 +19,6 @@ public final class SqlUtils {
     public static Connection connect(String host, String database, String user, String password) throws SQLException {
         if (!init.get()) throw new IllegalStateException("Driver isn't loaded! (Did you call SqlUtils#loadDriver?)");
         String url =  "jdbc:mysql://" + host + "/" + database;
-        SqlUtils.database = database;
         connection.set(DriverManager.getConnection(url, user, password));
         sync();
         return connection.get();
@@ -195,5 +194,4 @@ public final class SqlUtils {
     private SqlUtils() {}
     private static final AtomicReference<Connection> connection = new AtomicReference<>();
     private static final AtomicBoolean init = new AtomicBoolean(false);
-    private static String database = null;
 }
