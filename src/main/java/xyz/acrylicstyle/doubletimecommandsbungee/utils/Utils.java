@@ -12,8 +12,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ConnectedPlayer;
-import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import util.Collection;
@@ -63,7 +61,7 @@ public class Utils {
 	}
 
 	public static <T extends CommandSender> boolean run(ThrowableRunnable consumer, T player, Errors error) {
-		final boolean[] type = {true};
+		AtomicBoolean status = new AtomicBoolean(true);
 		try {
 			ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> {
 				try {
@@ -71,15 +69,15 @@ public class Utils {
 				} catch (Throwable e) {
 					e.printStackTrace();
 					Utils.sendError(player, error);
-					type[0] = false;
+					status.set(false);
 				}
 			}, 1, TimeUnit.NANOSECONDS);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			Utils.sendError(player, Errors.SCHEDULER_ERROR);
-			type[0] = false;
+			status.set(false);
 		}
-		return type[0];
+		return status.get();
 	}
 
 
@@ -88,11 +86,10 @@ public class Utils {
 	}
 
 	/**
+	 * Example: <pre>if (!Utils.must(Ranks.ADMIN, PlayerUtils.getRank(player.getUniqueId))) return; // it sends message automatically, so do only return</pre>
 	 * @param required Required rank for do something
 	 * @param sender anything extends CommandSender for check if they have Admin rank
 	 * @return True if the required rank equals actual rank but console always returns true
-	 * @example
-	 * if (!Utils.must(Ranks.ADMIN, PlayerUtils.getRank(player.getUniqueId))) return; // it sends message automatically, so do only return
 	 */
 	public static boolean must(Ranks required, CommandSender sender) {
 		if (!(sender instanceof ProxiedPlayer)) return true;
