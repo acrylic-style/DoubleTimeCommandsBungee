@@ -92,11 +92,11 @@ public final class SqlUtils {
 
     public static String getName(UUID uuid) throws SQLException {
         Validate.notNull(uuid);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("select name from players where player=? limit 1;");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select id from players where player=? limit 1;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
         result.next();
-        String name = result.getString("name");
+        String name = result.getString("id");
         result.close();
         return name;
     }
