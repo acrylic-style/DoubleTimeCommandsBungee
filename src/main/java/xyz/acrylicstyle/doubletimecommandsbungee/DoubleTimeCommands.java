@@ -80,6 +80,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @Override
     public void onDisable() {
         try {
+            SqlUtils.clearFriendRequests();
             SqlUtils.close();
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().severe("Couldn't disconnect from the database.");

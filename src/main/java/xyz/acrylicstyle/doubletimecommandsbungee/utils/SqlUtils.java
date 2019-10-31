@@ -134,6 +134,10 @@ public final class SqlUtils {
         preparedStatement.executeUpdate();
     }
 
+    public static void clearFriendRequests() throws SQLException {
+        connection.get().createStatement().executeUpdate("delete from friend_requests where true;");
+    }
+
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
