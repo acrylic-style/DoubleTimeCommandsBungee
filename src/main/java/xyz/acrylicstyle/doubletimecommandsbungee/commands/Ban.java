@@ -40,7 +40,7 @@ public class Ban extends Command {
                 sender.sendMessage(new TextComponent(ChatColor.AQUA + "Information for Ban ID " + ChatColor.RED + args[1] + ChatColor.YELLOW + ":"));
                 sender.sendMessage(new TextComponent(ChatColor.GREEN + "Player: " + ChatColor.RED + PlayerUtils.getName(ban.getPlayer())));
                 sender.sendMessage(new TextComponent(ChatColor.GREEN + "Reason: " + ChatColor.RED + ban.getReason()));
-                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Expires: " + ChatColor.RED + ban.getExpires()));
+                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Expires: " + ChatColor.RED + ban.getExpires() + (ban.getExpires() == -1 ? " (Forever)" : "")));
                 sender.sendMessage(new TextComponent(ChatColor.GREEN + "Executor: " + ChatColor.RED + PlayerUtils.getName(ban.getExecutor())));
 				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Current time: " + ChatColor.RED + System.currentTimeMillis()));
             } catch (SQLException e) {
