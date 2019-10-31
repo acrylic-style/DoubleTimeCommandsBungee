@@ -108,9 +108,17 @@ public final class SqlUtils {
     public static Ranks getRank(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;"); // it's completely safe... i wish.
-        Ranks rank = Ranks.valueOf(result.getString("rank") == null ? "DEFAULT" : result.getString("rank"));
-        result.close();
-        return rank;
+        String rank1;
+        try {
+            rank1 = result.getString("rank");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            setRank(uuid, Ranks.DEFAULT);
+            rank1 = "DEFAULT";
+        } finally {
+            result.close();
+        }
+        return Ranks.valueOf(rank1);
     }
 
     public static void setRank(UUID uuid, Ranks rank) throws SQLException {
