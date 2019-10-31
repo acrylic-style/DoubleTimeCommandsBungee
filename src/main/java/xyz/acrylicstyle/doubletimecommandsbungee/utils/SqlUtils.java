@@ -121,7 +121,7 @@ public final class SqlUtils {
 
     public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into \" + database + \".friend_requests values (?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friend_requests values (?, ?);");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
