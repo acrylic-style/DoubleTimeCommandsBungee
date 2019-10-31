@@ -126,13 +126,13 @@ public class Friend extends Command {
                 }
             } else if (args[0].equalsIgnoreCase("accept")) {
                 if (args.length == 1) {
-                    sender.sendMessage(new TextComponent("§cPlease specify a player!"));
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a player!"));
                     return;
                 }
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[1]);
                 try {
-                    CollectionList<UUID> requests = SqlUtils.getFriendRequests(player.getUniqueId());
-                    if (!requests.contains(playerSender.getUniqueId())) {
+                    CollectionList<UUID> requests = SqlUtils.getFriendRequests(playerSender.getUniqueId());
+                    if (!requests.contains(player.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         sender.sendMessage(new TextComponent(ChatColor.RED + "They didn't send you friend request!"));
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -145,7 +145,7 @@ public class Friend extends Command {
                     sender.sendMessage(new TextComponent(ChatColor.GREEN + "You are now friend with " + PlayerUtils.getName(player)));
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                    player.sendMessage(new TextComponent(ChatColor.GREEN + "You are now friend with " + PlayerUtils.getName((ProxiedPlayer) sender)));
+                    player.sendMessage(new TextComponent(ChatColor.GREEN + "You are now friend with " + PlayerUtils.getName(playerSender)));
                     player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -165,12 +165,12 @@ public class Friend extends Command {
                         return;
                     }
                     SqlUtils.removeFriendRequest(playerSender.getUniqueId(), player.getUniqueId());
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                    sender.sendMessage(new TextComponent(PlayerUtils.getName(player) + ChatColor.YELLOW + " has declined your friend request."));
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                    player.sendMessage(new TextComponent(ChatColor.YELLOW + "You've declined friend request for " + PlayerUtils.getName((ProxiedPlayer)sender) + ChatColor.YELLOW + "."));
+                    player.sendMessage(new TextComponent(PlayerUtils.getName(playerSender) + ChatColor.YELLOW + " has declined your friend request."));
                     player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You've declined friend request for " + PlayerUtils.getName(player) + ChatColor.YELLOW + "."));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
