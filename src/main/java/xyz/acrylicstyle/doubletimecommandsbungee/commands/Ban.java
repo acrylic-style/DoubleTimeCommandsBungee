@@ -8,6 +8,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.sql.SQLException;
@@ -25,8 +26,29 @@ public class Ban extends Command {
 		}
 		if (!Utils.must(Ranks.MODERATOR, sender)) return;
 		if (args.length < 2) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <player> <reason> [<expires> <m/h/d>]"));
+			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <<player> <reason> [<expires> <m/h/d>]> or <info <banID>>"));
 			return;
+		}
+		if (args[0].equalsIgnoreCase("info")) {
+		    xyz.acrylicstyle.doubletimecommandsbungee.types.Ban ban;
+            try {
+                ban = SqlUtils.getBan(Integer.parseInt(args[1]));
+                if (ban == null) {
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't find punishment with specified ID."));
+                    return;
+                }
+                sender.sendMessage(new TextComponent(ChatColor.AQUA + "Information for Ban ID " + ChatColor.RED + args[1] + ChatColor.YELLOW + ":"));
+                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Player: " + ChatColor.RED + PlayerUtils.getName(ban.getPlayer())));
+                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Reason: " + ChatColor.RED + ban.getReason()));
+                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Expires: " + ChatColor.RED + ban.getExpires()));
+                sender.sendMessage(new TextComponent(ChatColor.GREEN + "Executor: " + ChatColor.RED + PlayerUtils.getName(ban.getExecutor())));
+				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Current time: " + ChatColor.RED + System.currentTimeMillis()));
+            } catch (SQLException e) {
+                sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't fetch punishments!"));
+                e.printStackTrace();
+                return;
+            }
+            return;
 		}
 		ProxiedPlayer ps = ProxyServer.getInstance().getPlayer(args[0]);
 		if (ps == null) {

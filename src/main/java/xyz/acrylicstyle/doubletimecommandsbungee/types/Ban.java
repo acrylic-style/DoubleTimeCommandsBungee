@@ -7,16 +7,19 @@ public class Ban {
     private final UUID player;
     private final String reason;
     private final int expires;
+    private final UUID executor;
 
-    public Ban(int id, UUID player, String reason, int expires) {
+    public Ban(int id, UUID player, String reason, int expires, UUID executor) {
         this.id = id;
         this.player = player;
         this.reason = reason;
         this.expires = expires;
+        this.executor = executor;
     }
 
     public final int getBanId() { return this.id; }
     public final UUID getPlayer() { return this.player; }
     public final String getReason() { return this.reason == null ? "None" : this.reason; }
     public final int getExpires() { return this.expires; }
+    public final UUID getExecutor() { return this.executor; }
 }

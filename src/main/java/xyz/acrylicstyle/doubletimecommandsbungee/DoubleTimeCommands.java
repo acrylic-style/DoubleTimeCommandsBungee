@@ -23,6 +23,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
     public static ConfigProvider config;
@@ -141,9 +142,13 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onPostLogin(PostLoginEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
+            AtomicInteger banIndex = new AtomicInteger(-1);
             CollectionList<xyz.acrylicstyle.doubletimecommandsbungee.types.Ban> bans = SqlUtils.getBan(uuid);
+            bans.foreach((ban, index) -> {
+                if (ban.getExpires() < 0) banIndex.set(index);
+            });
             if (bans.size() <= 0) return;
-            xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = bans.first();
+            xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = banIndex.get() > -1 ? bans.get(banIndex.get()) : bans.first();
             String reason = lastBan.getReason();
             int expires = lastBan.getExpires();
             long currentTimestamp = System.currentTimeMillis();

@@ -187,10 +187,18 @@ public final class SqlUtils {
             UUID player = UUID.fromString(result.getString("player"));
             String reason = result.getString("reason");
             int expires = result.getInt("expires");
-            bans.put(new Ban(id, player, reason, expires));
+            UUID executor = UUID.fromString(result.getString("executor"));
+            bans.put(new Ban(id, player, reason, expires, executor));
         }
         result.close();
         return bans;
+    }
+
+    public static Ban getBan(int id) throws SQLException {
+        Statement statement = connection.get().createStatement();
+        ResultSet result = statement.executeQuery("select * from bans where id=" + id + " limit 1;");
+        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getInt("expires"), UUID.fromString(result.getString("executor")));
+        return null;
     }
 
     public static boolean isBanned(UUID uuid) throws SQLException {

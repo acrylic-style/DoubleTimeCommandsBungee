@@ -33,6 +33,16 @@ public class PlayerUtils {
 		}
 	}
 
+	public static String getName(UUID player) {
+		try {
+			Ranks rank = SqlUtils.getRank(player);
+			return rank.getPrefix() + SqlUtils.getName(player);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return ChatColor.GRAY + "UUID=" + player;
+		}
+	}
+
 	public static String getName(ProxiedOfflinePlayer player) {
 		try {
 			Ranks rank = SqlUtils.getRank(player.getUniqueId());
