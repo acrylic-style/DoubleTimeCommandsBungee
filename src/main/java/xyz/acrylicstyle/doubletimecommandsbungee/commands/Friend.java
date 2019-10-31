@@ -138,7 +138,7 @@ public class Friend extends Command {
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         return;
                     }
-                    SqlUtils.removeFriendRequest(player.getUniqueId(), playerSender.getUniqueId());
+                    SqlUtils.removeFriendRequest(playerSender.getUniqueId(), player.getUniqueId());
                     SqlUtils.addFriend(player.getUniqueId(), playerSender.getUniqueId());
                     SqlUtils.addFriend(playerSender.getUniqueId(), player.getUniqueId());
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -157,14 +157,14 @@ public class Friend extends Command {
                 }
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[1]);
                 try {
-                    CollectionList<UUID> requests = SqlUtils.getFriendRequests(player.getUniqueId());
-                    if (!requests.contains(playerSender.getUniqueId())) {
+                    CollectionList<UUID> requests = SqlUtils.getFriendRequests(playerSender.getUniqueId());
+                    if (!requests.contains(player.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         sender.sendMessage(new TextComponent(ChatColor.RED + "They didn't send you friend request!"));
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         return;
                     }
-                    SqlUtils.removeFriendRequest(player.getUniqueId(), playerSender.getUniqueId());
+                    SqlUtils.removeFriendRequest(playerSender.getUniqueId(), player.getUniqueId());
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     sender.sendMessage(new TextComponent(PlayerUtils.getName(player) + ChatColor.YELLOW + " has declined your friend request."));
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
