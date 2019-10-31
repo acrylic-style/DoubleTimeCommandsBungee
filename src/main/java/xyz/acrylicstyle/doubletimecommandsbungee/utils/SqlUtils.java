@@ -49,14 +49,14 @@ public final class SqlUtils {
         statement.executeUpdate("CREATE TABLE if not exists bans (\n" +
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
-                "        reason VARCHAR(666),\n" +
+                "        reason VARCHAR(666) default 'None',\n" +
                 "        expires INT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists players (\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
-                "        rank VARCHAR(100),\n" +
+                "        rank VARCHAR(100) default 'DEFAULT',\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
