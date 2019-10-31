@@ -100,7 +100,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onLogin(LoginEvent event) {
         try {
-            SqlUtils.createPlayer(event.getConnection().getUniqueId(), Ranks.DEFAULT);
+            SqlUtils.createPlayer(event.getConnection().getUniqueId(), Ranks.DEFAULT, event.getConnection().getName());
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().warning("Couldn't create player!");
             e.printStackTrace();

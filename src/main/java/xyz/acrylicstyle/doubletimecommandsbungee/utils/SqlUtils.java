@@ -56,6 +56,7 @@ public final class SqlUtils {
         statement.executeUpdate("CREATE TABLE if not exists players (\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        rank VARCHAR(100) default 'DEFAULT',\n" +
+                "        name VARCHAR(100) NOT NULL,\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -70,16 +71,17 @@ public final class SqlUtils {
                 "    );");
     }
 
-    public static Player createPlayer(UUID uuid, Ranks rank) throws SQLException {
+    public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
         Validate.notNull(uuid, rank);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank)\n" +
-                "select * from (select ?, ?) as tmp\n" +
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, 'name')\n" +
+                "select * from (select ?, ?, ?) as tmp\n" +
                 "where not exists (\n" +
                 "    select player from players where player = ?\n" +
                 ") limit 1;");
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setString(2, rank.name());
-        preparedStatement.setString(3, uuid.toString());
+        preparedStatement.setString(3, name);
+        preparedStatement.setString(4, uuid.toString());
         preparedStatement.executeUpdate();
         return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
     }
@@ -94,7 +96,7 @@ public final class SqlUtils {
 
     public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friends values (default, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
         preparedStatement.setInt(3, expires);
