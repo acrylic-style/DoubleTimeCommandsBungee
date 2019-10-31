@@ -136,7 +136,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             CollectionList<xyz.acrylicstyle.doubletimecommandsbungee.types.Ban> bans = SqlUtils.getBan(uuid);
             if (bans.size() <= 0) return;
-            xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = bans.valuesArray()[bans.size()-1];
+            xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = bans.first();
             String reason = lastBan.getReason();
             int expires = lastBan.getExpires();
             long currentTimestamp = System.currentTimeMillis();

@@ -1,18 +1,14 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.UUID;
-
-import org.json.simple.parser.ParseException;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.*;
+
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Unban extends Command {
 	public Unban() {
@@ -26,20 +22,17 @@ public class Unban extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 1 more argument! <player>"));
 			return;
 		}
-		final UUID[] uuid = new UUID[1];
+		final AtomicReference<UUID> uuid = new AtomicReference<>();
 		if (!Utils.run(() -> {
-			uuid[0] = PlayerUtils.getByName(args[0]).toUUID();
-			if (!ConfigProvider.getBoolean("players." + uuid[0] + ".ban.banned", false, "DoubleTimeCommands")) {
+			uuid.set(PlayerUtils.getByName(args[0]).toUUID());
+			if (!SqlUtils.isBanned(uuid.get())) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "They're not banned in the past!"));
 			}
 		}, sender, Errors.UNABLE_TO_FETCH_UUID)) return;
-		if (uuid[0] == ((ProxiedPlayer)sender).getUniqueId()) {
+		if (uuid.get() == ((ProxiedPlayer)sender).getUniqueId()) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't do that. Illegal."));
 			return;
 		}
-		if (!Utils.run(() -> {
-			Utils.unban(uuid[0]);
-		}, sender, Errors.IO_ERROR)) return;
-		sender.sendMessage(new TextComponent(ChatColor.GREEN + "You've unbanned " + args[0] + "!"));
+		sender.sendMessage(new TextComponent("ew you can't unban "));
 	}
 }

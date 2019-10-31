@@ -119,7 +119,7 @@ public final class SqlUtils {
 
     public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select * from bans where player=" + uuid.toString() + ";");
+        ResultSet result = statement.executeQuery("select * from bans where player=" + uuid.toString() + " order by expires DESC;");
         CollectionList<Ban> bans = new CollectionList<>();
         while (result.next()) {
             int id = result.getInt("id");
@@ -130,6 +130,10 @@ public final class SqlUtils {
             bans.put(new Ban(id, player, reason, expires));
         }
         return bans;
+    }
+
+    public static boolean isBanned(UUID uuid) throws SQLException {
+        return getBan(uuid).first().getExpires() > System.currentTimeMillis();
     }
 
     public static Player getPlayer(UUID uuid) throws SQLException {
