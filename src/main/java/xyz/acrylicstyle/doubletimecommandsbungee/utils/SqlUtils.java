@@ -73,9 +73,11 @@ public final class SqlUtils {
 
     public static Player createPlayer(UUID uuid, Ranks rank) throws SQLException {
         Validate.notNull(uuid, rank);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".players values (?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".players values (?, ?) on duplicate key update player=?, rank=?;");
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setString(2, rank.name());
+        preparedStatement.setString(3, uuid.toString());
+        preparedStatement.setString(4, rank.name());
         preparedStatement.executeUpdate();
         return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
     }
