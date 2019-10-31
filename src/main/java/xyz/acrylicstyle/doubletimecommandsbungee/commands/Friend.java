@@ -132,7 +132,7 @@ public class Friend extends Command {
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[1]);
                 try {
                     CollectionList<UUID> requests = SqlUtils.getFriendRequests(player.getUniqueId());
-                    if (!requests.contains(player.getUniqueId())) {
+                    if (!requests.contains(playerSender.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         sender.sendMessage(new TextComponent(ChatColor.RED + "They didn't send you friend request!"));
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -152,13 +152,13 @@ public class Friend extends Command {
                 }
             } else if (args[0].equalsIgnoreCase("deny")) {
                 if (args.length == 1) {
-                    sender.sendMessage(new TextComponent("§cPlease specify a player!"));
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a player!"));
                     return;
                 }
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[1]);
                 try {
                     CollectionList<UUID> requests = SqlUtils.getFriendRequests(player.getUniqueId());
-                    if (!requests.contains(player.getUniqueId())) {
+                    if (!requests.contains(playerSender.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         sender.sendMessage(new TextComponent(ChatColor.RED + "They didn't send you friend request!"));
                         sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
