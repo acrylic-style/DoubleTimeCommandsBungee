@@ -95,7 +95,7 @@ public final class SqlUtils {
 
     public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friends values (default, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friends values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
         preparedStatement.setInt(3, expires);
@@ -105,7 +105,7 @@ public final class SqlUtils {
 
     public static void addFriend(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friends values (?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friends values (?, ?);");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
@@ -121,7 +121,7 @@ public final class SqlUtils {
 
     public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
         Validate.notNull(player1, player2);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into " + database + ".friend_requests values (?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friend_requests values (?, ?);");
         preparedStatement.setString(1, player1.toString());
         preparedStatement.setString(2, player2.toString());
         preparedStatement.executeUpdate();
