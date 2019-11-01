@@ -94,6 +94,11 @@ public class Utils {
         return true;
     }
 
+    public static boolean must(Ranks required, UUID player) {
+        Ranks actual = PlayerUtils.getRank(player);
+        return required.ordinal() >= actual.ordinal();
+    }
+
     public static void ban(UUID uuid, String reason, UUID executor) throws SQLException {
         Utils.ban(uuid, reason, -1, executor); // -1 means never
     }

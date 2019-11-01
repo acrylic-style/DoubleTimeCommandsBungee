@@ -12,6 +12,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class Ban extends Command {
 	public Ban() {
@@ -50,24 +51,27 @@ public class Ban extends Command {
             }
             return;
 		}
-		ProxiedPlayer ps = ProxyServer.getInstance().getPlayer(args[0]);
-		if (ps == null) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "That player is currently offline."));
+		UUID player;
+		try {
+			player = SqlUtils.getUniqueId(args[0]);
+		} catch (SQLException e) {
+			sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't find player!"));
+			e.printStackTrace();
 			return;
 		}
-		if (ps.getUniqueId() == ((ProxiedPlayer)sender).getUniqueId()) {
+		if (player == ((ProxiedPlayer)sender).getUniqueId()) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Why would you do that? :("));
 			return;
 		}
-		if (Utils.must(PlayerUtils.getRank(((ProxiedPlayer)sender).getUniqueId()), ps)) {
+		if (Utils.must(PlayerUtils.getRank(((ProxiedPlayer)sender).getUniqueId()), player)) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't ban that player!"));
 			return;
 		}
 		try {
 			if (args.length <= 3) {
-				Utils.ban(ps.getUniqueId(), args[1], ((ProxiedPlayer)sender).getUniqueId());
-				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
-				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " permanently."));
+				Utils.ban(player, args[1], ((ProxiedPlayer)sender).getUniqueId());
+				if (ProxyServer.getInstance().getPlayer(args[0]) != null) ProxyServer.getInstance().getPlayer(args[0]).disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
+				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + PlayerUtils.getName(player) + ChatColor.GREEN + " permanently."));
 				return;
 			}
 			try {
@@ -82,9 +86,9 @@ public class Ban extends Command {
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
 					return;
 				}
-				Utils.ban(ps.getUniqueId(), args[1], expires, ((ProxiedPlayer)sender).getUniqueId());
-				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
-				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
+				Utils.ban(player, args[1], expires, ((ProxiedPlayer)sender).getUniqueId());
+				if (ProxyServer.getInstance().getPlayer(args[0]) != null) ProxyServer.getInstance().getPlayer(args[0]).disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
+				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + PlayerUtils.getName(player) + ChatColor.GREEN + " temporarily for " + args[2] + args[3] + "."));
 			} catch (NumberFormatException e) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "Time must be number."));
 			}
