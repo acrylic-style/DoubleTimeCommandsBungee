@@ -369,7 +369,7 @@ public class Party extends Command {
                                 try {
                                     final Player player2 = SqlUtils.getPlayer(uuid);
                                     Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                                    Utils.sendMessage(sender, new TextComponent(ChatColor.YELLOW + "Party invite to " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
+                                    Utils.sendMessage(player2, new TextComponent(ChatColor.YELLOW + "Party invite to " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
                                     Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                                     Utils.connect(player2, sender.getServer().getInfo().getName());
                                 } catch (Exception e) {
