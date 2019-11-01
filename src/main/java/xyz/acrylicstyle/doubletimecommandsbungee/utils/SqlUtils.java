@@ -422,6 +422,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set connected=? where player=?;");
         if (server != null) preparedStatement.setString(1, server); else preparedStatement.setNull(1, Types.VARCHAR);
         preparedStatement.setString(2, player.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static String getName(UUID uuid) throws SQLException {
