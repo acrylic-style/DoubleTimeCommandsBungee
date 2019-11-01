@@ -187,8 +187,12 @@ public class Utils {
             int party_id = SqlUtils.getPartyId(player.getUniqueId());
             final String[] message = {""};
             new CollectionList<>(Arrays.asList(args)).foreach((arg, index) -> {
-                if (index >= i) message[0] += arg;
+                if (index >= i) message[0] += arg + " ";
             });
+            if (message[0].length() <= 0) {
+                Utils.sendMessage(player, new TextComponent(ChatColor.RED + "Please specify message!"));
+                return;
+            }
             final String name = PlayerUtils.getName(player.getUniqueId());
             SqlUtils.getPartyMembersAsUniqueId(party_id).forEach(uuid -> {
                 try {
