@@ -39,10 +39,10 @@
     </plugins>
   </build>
   <repositories>
-    <repository>
+    <!--repository>
       <id>exceptionflug</id>
       <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
-    </repository>
+    </repository-->
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
