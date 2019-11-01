@@ -7,14 +7,6 @@ import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer
 import java.util.UUID;
 
 public class PlayerUtils {
-	/**
-	 * @param something UUID or username.
-	 * @param uuid Is "something" uuid or not
-	 */
-	public static Player getBySomething(String something, boolean uuid) {
-		return new Player(something, uuid);
-	}
-
 	public static Player getByName(String username) {
 		return new Player(username);
 	}
@@ -24,13 +16,7 @@ public class PlayerUtils {
 	}
 
 	public static String getName(ProxiedPlayer player) {
-		try {
-			Ranks rank = SqlUtils.getRank(player.getUniqueId());
-			return rank.getPrefix() + player.getName();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return ChatColor.GRAY + player.getName();
-		}
+		return getName(player.getUniqueId());
 	}
 
 	public static String getName(UUID player) {
@@ -44,13 +30,7 @@ public class PlayerUtils {
 	}
 
 	public static String getName(ProxiedOfflinePlayer player) {
-		try {
-			Ranks rank = SqlUtils.getRank(player.getUniqueId());
-			return rank.getPrefix() + player.getName();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return ChatColor.GRAY + player.getName();
-		}
+		return getName(player.getUniqueId());
 	}
 
 	public static Ranks getRank(UUID uuid) {

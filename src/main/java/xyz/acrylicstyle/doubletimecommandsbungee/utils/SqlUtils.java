@@ -38,11 +38,11 @@ public final class SqlUtils {
         connection.set(null);
     }
 
-    public static void sync() throws SQLException {
+    private static void sync() throws SQLException {
         sync(false);
     }
 
-    public static void sync(boolean force) throws SQLException {
+    private static void sync(boolean force) throws SQLException {
         if (connection.get() == null) throw new IllegalStateException("Connection haven't made.");
         Statement statement = connection.get().createStatement();
         if (force) statement.executeUpdate("drop table if exists bans;");
@@ -186,7 +186,7 @@ public final class SqlUtils {
     }
 
     @NonNull
-    public static Ranks getRank(@NonNull UUID uuid) throws SQLException {
+    static Ranks getRank(@NonNull UUID uuid) throws SQLException {
         Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
