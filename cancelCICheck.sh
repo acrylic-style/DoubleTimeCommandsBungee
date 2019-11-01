@@ -1,6 +1,6 @@
 TITLE="$(git show --pretty=format:%s -s HEAD)"
 if [[ "$TITLE" == "//"* ]]; then
-  false
+  exit 1
 else
-  true
+  exit 0
 fi

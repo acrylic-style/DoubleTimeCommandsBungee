@@ -163,7 +163,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into parties values (default, ?);");
         preparedStatement.setString(1, leader.toString());
         preparedStatement.executeUpdate();
-        Party party = getParty(leader);
+        Party party = getPartyFromLeader(leader);
         addPartyMember(party.getPartyId(), leader);
         return getParty(party.getPartyId());
     }
@@ -230,10 +230,31 @@ public final class SqlUtils {
         return new Party(partyId, leader, partyMembers);
     }
 
+    public static Party getPartyFromLeader(UUID leader) throws SQLException {
+        Validate.notNull(leader);
+        int partyId = getPartyIdFromParties(leader);
+        UUID leader2 = getPartyLeader(partyId).getUniqueId(); // just in case
+        CollectionList<Player> partyMembers = getPartyMembers(partyId);
+        return new Party(partyId, leader2, partyMembers);
+    }
+
     public static Integer getPartyId(UUID member) throws SQLException {
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_members where member=?;");
         preparedStatement.setString(1, member.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        int partyId;
+        if (result.next()) {
+            partyId = result.getInt("party_id");
+        } else return null;
+        result.close();
+        return partyId;
+    }
+
+    public static Integer getPartyIdFromParties(UUID leader) throws SQLException {
+        Validate.notNull(leader);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from parties where member=?;");
+        preparedStatement.setString(1, leader.toString());
         ResultSet result = preparedStatement.executeQuery();
         int partyId;
         if (result.next()) {
