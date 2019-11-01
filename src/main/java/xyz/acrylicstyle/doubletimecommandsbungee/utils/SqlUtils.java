@@ -96,7 +96,9 @@ public final class SqlUtils {
 
     public static boolean isPartyLeader(UUID player) throws SQLException {
         Validate.notNull(player);
-        return getPartyLeader(getPartyId(player)).getUniqueId().equals(player);
+        Integer party_id = getPartyId(player);
+        if (party_id == null) return false;
+        return getPartyLeader(party_id).getUniqueId().equals(player);
     }
 
     public static boolean isPartyLeader(int party_id, UUID player) throws SQLException {
@@ -160,6 +162,7 @@ public final class SqlUtils {
         preparedStatement.setString(1, leader.toString());
         preparedStatement.executeUpdate();
         Party party = getPartyFromLeader(leader);
+        assert party != null;
         addPartyMember(party.getPartyId(), leader);
         return getParty(party.getPartyId());
     }
@@ -176,6 +179,18 @@ public final class SqlUtils {
         return players;
     }
 
+    public static CollectionList<Integer> getPartyInvites(UUID player) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_invites where member=?;");
+        preparedStatement.setString(1, player.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        CollectionList<Integer> invites = new CollectionList<>();
+        while (result.next()) {
+            invites.add(result.getInt("party_id"));
+        }
+        return invites;
+    }
+
     public static CollectionList<UUID> getPartyInvitesAsUniqueId(int party_id) throws SQLException {
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_invites where party_id=?;");
@@ -188,10 +203,11 @@ public final class SqlUtils {
         return players;
     }
 
-    public static void removePartyInvite(UUID member) throws SQLException {
+    public static void removePartyInvite(int party_id, UUID member) throws SQLException {
         Validate.notNull(member);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_invites where member=?;");
-        preparedStatement.setString(1, member.toString());
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_invites where party_id=? and member=?;");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.setString(2, member.toString());
         preparedStatement.executeUpdate();
     }
 
@@ -231,7 +247,8 @@ public final class SqlUtils {
 
     public static Party getParty(UUID member) throws SQLException {
         Validate.notNull(member);
-        int partyId = getPartyId(member);
+        Integer partyId = getPartyId(member);
+        if (partyId == null) return null;
         UUID leader = getPartyLeader(partyId).getUniqueId();
         CollectionList<Player> partyMembers = getPartyMembers(partyId);
         return new Party(partyId, leader, partyMembers);
@@ -239,7 +256,8 @@ public final class SqlUtils {
 
     public static Party getPartyFromLeader(UUID leader) throws SQLException {
         Validate.notNull(leader);
-        int partyId = getPartyIdFromParties(leader);
+        Integer partyId = getPartyIdFromParties(leader);
+        if (partyId == null) return null;
         UUID leader2 = getPartyLeader(partyId).getUniqueId(); // just in case
         CollectionList<Player> partyMembers = getPartyMembers(partyId);
         return new Party(partyId, leader2, partyMembers);

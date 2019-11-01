@@ -70,6 +70,7 @@ public class Party extends Command {
                 }
                 try {
                     SqlUtils.addPartyMember(party_id, ps.getUniqueId());
+                    SqlUtils.removePartyInvite(party_id, player);
                 } catch (SQLException e) {
                     sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while joining party!"));
                     e.printStackTrace();
@@ -118,9 +119,9 @@ public class Party extends Command {
                     return;
                 }
                 try {
-                    SqlUtils.addPartyMember(party_id, ps.getUniqueId());
+                    SqlUtils.removePartyInvite(party_id, player);
                 } catch (SQLException e) {
-                    sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while joining party!"));
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while declining party!"));
                     e.printStackTrace();
                     return;
                 }
@@ -351,7 +352,7 @@ public class Party extends Command {
                     public void run() {
                         try {
                             if (!SqlUtils.inPartyInvite(finalParty_id, player.getUniqueId())) return;
-                            SqlUtils.removePartyInvite(player.getUniqueId());
+                            SqlUtils.removePartyInvite(finalParty_id, player.getUniqueId());
                             sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party invite to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
                             sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -370,6 +371,22 @@ public class Party extends Command {
             }
         } else {
             sender.sendMessage(new TextComponent(help));
+        }
+    }
+
+    public void emptyPartyCheck(ProxiedPlayer sender) {
+        try {
+            Integer party_id = SqlUtils.getPartyId(sender.getUniqueId());
+            if (party_id == null) return;
+            if (SqlUtils.getPartyMembers(party_id).size() <= 1) {
+                SqlUtils.disbandParty(party_id);
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party has 1 player (only you) and party has been disbanded."));
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+            }
+        } catch (SQLException e) {
+            ProxyServer.getInstance().getLogger().warning("An error occurred while checking for empty party!");
+            e.printStackTrace();
         }
     }
 }
