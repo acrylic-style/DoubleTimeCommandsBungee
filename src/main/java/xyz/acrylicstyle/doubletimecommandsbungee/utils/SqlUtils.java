@@ -115,11 +115,11 @@ public final class SqlUtils {
 
     static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
-        ProxyServer.getInstance().getLogger().info("debug: expires: " + (System.currentTimeMillis() +expires));
+        ProxyServer.getInstance().getLogger().info("debug: expires: " + (expires != -1 ? System.currentTimeMillis() +expires : -1));
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
-        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(System.currentTimeMillis() + expires));
+        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires != -1 ? System.currentTimeMillis() + expires : -1));
         preparedStatement.setString(4, executor.toString());
         preparedStatement.executeUpdate();
     }
