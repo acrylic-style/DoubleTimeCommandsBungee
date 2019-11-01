@@ -77,7 +77,7 @@ public final class SqlUtils {
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friend_requests (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
-                "       player2 VARCHAR(36) NOT NULL,\n" +
+                "       player2 VARCHAR(36) NOT NULL\n" +
                 "    );");
         statement.executeUpdate("create table if not exists party_invites (\n" +
                 "       party_id int not null,\n" +
