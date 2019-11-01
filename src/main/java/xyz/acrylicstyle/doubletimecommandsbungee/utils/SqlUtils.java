@@ -267,16 +267,16 @@ public final class SqlUtils {
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
         Validate.notNull(uuid, rank);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id, experience, points)\n" +
-                "select * from (select ?, ?, ?, ?, ?) as tmp\n" +
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id)\n" +
+                "select * from (select ?, ?, ?) as tmp\n" +
                 "where not exists (\n" +
                 "    select player from players where player = ?\n" +
                 ") limit 1;");
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setString(2, rank.name());
         preparedStatement.setString(3, name);
-        preparedStatement.setBigDecimal(4, BigDecimal.ZERO);
-        preparedStatement.setBigDecimal(5, BigDecimal.ZERO);
+        preparedStatement.setInt(4, 0);
+        preparedStatement.setInt(5, 0);
         preparedStatement.setString(6, uuid.toString());
         preparedStatement.executeUpdate();
         preparedStatement = connection.get().prepareStatement("update players set id=? where player=?;");
