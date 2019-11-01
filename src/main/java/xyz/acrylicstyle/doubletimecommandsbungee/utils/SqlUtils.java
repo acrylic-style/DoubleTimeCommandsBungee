@@ -253,7 +253,7 @@ public final class SqlUtils {
 
     public static Integer getPartyIdFromParties(UUID leader) throws SQLException {
         Validate.notNull(leader);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from parties where member=?;");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from parties where leader=?;");
         preparedStatement.setString(1, leader.toString());
         ResultSet result = preparedStatement.executeQuery();
         int partyId;
