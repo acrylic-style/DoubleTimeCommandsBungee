@@ -175,7 +175,7 @@ public class Utils {
     }
 
     public static void playSound(Player player, String sound) {
-        ChannelListener.sendToBukkit("helper:connect", player.getUniqueId().toString(), sound, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        ChannelListener.sendToBukkit("helper:sound", player.getUniqueId().toString(), sound, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
     public static void partyChat(ProxiedPlayer player, String[] args, int i) {
