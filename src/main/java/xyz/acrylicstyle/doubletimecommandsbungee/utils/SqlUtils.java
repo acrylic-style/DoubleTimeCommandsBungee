@@ -5,6 +5,7 @@ import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.annotations.NonNull;
 import xyz.acrylicstyle.doubletimecommandsbungee.annotations.Nullable;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Ban;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Party;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 
 import java.math.BigDecimal;
@@ -49,6 +50,9 @@ public final class SqlUtils {
         if (force) statement.executeUpdate("drop table if exists players;");
         if (force) statement.executeUpdate("drop table if exists friends;");
         if (force) statement.executeUpdate("drop table if exists friend_requests;");
+        if (force) statement.executeUpdate("drop table if exists party_invites;");
+        if (force) statement.executeUpdate("drop table if exists parties;");
+        if (force) statement.executeUpdate("drop table if exists party_members;");
         statement.executeUpdate("CREATE TABLE if not exists bans (\n" +
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
@@ -77,9 +81,188 @@ public final class SqlUtils {
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
                 "    );");
-        statement.executeUpdate("create table if not exists parties (\n" +
-                "       leader VARCHAR(36) NOT NULL,\n" +
+        statement.executeUpdate("create table if not exists party_invites (\n" +
+                "       party_id int not null,\n" +
+                "       member varchar(36) not null,\n" + // uuid
+                "       primary key (party_id)" +
                 ");");
+        statement.executeUpdate("create table if not exists parties (\n" +
+                "       party_id int not null auto_increment,\n" +
+                "       leader varchar(36) not null,\n" + // uuid
+                "       primary key (id)\n" +
+                ");");
+        statement.executeUpdate("create table if not exists party_members (\n" +
+                "       party_id int not null,\n" +
+                "       member varchar(36) not null,\n" + // uuid
+                "       primary key(party_key)\n" +
+                ");");
+    }
+
+    public static boolean isPartyLeader(UUID player) throws SQLException {
+        Validate.notNull(player);
+        return getPartyLeader(getPartyId(player)).getUniqueId().equals(player);
+    }
+
+    public static boolean isPartyLeader(int party_id, UUID player) throws SQLException {
+        Validate.notNull(party_id, player);
+        return getPartyLeader(party_id).getUniqueId().equals(player);
+    }
+
+    public static boolean inParty(UUID player) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_members where member=?;");
+        preparedStatement.setString(1, player.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        boolean isInParty = result.next();
+        result.close();
+        return isInParty;
+    }
+
+    public static Player getPartyLeader(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select leader from parties where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        UUID player = UUID.fromString(result.getString("leader"));
+        result.close();
+        return getPlayer(player);
+    }
+
+    public static void disbandParty(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from parties where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.executeUpdate();
+        preparedStatement = connection.get().prepareStatement("delete from party_invites where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.executeUpdate();
+        preparedStatement = connection.get().prepareStatement("delete from party_members where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.executeUpdate();
+    }
+
+    public static void resetParty() throws SQLException {
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from parties where true;");
+        preparedStatement.executeUpdate();
+        preparedStatement = connection.get().prepareStatement("delete from party_invites where true;");
+        preparedStatement.executeUpdate();
+        preparedStatement = connection.get().prepareStatement("delete from party_members where true;");
+        preparedStatement.executeUpdate();
+    }
+
+    public static void leaveParty(UUID member) throws SQLException {
+        Validate.notNull(member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_members where member=?;");
+        preparedStatement.setString(1, member.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static Party createParty(UUID leader) throws SQLException {
+        Validate.notNull(leader);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into parties values (default, ?);");
+        preparedStatement.setString(1, leader.toString());
+        preparedStatement.executeUpdate();
+        Party party = getParty(leader);
+        addPartyMember(party.getPartyId(), leader);
+        return getParty(party.getPartyId());
+    }
+
+    public static CollectionList<Player> getPartyInvites(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_invites where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        CollectionList<Player> players = new CollectionList<>();
+        while (result.next()) {
+            players.add(getPlayer(UUID.fromString(result.getString("member"))));
+        }
+        return players;
+    }
+
+    public static CollectionList<UUID> getPartyInvitesAsUniqueId(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_invites where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        CollectionList<UUID> players = new CollectionList<>();
+        while (result.next()) {
+            players.add(UUID.fromString(result.getString("member")));
+        }
+        return players;
+    }
+
+    public static void removePartyInvite(UUID member) throws SQLException {
+        Validate.notNull(member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_invites where member=?;");
+        preparedStatement.setString(1, member.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static void addPartyInvite(int party_id, UUID member) throws SQLException {
+        Validate.notNull(party_id, member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into party_invites values (?, ?);");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.setString(2, member.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static void addPartyMember(int party_id, UUID member) throws SQLException {
+        Validate.notNull(member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into party_members values (?, ?);");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.setString(2, member.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static Party getParty(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        UUID leader = getPartyLeader(party_id).getUniqueId();
+        CollectionList<Player> partyMembers = getPartyMembers(party_id);
+        return new Party(party_id, leader, partyMembers);
+    }
+
+    public static Party getParty(UUID member) throws SQLException {
+        Validate.notNull(member);
+        int partyId = getPartyId(member);
+        UUID leader = getPartyLeader(partyId).getUniqueId();
+        CollectionList<Player> partyMembers = getPartyMembers(partyId);
+        return new Party(partyId, leader, partyMembers);
+    }
+
+    public static int getPartyId(UUID member) throws SQLException {
+        Validate.notNull(member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_members where member=?;");
+        preparedStatement.setString(1, member.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        int partyId = result.getInt("party_id");
+        result.close();
+        return partyId;
+    }
+
+    public static CollectionList<Player> getPartyMembers(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_members where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        CollectionList<Player> members = new CollectionList<>();
+        while (result.next()) {
+            members.add(getPlayer(UUID.fromString(result.getString("member"))));
+        }
+        return members;
+    }
+
+    public static CollectionList<UUID> getPartyMembersAsUniqueId(int party_id) throws SQLException {
+        Validate.notNull(party_id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_members where party_id=?;");
+        preparedStatement.setInt(1, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        CollectionList<UUID> members = new CollectionList<>();
+        while (result.next()) {
+            members.add(UUID.fromString(result.getString("member")));
+        }
+        return members;
     }
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {

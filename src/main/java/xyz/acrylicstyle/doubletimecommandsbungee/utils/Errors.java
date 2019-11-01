@@ -8,5 +8,5 @@ public enum Errors {
     IO_ERROR,
     COULD_NOT_SAVE_CONFIG,
     COULD_NOT_READ_CONFIG,
-    ARRAYLIST_ERROR
+    COLLECTION_ERROR
 }
