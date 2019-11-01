@@ -52,7 +52,7 @@ public final class SqlUtils {
         statement.executeUpdate("CREATE TABLE if not exists bans (\n" +
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
-                "        reason VARCHAR(666) default 'None',\n" +
+                "        reason VARCHAR(666) not null default 'None',\n" +
                 "        bannedAt BIGINT(255) NOT NULL,\n" +
                 "        expires BIGINT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
@@ -63,6 +63,8 @@ public final class SqlUtils {
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        rank VARCHAR(100) default 'DEFAULT',\n" +
                 "        id VARCHAR(100) NOT NULL,\n" +
+                "        experience BIGINT(255) NOT NULL default 0,\n" +
+                "        points BIGINT(255) NOT NULL default 0,\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -79,8 +81,8 @@ public final class SqlUtils {
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
         Validate.notNull(uuid, rank);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id)\n" +
-                "select * from (select ?, ?, ?) as tmp\n" +
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id, experience, points)\n" +
+                "select * from (select ?, ?, ?, 0, 0) as tmp\n" +
                 "where not exists (\n" +
                 "    select player from players where player = ?\n" +
                 ") limit 1;");
@@ -94,6 +96,68 @@ public final class SqlUtils {
         preparedStatement.setString(2, uuid.toString());
         preparedStatement.executeUpdate();
         return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
+    }
+
+    public static void setPoints(UUID uuid, long points) throws SQLException {
+        Validate.notNull(uuid, points);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update players set points=? where player=?;");
+        preparedStatement.setBigDecimal(1, BigDecimal.valueOf(points));
+        preparedStatement.setString(2, uuid.toString());
+    }
+
+    public static void addPoints(UUID uuid, long points) throws SQLException {
+        Validate.notNull(uuid, points);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select points from players where player=?;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        long points1 = result.getBigDecimal("points").longValueExact();
+        result.close();
+        preparedStatement = connection.get().prepareStatement("update players set points=? where player=?;");
+        preparedStatement.setBigDecimal(1, BigDecimal.valueOf(points1 + points));
+        preparedStatement.setString(2, uuid.toString());
+    }
+
+    public static long getPoints(UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select points from players where player=?;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        long value = result.getBigDecimal("points").longValueExact();
+        result.close();
+        return value;
+    }
+
+    public static void setExperience(UUID uuid, long experience) throws SQLException {
+        Validate.notNull(uuid, experience);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update players set experience=? where player=?;");
+        preparedStatement.setBigDecimal(1, BigDecimal.valueOf(experience));
+        preparedStatement.setString(2, uuid.toString());
+    }
+
+    public static void addExperience(UUID uuid, long experience) throws SQLException {
+        Validate.notNull(uuid, experience);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        long experience1 = result.getBigDecimal("experience").longValueExact();
+        result.close();
+        preparedStatement = connection.get().prepareStatement("update players set experience=? where player=?;");
+        preparedStatement.setBigDecimal(1, BigDecimal.valueOf(experience1 + experience));
+        preparedStatement.setString(2, uuid.toString());
+    }
+
+    public static long getExperience(UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        long value = result.getBigDecimal("experience").longValueExact();
+        result.close();
+        return value;
     }
 
     public static String getName(UUID uuid) throws SQLException {
