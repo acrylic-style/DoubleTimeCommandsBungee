@@ -29,6 +29,7 @@ public class Unban extends Command {
 			uuid = SqlUtils.getUniqueId(args[1]);
 			if (!SqlUtils.isBanned(uuid)) {
 				sender.sendMessage(new TextComponent(ChatColor.RED + "They're not banned in the past!"));
+				return;
 			}
 		} catch (SQLException e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't get player!"));
