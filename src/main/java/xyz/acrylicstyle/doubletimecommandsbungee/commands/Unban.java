@@ -41,6 +41,11 @@ public class Unban extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't do that. Illegal."));
 			return;
 		}
-		sender.sendMessage(new TextComponent("ew you can't unban "));
+		try {
+			SqlUtils.unban(uuid.get(), ((ProxiedPlayer) sender).getUniqueId());
+		} catch (SQLException e) {
+			sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't unban that player!"));
+			e.printStackTrace();
+		}
 	}
 }

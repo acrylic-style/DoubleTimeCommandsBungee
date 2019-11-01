@@ -2,6 +2,8 @@ package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
 import net.md_5.bungee.api.ProxyServer;
 import util.CollectionList;
+import xyz.acrylicstyle.doubletimecommandsbungee.annotations.NonNull;
+import xyz.acrylicstyle.doubletimecommandsbungee.annotations.Nullable;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Ban;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 
@@ -53,6 +55,7 @@ public final class SqlUtils {
                 "        reason VARCHAR(666) default 'None',\n" +
                 "        expires BIGINT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
+                "        unbanner VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists players (\n" +
@@ -103,17 +106,19 @@ public final class SqlUtils {
         return name;
     }
 
-    public static CollectionList<UUID> getFriends(UUID uuid) throws SQLException {
+    @Nullable
+    public static CollectionList<UUID> getFriends(@NonNull UUID uuid) throws SQLException {
         Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friends where player=", "player2");
     }
 
-    public static CollectionList<UUID> getFriendRequests(UUID uuid) throws SQLException {
+    @Nullable
+    public static CollectionList<UUID> getFriendRequests(@NonNull UUID uuid) throws SQLException {
         Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
-    static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
+    static void addBan(@NonNull UUID player, @Nullable String reason, @NonNull long expires, @NonNull UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
         ProxyServer.getInstance().getLogger().info("debug: expires: " + (expires != -1 ? System.currentTimeMillis() +expires : -1));
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
@@ -121,6 +126,26 @@ public final class SqlUtils {
         preparedStatement.setString(2, reason);
         preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires != -1 ? System.currentTimeMillis() + expires : -1));
         preparedStatement.setString(4, executor.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static void unban(@NonNull UUID player, @NonNull UUID unbanner) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update bans set expires=0, unbanner=? where player=?;");
+        preparedStatement.setString(1, unbanner.toString());
+        preparedStatement.setString(2, player.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static void updateBan(@NonNull int id, @Nullable UUID player, @Nullable String reason, @Nullable Long expires, @Nullable UUID executor, @Nullable UUID unbanner) throws SQLException {
+        Validate.notNull(id);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update bans set player=?, reason=?, expires=?, executor=?, unbanner=? where id=?;");
+        if (player != null) preparedStatement.setString(1, player.toString()); else preparedStatement.setString(1, null);
+        if (reason != null) preparedStatement.setString(2, reason); else preparedStatement.setString(2, null);
+        if (expires != null) preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires)); else preparedStatement.setBigDecimal(3, null);
+        if (executor != null) preparedStatement.setString(4, executor.toString()); else preparedStatement.setString(4, null);
+        if (unbanner != null) preparedStatement.setString(5, unbanner.toString()); else preparedStatement.setString(5, null);
+        preparedStatement.setInt(6, id);
         preparedStatement.executeUpdate();
     }
 
@@ -160,7 +185,9 @@ public final class SqlUtils {
         connection.get().createStatement().executeUpdate("delete from friend_requests where true;");
     }
 
-    public static Ranks getRank(UUID uuid) throws SQLException {
+    @NonNull
+    public static Ranks getRank(@NonNull UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
         result.next();
@@ -177,11 +204,13 @@ public final class SqlUtils {
         return Ranks.valueOf(rank1);
     }
 
-    public static void setRank(UUID uuid, Ranks rank) throws SQLException {
+    public static void setRank(@NonNull UUID uuid, @NonNull Ranks rank) throws SQLException {
         connection.get().createStatement().executeUpdate("update players set rank='" + rank.name() + "' where player='" + uuid.toString() + "';");
     }
 
-    public static CollectionList<Ban> getBan(UUID uuid) throws SQLException {
+    @NonNull
+    public static CollectionList<Ban> getBan(@NonNull UUID uuid) throws SQLException {
+        Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires;"); // DESC
         CollectionList<Ban> bans = new CollectionList<>();

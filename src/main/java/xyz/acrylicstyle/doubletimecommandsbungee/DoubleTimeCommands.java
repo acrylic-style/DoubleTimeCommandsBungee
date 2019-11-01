@@ -153,7 +153,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             long expires = lastBan.getExpires();
             long currentTimestamp = System.currentTimeMillis();
             long days = Math.round(((float) (expires-currentTimestamp)/86400000F)*10L)/10;
-            if (expires > 0 && expires <= currentTimestamp) return;
+            if (expires >= 0 && expires <= currentTimestamp) return;
             boolean perm = expires <= -1;
             Collection<TextComponent> stackedMessage = new ArrayList<>();
             if (perm) stackedMessage.add(new TextComponent(ChatColor.RED + "You are permanently banned from this server!\n\n"));
@@ -163,7 +163,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + lastBan.getBanId()));
             event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
         } catch (Exception e) {
-            event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "Couldn't read config, please report this to admins!"));
+            event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "An error occurred while processing your login, please report this to admins!"));
             e.printStackTrace();
         }
     }
