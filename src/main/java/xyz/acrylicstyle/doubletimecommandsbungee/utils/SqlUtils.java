@@ -77,19 +77,24 @@ public final class SqlUtils {
                 "       player2 VARCHAR(36) NOT NULL,\n" +
                 "       primary key (player)\n" +
                 "    );");
+        statement.executeUpdate("create table if not exists parties (\n" +
+                "       leader VARCHAR(36) NOT NULL,\n" +
+                ");");
     }
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
         Validate.notNull(uuid, rank);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id, experience, points)\n" +
-                "select * from (select ?, ?, ?, 0, 0) as tmp\n" +
+                "select * from (select ?, ?, ?, ?, ?) as tmp\n" +
                 "where not exists (\n" +
                 "    select player from players where player = ?\n" +
                 ") limit 1;");
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setString(2, rank.name());
         preparedStatement.setString(3, name);
-        preparedStatement.setString(4, uuid.toString());
+        preparedStatement.setBigDecimal(4, BigDecimal.ZERO);
+        preparedStatement.setBigDecimal(5, BigDecimal.ZERO);
+        preparedStatement.setString(6, uuid.toString());
         preparedStatement.executeUpdate();
         preparedStatement = connection.get().prepareStatement("update players set id=? where player=?;");
         preparedStatement.setString(1, name);
