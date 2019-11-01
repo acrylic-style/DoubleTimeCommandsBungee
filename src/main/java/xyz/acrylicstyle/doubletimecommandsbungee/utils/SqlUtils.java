@@ -275,9 +275,7 @@ public final class SqlUtils {
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setString(2, rank.name());
         preparedStatement.setString(3, name);
-        preparedStatement.setInt(4, 0);
-        preparedStatement.setInt(5, 0);
-        preparedStatement.setString(6, uuid.toString());
+        preparedStatement.setString(4, uuid.toString());
         preparedStatement.executeUpdate();
         preparedStatement = connection.get().prepareStatement("update players set id=? where player=?;");
         preparedStatement.setString(1, name);
