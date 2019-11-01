@@ -100,7 +100,7 @@ public class Party extends Command {
                         return;
                     }
                     party_id = SqlUtils.getPartyId(ps.getUniqueId()); // impossible
-                    if (!SqlUtils.getPartyLeader(party_id).getUniqueId().equals(ps.getUniqueId())) {
+                    if (!SqlUtils.isPartyLeader(party_id, ps.getUniqueId())) {
                         ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         ps.sendMessage(new TextComponent(ChatColor.RED + "You are not party leader!"));
                         ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -181,7 +181,7 @@ public class Party extends Command {
                         return;
                     }
                     party_id = SqlUtils.getPartyId(ps.getUniqueId()); // impossible because already checked with SqlUtils#inParty
-                    if (SqlUtils.isPartyLeader(party_id, ps.getUniqueId())) {
+                    if (!SqlUtils.isPartyLeader(party_id, ps.getUniqueId())) {
                         ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         ps.sendMessage(new TextComponent(ChatColor.RED + "You are not a party leader!"));
                         ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
