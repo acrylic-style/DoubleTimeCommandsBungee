@@ -61,7 +61,7 @@ public class Party extends Command {
                 CollectionList<UUID> members;
                 int party_id;
                 try {
-                    party_id = SqlUtils.getPartyId(player);
+                    party_id = SqlUtils.getPartyId(player); // impossible
                     members = SqlUtils.getPartyMembersAsUniqueId(party_id);
                 } catch (SQLException e) {
                     sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while fetching party!"));
@@ -106,7 +106,7 @@ public class Party extends Command {
                 CollectionList<UUID> members;
                 int party_id;
                 try {
-                    party_id = SqlUtils.getPartyId(ps.getUniqueId());
+                    party_id = SqlUtils.getPartyId(ps.getUniqueId()); // impossible
                     members = SqlUtils.getPartyMembersAsUniqueId(party_id);
                 } catch (SQLException e) {
                     sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while fetching party!"));
