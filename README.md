@@ -1,4 +1,4 @@
-# DoubleTimeCommands
+# DoubleTimeCommands ![](https://ci.acrylicstyle.xyz/job/DoubleTimeCommandsBungee/badge/icon?style=flat-square)
 *BungeeCord plugin for manage player's rank, friends, parties, and something!*
 
 [CI Builds](https://ci.acrylicstyle.xyz/job/DoubleTimeCommandsBungee/)
