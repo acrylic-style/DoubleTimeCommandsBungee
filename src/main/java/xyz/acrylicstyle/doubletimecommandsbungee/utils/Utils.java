@@ -167,4 +167,8 @@ public class Utils {
     public static void kickPlayer(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
         ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString() + ",", message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
+
+    public static void connect(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, String server) {
+        ChannelListener.sendToBukkit("helper:connect", player.getUniqueId().toString(), server, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+    }
 }

@@ -38,6 +38,15 @@ public class ChannelListener implements Listener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        } else if (e.getTag().equalsIgnoreCase("helper:connect")) {
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
+            try {
+                String subchannel = in.readUTF();
+                String input = in.readUTF();
+                ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).connect(ProxyServer.getInstance().getServerInfo(input));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
