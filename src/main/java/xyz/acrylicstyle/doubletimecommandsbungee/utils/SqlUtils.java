@@ -51,7 +51,7 @@ public final class SqlUtils {
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666) default 'None',\n" +
-                "        expires NUMERIC(65) NOT NULL,\n" +
+                "        expires BIGINT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    );");
@@ -113,13 +113,13 @@ public final class SqlUtils {
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
-    public static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
+    static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
         ProxyServer.getInstance().getLogger().info("debug: expires: " + expires);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
-        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires));
+        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(System.currentTimeMillis() + expires));
         preparedStatement.setString(4, executor.toString());
         preparedStatement.executeUpdate();
     }

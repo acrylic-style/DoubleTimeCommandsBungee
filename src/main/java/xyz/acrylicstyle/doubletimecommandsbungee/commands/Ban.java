@@ -73,16 +73,15 @@ public class Ban extends Command {
 			try {
 				long expires;
 				if (args[3].equalsIgnoreCase("d")) {
-					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.DAY);
+					expires = Integer.parseInt(args[2]) * Utils.DAY;
 				} else if (args[3].equalsIgnoreCase("h")) {
-					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.HOUR);
+					expires = Integer.parseInt(args[2]) * Utils.HOUR;
 				} else if (args[3].equalsIgnoreCase("m")) {
-					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.MINUTE);
+					expires = Integer.parseInt(args[2]) * Utils.MINUTE;
 				} else {
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
 					return;
 				}
-				ProxyServer.getInstance().getLogger().info("Current time:" + System.currentTimeMillis() + ", expires at:" + expires);
 				Utils.ban(ps.getUniqueId(), args[1], expires, ((ProxiedPlayer)sender).getUniqueId());
 				ps.disconnect(new TextComponent(ChatColor.RED + "You've banned from this server!"));
 				sender.sendMessage(new TextComponent(ChatColor.GREEN + "Banned " + ps.getName() + " temporarily for " + args[2] + args[3] + "."));
