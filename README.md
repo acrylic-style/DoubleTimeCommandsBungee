@@ -54,7 +54,8 @@
   
 ## Installation
 1. Download this plugin into your BungeeCord/plugins (not spigot)
-2. Create `plugins/DoubleTimeCommands/config.yml` and write looks like this (you need to change something):
+2. Download [the plugin](https://ci.acrylicstyle.xyz/job/DoubleTimeCommandsBungeeHelper/lastSuccessfulBuild/artifact/target/DoubleTimeCommandsBungeeHelper-0.0.1-SNAPSHOT.jar) into your Spigot/plugins (not bungeecord)
+3. Create `plugins/DoubleTimeCommands/config.yml` and write looks like this (you need to change something):
 ```yaml
 proxyName: BUNGEECORD_01_US # change me
 commands: # change me if you're using spigot plugin of this
