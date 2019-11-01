@@ -317,6 +317,12 @@ public class Party extends Command {
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     return;
                 }
+                if (ps.getUniqueId() == player.getUniqueId()) {
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "You can't send party invite to yourself!"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    return;
+                }
                 Integer party_id;
                 try {
                     party_id = SqlUtils.getPartyId(player.getUniqueId());

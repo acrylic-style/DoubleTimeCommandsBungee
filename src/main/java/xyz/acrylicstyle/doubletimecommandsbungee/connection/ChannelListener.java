@@ -41,7 +41,7 @@ public class ChannelListener implements Listener {
         }
     }
 
-    private void sendToBukkit(String tag, String subchannel, String message, ServerInfo server) {
+    public static void sendToBukkit(String tag, String subchannel, String message, ServerInfo server) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
         try {
