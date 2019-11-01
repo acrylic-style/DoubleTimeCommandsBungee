@@ -51,7 +51,7 @@ public final class SqlUtils {
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666) default 'None',\n" +
-                "        expires NUMERIC(255) NOT NULL,\n" +
+                "        expires NUMERIC(65) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    );");
