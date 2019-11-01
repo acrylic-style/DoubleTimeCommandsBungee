@@ -94,7 +94,7 @@ public class Party extends Command {
             } else if (args[0].equalsIgnoreCase("leave")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 try {
-                    if (SqlUtils.inParty(ps.getUniqueId())) {
+                    if (!SqlUtils.inParty(ps.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.RED + "You are not in party!"));
                         return;
                     }
@@ -140,11 +140,11 @@ public class Party extends Command {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 int party_id;
                 try {
-                    if (SqlUtils.inParty(ps.getUniqueId())) {
+                    if (!SqlUtils.inParty(ps.getUniqueId())) {
                         sender.sendMessage(new TextComponent(ChatColor.RED + "You are not in party!"));
                         return;
                     }
-                    party_id = SqlUtils.getPartyId(ps.getUniqueId());
+                    party_id = SqlUtils.getPartyId(ps.getUniqueId()); // impossible because already checked with SqlUtils#inParty
                     if (SqlUtils.isPartyLeader(party_id, ps.getUniqueId())) {
                         ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
                         ps.sendMessage(new TextComponent(ChatColor.RED + "You are not a party leader!"));
@@ -225,9 +225,10 @@ public class Party extends Command {
                     sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
                     return;
                 }
-                int party_id;
+                Integer party_id;
                 try {
                     party_id = SqlUtils.getPartyId(player.getUniqueId());
+                    if (party_id == null) party_id = SqlUtils.createParty(ps.getUniqueId()).getPartyId();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     return;

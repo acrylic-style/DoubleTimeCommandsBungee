@@ -230,13 +230,15 @@ public final class SqlUtils {
         return new Party(partyId, leader, partyMembers);
     }
 
-    public static int getPartyId(UUID member) throws SQLException {
+    public static Integer getPartyId(UUID member) throws SQLException {
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_members where member=?;");
         preparedStatement.setString(1, member.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
-        int partyId = result.getInt("party_id");
+        int partyId;
+        if (result.next()) {
+            partyId = result.getInt("party_id");
+        } else return null;
         result.close();
         return partyId;
     }
