@@ -129,7 +129,7 @@ public class Party extends Command {
                         final ProxiedPlayer player2 = ProxyServer.getInstance().getPlayer(uuid);
                         if (player2 != null) {
                             player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                            player2.sendMessage(new TextComponent(ChatColor.GRAY + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.GREEN + " has declined the party invite."));
+                            player2.sendMessage(new TextComponent(ChatColor.GRAY + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + " has declined the party invite."));
                             player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         }
                     } catch (Exception e) {
@@ -138,7 +138,7 @@ public class Party extends Command {
                     }
                 });
                 ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                ps.sendMessage(new TextComponent(ChatColor.GREEN + "You declined the party invite."));
+                ps.sendMessage(new TextComponent(ChatColor.YELLOW + "You declined the party invite."));
                 ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
             } else if (args[0].equalsIgnoreCase("disband")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
@@ -156,7 +156,7 @@ public class Party extends Command {
                         return;
                     }
                     ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                    ps.sendMessage(new TextComponent(ChatColor.YELLOW + "You've disbanded the party."));
+                    ps.sendMessage(new TextComponent(ChatColor.YELLOW + "You disbanded the party!"));
                     ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     SqlUtils.getPartyMembersAsUniqueId(party_id).filter(p -> !p.equals(ps.getUniqueId())).forEach(uuid -> {
                         try {
