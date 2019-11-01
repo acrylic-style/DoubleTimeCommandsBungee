@@ -69,7 +69,7 @@ public final class SqlUtils {
                 "        id VARCHAR(100) NOT NULL,\n" +
                 "        experience BIGINT(255) NOT NULL default 0,\n" +
                 "        points BIGINT(255) NOT NULL default 0,\n" +
-                "        connected varchar(255) default '',\n" + // char(1) = boolean
+                "        connected varchar(255) default null,\n" + // char(1) = boolean
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +

@@ -3,12 +3,14 @@ package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import util.Collection;
 import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
+import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -144,5 +146,9 @@ public class Utils {
             if (!connected.get() && before.equalsIgnoreCase(player.getServer().getInfo().getName()) && checked.get() >= servers.size())
                 player.sendMessage(new TextComponent(ChatColor.RED + "We couldn't find available server!"));
         }));
+    }
+
+    public static void sendMessage(ProxiedPlayer sender, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:message", "", message.toPlainText(), sender.getServer().getInfo());
     }
 }
