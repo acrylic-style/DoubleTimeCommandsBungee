@@ -101,6 +101,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         try {
+            ProxyServer.getInstance().getLogger().info("Server name: " + event.getServer().getInfo().getName());
             SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().warning("An error occurred while setting connection");
