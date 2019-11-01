@@ -63,8 +63,8 @@ public class Party extends Command {
                 try {
                     party_id = SqlUtils.getPartyId(player); // impossible
                     members = SqlUtils.getPartyMembersAsUniqueId(party_id);
-                } catch (SQLException e) {
-                    sender.sendMessage(new TextComponent(ChatColor.RED + "An error occurred while fetching party!"));
+                } catch (NullPointerException | SQLException e) {
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "That invite is never existed or expired."));
                     e.printStackTrace();
                     return;
                 }
