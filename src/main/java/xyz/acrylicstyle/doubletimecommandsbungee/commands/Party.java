@@ -3,9 +3,6 @@ package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -275,16 +272,15 @@ public class Party extends Command {
                     public void run() {
                         members.forEach(uuid -> {
                             try {
-                                final ProxiedPlayer player2 = ProxyServer.getInstance().getPlayer(uuid);
-                                if (!player2.getServer().getInfo().getName().equalsIgnoreCase(sender.getServer().getInfo().getName())) {
+                                final Player player2 = SqlUtils.getPlayer(uuid);
+                                if (!player2.getConnectedServer().equalsIgnoreCase(sender.getServer().getInfo().getName())) {
                                     Utils.sendMessage(player2, new TextComponent(ChatColor.RED + "You didn't warp correctly!"));
-                                    stackedMessages.add(new TextComponent(ChatColor.RED + "✖ " + PlayerUtils.getName(player2) + ChatColor.RED + " didn't warp correctly!"));
+                                    stackedMessages.add(new TextComponent(ChatColor.RED + "✖ " + PlayerUtils.getName(player2.getUniqueId()) + ChatColor.RED + " didn't warp correctly!"));
                                 } else {
-                                    stackedMessages.add(new TextComponent(ChatColor.GREEN + "✔ Warped " + PlayerUtils.getName(player2) + ChatColor.GREEN + " to your server!"));
+                                    stackedMessages.add(new TextComponent(ChatColor.GREEN + "✔ Warped " + PlayerUtils.getName(player2.getUniqueId()) + ChatColor.GREEN + " to your server!"));
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                e.getCause().printStackTrace();
                             }
                         });
                         stackedMessages.add(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
@@ -347,16 +343,7 @@ public class Party extends Command {
                 Utils.sendMessage(sender, new TextComponent(ChatColor.YELLOW + "You sent party invite to " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.RESET + ChatColor.YELLOW + "! They have 1 minute to accept."));
                 Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 Utils.sendMessage(player, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
-                Utils.sendMessage(player, new TextComponent(ChatColor.YELLOW + "You received party invite from " + PlayerUtils.getName(sender) + ChatColor.RESET + ChatColor.YELLOW + "!"));
-                TextComponent dialog = new TextComponent("" + ChatColor.GREEN + ChatColor.BOLD + "[ACCEPT]");
-                dialog.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "Accept the party invite and join to their party.").create()));
-                dialog.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/p accept " + sender.getName()));
-                TextComponent deny = new TextComponent("" + ChatColor.RED + ChatColor.BOLD + "[DENY]");
-                deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.RED + "Decline the party invite.").create()));
-                deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/p deny " + sender.getName()));
-                dialog.addExtra("" + ChatColor.RESET + ChatColor.GRAY + " - ");
-                dialog.addExtra(deny);
-                Utils.sendMessage(player, dialog);
+                Utils.sendMessage(player, "/p," + sender.getName(), new TextComponent(""));
                 Utils.sendMessage(player, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 Integer finalParty_id = party_id;
                 TimerTask task = new TimerTask() {

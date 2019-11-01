@@ -149,11 +149,19 @@ public class Utils {
     }
 
     public static void sendMessage(ProxiedPlayer player, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString(), message.toPlainText(), player.getServer().getInfo());
+        sendMessage(player, "", message);
+    }
+
+    public static void sendMessage(ProxiedPlayer player, String subchannel, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:message", subchannel, message.toPlainText(), player.getServer().getInfo());
     }
 
     public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString(), message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        sendMessage(player, "", message);
+    }
+
+    public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, String subchannel, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:message", subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
     public static void kickPlayer(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
