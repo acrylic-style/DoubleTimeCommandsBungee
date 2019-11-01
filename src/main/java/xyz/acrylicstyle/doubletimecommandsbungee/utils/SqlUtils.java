@@ -94,7 +94,7 @@ public final class SqlUtils {
         statement.executeUpdate("create table if not exists party_members (\n" +
                 "       party_id int not null,\n" +
                 "       member varchar(36) not null,\n" + // uuid
-                "       primary key(party_key)\n" +
+                "       primary key(party_id)\n" +
                 ");");
     }
 
