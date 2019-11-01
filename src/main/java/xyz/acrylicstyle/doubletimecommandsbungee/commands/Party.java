@@ -67,8 +67,8 @@ public class Party extends Command {
                     return;
                 }
                 try {
+                    SqlUtils.removePartyInvite(party_id, sender.getUniqueId());
                     SqlUtils.addPartyMember(party_id, sender.getUniqueId());
-                    SqlUtils.removePartyInvite(party_id, player);
                 } catch (SQLException e) {
                     Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "An error occurred while joining party!"));
                     e.printStackTrace();
@@ -114,7 +114,7 @@ public class Party extends Command {
                     return;
                 }
                 try {
-                    SqlUtils.removePartyInvite(party_id, player);
+                    SqlUtils.removePartyInvite(party_id, sender.getUniqueId());
                 } catch (SQLException e) {
                     Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "An error occurred while declining party!"));
                     e.printStackTrace();
@@ -361,7 +361,10 @@ public class Party extends Command {
                 TimerTask task = new TimerTask() {
                     public void run() {
                         try {
-                            if (!SqlUtils.inPartyInvite(finalParty_id, player.getUniqueId())) return;
+                            if (SqlUtils.inParty(player.getUniqueId()) || !SqlUtils.inPartyInvite(finalParty_id, player.getUniqueId())) {
+                                emptyPartyCheck(sender);
+                                return;
+                            }
                             SqlUtils.removePartyInvite(finalParty_id, player.getUniqueId());
                             CollectionList<UUID> members = SqlUtils.getPartyMembersAsUniqueId(finalParty_id);
                             members.remove(sender.getUniqueId()); // remove yourself
