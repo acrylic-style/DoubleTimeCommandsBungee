@@ -53,6 +53,7 @@ public final class SqlUtils {
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666) default 'None',\n" +
+                "        bannedAt BIGINT(255) NOT NULL,\n" +
                 "        expires BIGINT(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        unbanner VARCHAR(36) default null,\n" + // uuid
@@ -121,11 +122,12 @@ public final class SqlUtils {
     static void addBan(@NonNull UUID player, @Nullable String reason, @NonNull long expires, @NonNull UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
         ProxyServer.getInstance().getLogger().info("debug: expires: " + (expires != -1 ? System.currentTimeMillis() +expires : -1));
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?, default);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?, ?, default);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
-        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires != -1 ? System.currentTimeMillis() + expires : -1));
-        preparedStatement.setString(4, executor.toString());
+        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(System.currentTimeMillis()));
+        preparedStatement.setBigDecimal(4, BigDecimal.valueOf(expires != -1 ? System.currentTimeMillis() + expires : -1));
+        preparedStatement.setString(5, executor.toString());
         preparedStatement.executeUpdate();
     }
 
