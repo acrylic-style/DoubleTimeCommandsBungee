@@ -44,6 +44,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             ProxyServer.getInstance().getLogger().severe("Couldn't load database driver!");
             return;
         }
+        boolean forceSync = config.configuration.getBoolean("database.forceSync", false);
+        if (forceSync) config.configuration.set("database.forceSync", false);
         String host = config.configuration.getString("database.host", "localhost");
         String database = config.configuration.getString("database.name");
         String user = config.configuration.getString("database.user");
@@ -54,6 +56,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         }
         try {
             SqlUtils.connect(host, database, user, password);
+            if (forceSync) SqlUtils.sync(true);
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().severe("An error occurred while connecting to the database");
             e.printStackTrace();

@@ -43,7 +43,7 @@ public final class SqlUtils {
         sync(false);
     }
 
-    private static void sync(boolean force) throws SQLException {
+    public static void sync(boolean force) throws SQLException {
         if (connection.get() == null) throw new IllegalStateException("Connection haven't made.");
         Statement statement = connection.get().createStatement();
         if (force) statement.executeUpdate("drop table if exists bans;");
