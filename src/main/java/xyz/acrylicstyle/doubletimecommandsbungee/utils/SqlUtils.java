@@ -113,11 +113,10 @@ public final class SqlUtils {
 
     public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, " + expires + ", ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
-        preparedStatement.setInt(3, expires);
-        preparedStatement.setString(4, executor.toString());
+        preparedStatement.setString(3, executor.toString());
         preparedStatement.executeUpdate();
     }
 
