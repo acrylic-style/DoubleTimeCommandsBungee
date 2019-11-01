@@ -203,6 +203,17 @@ public final class SqlUtils {
         preparedStatement.executeUpdate();
     }
 
+    public static boolean inPartyInvite(int party_id, UUID member) throws SQLException {
+        Validate.notNull(party_id, member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_invites where party_id=? and member=?;");
+        preparedStatement.setInt(1, party_id);
+        preparedStatement.setString(2, member.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        boolean yes = result.next();
+        result.close();
+        return yes;
+    }
+
     public static void addPartyMember(int party_id, UUID member) throws SQLException {
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into party_members values (?, ?);");
