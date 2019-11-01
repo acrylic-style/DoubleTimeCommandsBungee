@@ -30,7 +30,7 @@ public class Party extends Command {
             }
         }
         String help =
-                ChatColor.BLUE + "------------------------------------------------------------\n" +
+                ChatColor.BLUE + "--------------------------------------------------\n" +
                         ChatColor.GREEN + "Party Commands:\n" +
                         ChatColor.YELLOW + "/p add §7- §bInvite a player to your party\n" +
                         ChatColor.YELLOW + "/p accept §7- §bAccept a party invite\n" +
@@ -40,7 +40,7 @@ public class Party extends Command {
                         ChatColor.YELLOW + "/p disband §7- §bDisbands your party\n" +
                         ChatColor.YELLOW + "/p leave §7- §bLeave the party\n" +
                         ChatColor.YELLOW + "/p warp §7- §bTeleports your party members into your server\n" +
-                        ChatColor.BLUE + "------------------------------------------------------------";
+                        ChatColor.BLUE + "--------------------------------------------------";
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("accept")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
@@ -52,9 +52,9 @@ public class Party extends Command {
                 try {
                     player = SqlUtils.getUniqueId(args[1]);
                 } catch (SQLException e) {
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     sender.sendMessage(new TextComponent(ChatColor.RED + "Unable to find that player!"));
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     e.printStackTrace();
                     return;
                 }
@@ -79,18 +79,18 @@ public class Party extends Command {
                     try {
                         final ProxiedPlayer player2 = ProxyServer.getInstance().getPlayer(uuid);
                         if (player2 != null) {
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player2.sendMessage(new TextComponent(ChatColor.GRAY + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.GREEN + " joined your party!"));
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         e.getCause().printStackTrace();
                     }
                 });
-                ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 ps.sendMessage(new TextComponent(ChatColor.GREEN + "You joined the party!"));
-                ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
             } else if (args[0].equalsIgnoreCase("leave")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 try {
@@ -124,18 +124,18 @@ public class Party extends Command {
                     try {
                         final ProxiedPlayer player2 = ProxyServer.getInstance().getPlayer(uuid);
                         if (player2 != null) {
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player2.sendMessage(new TextComponent(ChatColor.GRAY + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + " left your party."));
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         e.getCause().printStackTrace();
                     }
                 });
-                ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 ps.sendMessage(new TextComponent(ChatColor.YELLOW + "You left the party"));
-                ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
             } else if (args[0].equalsIgnoreCase("warp")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 int party_id;
@@ -146,9 +146,9 @@ public class Party extends Command {
                     }
                     party_id = SqlUtils.getPartyId(ps.getUniqueId()); // impossible because already checked with SqlUtils#inParty
                     if (SqlUtils.isPartyLeader(party_id, ps.getUniqueId())) {
-                        ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                        ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         ps.sendMessage(new TextComponent(ChatColor.RED + "You are not a party leader!"));
-                        ps.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                        ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         return;
                     }
                 } catch (SQLException e) {
@@ -170,9 +170,9 @@ public class Party extends Command {
                     try {
                         final ProxiedPlayer player2 = ProxyServer.getInstance().getPlayer(uuid);
                         if (player2 != null) {
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player2.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party leader, " + ChatColor.GRAY + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + " has summoned you to their server."));
-                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player2.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player2.connect(ps.getServer().getInfo());
                         }
                     } catch (Exception e) {
@@ -181,7 +181,7 @@ public class Party extends Command {
                     }
                 });
                 Collection<TextComponent> stackedMessages = new ArrayList<>();
-                stackedMessages.add(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                stackedMessages.add(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 TimerTask task = new TimerTask() {
                     public void run() {
                         members.forEach(uuid -> {
@@ -198,7 +198,7 @@ public class Party extends Command {
                                 e.getCause().printStackTrace();
                             }
                         });
-                        stackedMessages.add(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                        stackedMessages.add(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         stackedMessages.forEach(sender::sendMessage);
                     }
                 };
@@ -213,16 +213,16 @@ public class Party extends Command {
                     e.printStackTrace();
                     return;
                 }
-                sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Parties has been reset."));
-                sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
             } else {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 final ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[0].equalsIgnoreCase("add") && args.length >= 2 ? args[1] : args[0]);
                 if (player == null) {
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     sender.sendMessage(new TextComponent(ChatColor.RED + "Unable to find that player!"));
-                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                    sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                     return;
                 }
                 Integer party_id;
@@ -235,9 +235,9 @@ public class Party extends Command {
                 }
                 try {
                     if (SqlUtils.getPartyInvitesAsUniqueId(party_id).contains(ps.getUniqueId())) {
-                        sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                        sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You already sent party request to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + "! Wait for them to accept!"));
-                        sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                        sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         return;
                     }
                     SqlUtils.addPartyInvite(party_id, player.getUniqueId());
@@ -246,10 +246,10 @@ public class Party extends Command {
                     e.printStackTrace();
                     return;
                 }
-                sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 sender.sendMessage(new TextComponent(ChatColor.YELLOW + "You sent party invite to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + "! They have 1 minute to accept."));
-                sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-                player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 player.sendMessage(new TextComponent(ChatColor.YELLOW + "You received party invite from " + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + "!"));
                 TextComponent dialog = new TextComponent("" + ChatColor.GREEN + ChatColor.BOLD + "[ACCEPT]");
                 dialog.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN + "Accept the party invite and join to their party.").create()));
@@ -260,18 +260,18 @@ public class Party extends Command {
                 dialog.addExtra("" + ChatColor.RESET + ChatColor.GRAY + " - ");
                 dialog.addExtra(deny);
                 player.sendMessage(dialog);
-                player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 TimerTask task = new TimerTask() {
                     public void run() {
                         try {
                             if (SqlUtils.inParty(player.getUniqueId())) return;
                             SqlUtils.removePartyInvite(player.getUniqueId());
-                            sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             sender.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party invite to " + PlayerUtils.getName(player) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
-                            sender.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
-                            player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            sender.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party invite from " + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
-                            player.sendMessage(new TextComponent(ChatColor.BLUE + "------------------------------------------------------------"));
+                            player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                         } catch(SQLException e) {
                             ProxyServer.getInstance().getLogger().severe("Error while handling expired friend request:");
                             e.printStackTrace();
