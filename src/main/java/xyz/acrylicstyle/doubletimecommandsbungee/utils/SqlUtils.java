@@ -489,6 +489,9 @@ public final class SqlUtils {
 
     public static boolean isBanned(UUID uuid) throws SQLException {
         CollectionList<Ban> bans = getBan(uuid);
+        try {
+            if (bans.first() == null) return false;
+        } catch (Exception e) { return false; }
         return bans.first().getExpires() > System.currentTimeMillis() || bans.valuesArray()[bans.size()].getExpires() == -1;
     }
 
