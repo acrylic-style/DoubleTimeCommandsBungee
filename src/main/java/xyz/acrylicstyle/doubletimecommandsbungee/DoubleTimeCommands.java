@@ -130,6 +130,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             });
             Collections.shuffle(servers, new Random()); // shuffle all servers
             event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
+            if (SqlUtils.isBanned(event.getPlayer().getUniqueId())) return;
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
