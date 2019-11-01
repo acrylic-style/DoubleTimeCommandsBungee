@@ -5,6 +5,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
@@ -42,6 +43,7 @@ public class Unban extends Command {
 		}
 		try {
 			SqlUtils.unban(uuid, ((ProxiedPlayer) sender).getUniqueId());
+			sender.sendMessage(new TextComponent(ChatColor.GREEN + "You've unbanned " + PlayerUtils.getName(uuid) + ChatColor.GREEN + "!"));
 		} catch (SQLException e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't unban that player!"));
 			e.printStackTrace();
