@@ -343,6 +343,7 @@ public class Party extends Command {
                 Utils.sendMessage(sender, new TextComponent(ChatColor.YELLOW + "You sent party invite to " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.RESET + ChatColor.YELLOW + "! They have 1 minute to accept."));
                 Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 Utils.sendMessage(player, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                Utils.sendMessage(player, new TextComponent(ChatColor.YELLOW + "You received party invite from " + PlayerUtils.getName(sender.getUniqueId()) + ChatColor.RESET + ChatColor.YELLOW + "!"));
                 Utils.sendMessage(player, "/p," + sender.getName(), new TextComponent(""));
                 Utils.sendMessage(player, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 Integer finalParty_id = party_id;
