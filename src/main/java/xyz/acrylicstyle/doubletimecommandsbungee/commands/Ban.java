@@ -71,13 +71,13 @@ public class Ban extends Command {
 				return;
 			}
 			try {
-				int expires = (int) System.currentTimeMillis();
+				long expires;
 				if (args[3].equalsIgnoreCase("d")) {
-					expires = expires + (Integer.parseInt(args[2]) * Utils.DAY);
+					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.DAY);
 				} else if (args[3].equalsIgnoreCase("h")) {
-					expires = expires + (Integer.parseInt(args[2]) * Utils.HOUR);
+					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.HOUR);
 				} else if (args[3].equalsIgnoreCase("m")) {
-					expires = expires + (Integer.parseInt(args[2]) * Utils.MINUTE);
+					expires = System.currentTimeMillis() + (Integer.parseInt(args[2]) * Utils.MINUTE);
 				} else {
 					sender.sendMessage(new TextComponent(ChatColor.RED + "Unknown time type: " + args[3]));
 					return;
