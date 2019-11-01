@@ -2,7 +2,6 @@ package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -11,7 +10,9 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
+import java.sql.SQLException;
 import java.util.Locale;
+import java.util.UUID;
 
 public class Rank extends Command {
 	public Rank() {
@@ -25,12 +26,15 @@ public class Rank extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 2 more argument at least! <new rank> <player>"));
 			return;
 		}
-		ProxiedPlayer ps = ProxyServer.getInstance().getPlayer(args[1]);
-		if (ps == null) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "That player is currently offline."));
+		UUID player;
+		try {
+			player = SqlUtils.getUniqueId(args[1]);
+		} catch (SQLException e) {
+			sender.sendMessage(new TextComponent(ChatColor.RED + "Couldn't find player!"));
+			e.printStackTrace();
 			return;
 		}
-		if (sender instanceof ProxiedPlayer) if (ps.getUniqueId() == ((ProxiedPlayer)sender).getUniqueId() && PlayerUtils.getRank(((ProxiedPlayer)sender).getUniqueId()) != Ranks.OWNER) {
+		if (sender instanceof ProxiedPlayer) if (player == ((ProxiedPlayer)sender).getUniqueId() && PlayerUtils.getRank(((ProxiedPlayer)sender).getUniqueId()) != Ranks.OWNER) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You can't change the rank yourself!"));
 			return;
 		}
@@ -42,18 +46,19 @@ public class Rank extends Command {
 		try {
 			Ranks.valueOf(ucRank);
 		} catch (IllegalArgumentException e) {
-			String ranks = "";
-			for (Ranks rank : Ranks.values()) ranks += rank.name() + ", ";
-			sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify defined ranks! ("+ ranks +")"));
+			StringBuilder ranks = new StringBuilder();
+			for (Ranks rank : Ranks.values()) ranks.append(rank.name()).append(", ");
+			sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify defined ranks! ("+ ranks.toString() +")"));
 			return;
 		}
+		String before = PlayerUtils.getName(player);
 		try {
-			SqlUtils.setRank(ps.getUniqueId(), Ranks.valueOf(ucRank));
+			SqlUtils.setRank(player, Ranks.valueOf(ucRank));
 		} catch (Exception e) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "There was an unknown error while modifying rank!"));
 			e.printStackTrace();
 			return;
 		}
-		sender.sendMessage(new TextComponent(ChatColor.GREEN + ps.getName() + " is now: " + PlayerUtils.getName(ps)));
+		sender.sendMessage(new TextComponent(before + ChatColor.GREEN + " is now: " + PlayerUtils.getName(player)));
 	}
 }
