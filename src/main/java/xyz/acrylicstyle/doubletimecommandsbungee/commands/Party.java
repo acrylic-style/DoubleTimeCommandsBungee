@@ -226,7 +226,7 @@ public class Party extends Command {
                     }
                 });
                 try {
-                    emptyPartyCheck(SqlUtils.getPartyLeader(party_id).toProxiedPlayer());
+                    emptyPartyCheck(ProxyServer.getInstance().getPlayer(members.first()));
                 } catch (Exception ignored) {}
             } else if (args[0].equalsIgnoreCase("warp")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
