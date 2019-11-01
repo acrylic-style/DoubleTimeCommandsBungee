@@ -153,7 +153,7 @@ public class Utils {
     }
 
     public static void sendMessage(ProxiedPlayer player, String subchannel, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", subchannel, message.toPlainText(), player.getServer().getInfo());
+        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), player.getServer().getInfo());
     }
 
     public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
@@ -161,10 +161,10 @@ public class Utils {
     }
 
     public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, String subchannel, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
     public static void kickPlayer(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString(), message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString() + ",", message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 }
