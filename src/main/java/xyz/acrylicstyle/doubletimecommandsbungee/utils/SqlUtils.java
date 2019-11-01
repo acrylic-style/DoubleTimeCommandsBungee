@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
+import net.md_5.bungee.api.ProxyServer;
 import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Ban;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
@@ -112,7 +113,8 @@ public final class SqlUtils {
     }
 
     public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
-        Validate.notNull(player, expires);
+        Validate.notNull(player, expires, executor);
+        ProxyServer.getInstance().getLogger().info("debug: expires: " + expires);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, " + expires + ", ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
