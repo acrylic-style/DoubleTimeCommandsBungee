@@ -220,7 +220,7 @@ public final class SqlUtils {
             String reason = result.getString("reason");
             BigDecimal expires = result.getBigDecimal("expires");
             UUID executor = UUID.fromString(result.getString("executor"));
-            UUID unbanner = UUID.fromString(result.getString("unbanner"));
+            String unbanner = result.getString("unbanner");
             bans.put(new Ban(id, player, reason, expires.longValueExact(), executor, unbanner));
         }
         result.close();
@@ -230,7 +230,7 @@ public final class SqlUtils {
     public static Ban getBan(int id) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where id=" + id + " limit 1;");
-        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), UUID.fromString(result.getString("unbanner")));
+        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), result.getString("unbanner"));
         return null;
     }
 

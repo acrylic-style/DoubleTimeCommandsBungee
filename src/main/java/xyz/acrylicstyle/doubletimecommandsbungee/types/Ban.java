@@ -10,13 +10,13 @@ public class Ban {
     private final UUID executor;
     private final UUID unbanner;
 
-    public Ban(int id, UUID player, String reason, long expires, UUID executor, UUID unbanner) {
+    public Ban(int id, UUID player, String reason, long expires, UUID executor, String unbanner) {
         this.id = id;
         this.player = player;
         this.reason = reason;
         this.expires = expires;
         this.executor = executor;
-        this.unbanner = unbanner;
+        if (unbanner != null) this.unbanner = UUID.fromString(unbanner); else this.unbanner = null;
     }
 
     public final int getBanId() { return this.id; }
