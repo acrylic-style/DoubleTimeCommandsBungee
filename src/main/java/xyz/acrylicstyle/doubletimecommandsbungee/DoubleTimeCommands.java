@@ -101,7 +101,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         try {
-            SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getPlayer().getServer().getInfo().getName());
+            SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().warning("An error occurred while setting connection");
             e.printStackTrace();
@@ -112,7 +112,6 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onLogin(LoginEvent event) {
         try {
             SqlUtils.createPlayer(event.getConnection().getUniqueId(), Ranks.DEFAULT, event.getConnection().getName());
-            SqlUtils.setConnection(event.getConnection().getUniqueId(), ProxyServer.getInstance().getPlayer(event.getConnection().getUniqueId()).getServer().getInfo().getName());
             if (SqlUtils.isBanned(event.getConnection().getUniqueId())) return;
         } catch (SQLException e) {
             event.getConnection().disconnect(new TextComponent(ChatColor.RED + "An error occurred while processing your login, please report it to admins!"));
