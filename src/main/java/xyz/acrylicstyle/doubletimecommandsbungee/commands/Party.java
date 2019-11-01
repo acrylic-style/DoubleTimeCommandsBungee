@@ -207,9 +207,9 @@ public class Party extends Command {
                     SqlUtils.getPartyMembersAsUniqueId(party_id).filter(p -> !p.equals(sender.getUniqueId())).forEach(uuid -> {
                         try {
                             final Player player2 = SqlUtils.getPlayer(uuid);
-                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.GOLD + "--------------------------------------------------"));
                             Utils.sendMessage(player2, new TextComponent(ChatColor.GRAY + PlayerUtils.getName(sender) + ChatColor.RESET + ChatColor.YELLOW + " has promoted " + PlayerUtils.getName(player) + ChatColor.YELLOW + " to the party leader!"));
-                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.GOLD + "--------------------------------------------------"));
                         } catch (Exception e) {
                             e.printStackTrace();
                             e.getCause().printStackTrace();
@@ -232,9 +232,9 @@ public class Party extends Command {
                     SqlUtils.getPartyMembersAsUniqueId(party_id).forEach(uuid -> {
                         try {
                             final Player player2 = SqlUtils.getPlayer(uuid);
-                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.GOLD + "--------------------------------------------------"));
                             Utils.sendMessage(player2, new TextComponent(PlayerUtils.getName(sender) + ChatColor.YELLOW + " has hijacked your party!"));
-                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.GOLD + "--------------------------------------------------"));
                         } catch (Exception e) {
                             e.printStackTrace();
                             e.getCause().printStackTrace();
@@ -322,7 +322,10 @@ public class Party extends Command {
                 });
                 try {
                     emptyPartyCheck(ProxyServer.getInstance().getPlayer(members.first()));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
+            } else if (args[0].equalsIgnoreCase("chat")) {
+                Utils.partyChat(sender, args, 2);
             } else if (args[0].equalsIgnoreCase("warp")) {
                 int party_id;
                 try {

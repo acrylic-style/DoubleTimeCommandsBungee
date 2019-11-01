@@ -9,8 +9,10 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import util.Collection;
+import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -156,19 +158,49 @@ public class Utils {
         ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), player.getServer().getInfo());
     }
 
-    public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
+    public static void sendMessage(Player player, BaseComponent message) {
         sendMessage(player, "", message);
     }
 
-    public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, String subchannel, BaseComponent message) {
+    public static void sendMessage(Player player, String subchannel, BaseComponent message) {
         ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
-    public static void kickPlayer(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
+    public static void kickPlayer(Player player, BaseComponent message) {
         ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString() + ",", message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
-    public static void connect(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, String server) {
+    public static void connect(Player player, String server) {
         ChannelListener.sendToBukkit("helper:connect", player.getUniqueId().toString(), server, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+    }
+
+    public static void playSound(Player player, String sound) {
+        ChannelListener.sendToBukkit("helper:connect", player.getUniqueId().toString(), sound, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+    }
+
+    public static void partyChat(ProxiedPlayer player, String[] args, int i) {
+        try {
+            if (!SqlUtils.inParty(player.getUniqueId())) {
+                Utils.sendMessage(player, new TextComponent(ChatColor.RED + "You are not in party!"));
+                return;
+            }
+            int party_id = SqlUtils.getPartyId(player.getUniqueId());
+            final String[] message = {""};
+            new CollectionList<>(Arrays.asList(args)).foreach((arg, index) -> {
+                if (index >= i) message[0] += arg;
+            });
+            SqlUtils.getPartyMembersAsUniqueId(party_id).forEach(uuid -> {
+                try {
+                    Player player2 = SqlUtils.getPlayer(uuid);
+                    Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "Party > " + PlayerUtils.getName(uuid) + ChatColor.WHITE + ": " + message[0]));
+                    Utils.playSound(player2, "ENTITY_EXPERIENCE_ORB_PICKUP");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            Utils.sendMessage(player, new TextComponent(ChatColor.RED + "Couldn't send message! Please try again later!"));
+            e.printStackTrace();
+        }
     }
 }
