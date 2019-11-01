@@ -74,7 +74,6 @@ public final class SqlUtils {
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
                 "       player2 VARCHAR(36) NOT NULL,\n" +
-                "       primary key (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friend_requests (\n" +
                 "       player VARCHAR(36) NOT NULL,\n" +
@@ -84,7 +83,6 @@ public final class SqlUtils {
         statement.executeUpdate("create table if not exists party_invites (\n" +
                 "       party_id int not null,\n" +
                 "       member varchar(36) not null,\n" + // uuid
-                "       primary key (party_id)" +
                 ");");
         statement.executeUpdate("create table if not exists parties (\n" +
                 "       party_id int not null auto_increment,\n" +
@@ -94,7 +92,6 @@ public final class SqlUtils {
         statement.executeUpdate("create table if not exists party_members (\n" +
                 "       party_id int not null,\n" +
                 "       member varchar(36) not null,\n" + // uuid
-                "       primary key(party_id)\n" +
                 ");");
     }
 
