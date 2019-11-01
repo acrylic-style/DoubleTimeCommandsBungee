@@ -220,10 +220,11 @@ public final class SqlUtils {
             int id = result.getInt("id");
             UUID player = UUID.fromString(result.getString("player"));
             String reason = result.getString("reason");
+            BigDecimal bannedAt = result.getBigDecimal("bannedAt");
             BigDecimal expires = result.getBigDecimal("expires");
             UUID executor = UUID.fromString(result.getString("executor"));
             String unbanner = result.getString("unbanner");
-            bans.put(new Ban(id, player, reason, expires.longValueExact(), executor, unbanner));
+            bans.put(new Ban(id, player, reason, bannedAt.longValueExact(), expires.longValueExact(), executor, unbanner));
         }
         result.close();
         return bans;
@@ -232,7 +233,7 @@ public final class SqlUtils {
     public static Ban getBan(int id) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where id=" + id + " limit 1;");
-        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), result.getString("unbanner"));
+        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("bannedAt").longValueExact(), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), result.getString("unbanner"));
         return null;
     }
 
