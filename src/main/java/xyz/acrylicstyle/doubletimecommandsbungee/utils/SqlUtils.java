@@ -115,7 +115,7 @@ public final class SqlUtils {
 
     static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
-        ProxyServer.getInstance().getLogger().info("debug: expires: " + expires);
+        ProxyServer.getInstance().getLogger().info("debug: expires: " + (System.currentTimeMillis() +expires));
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
