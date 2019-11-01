@@ -5,6 +5,7 @@ import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Ban;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +51,7 @@ public final class SqlUtils {
                 "        id INT NOT NULL AUTO_INCREMENT,\n" +
                 "        player VARCHAR(36) NOT NULL,\n" + // uuid
                 "        reason VARCHAR(666) default 'None',\n" +
-                "        expires INT(255) NOT NULL,\n" +
+                "        expires NUMERIC(255) NOT NULL,\n" +
                 "        executor VARCHAR(36),\n" + // uuid
                 "        PRIMARY KEY (id)\n" +
                 "    );");
@@ -112,13 +113,14 @@ public final class SqlUtils {
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
-    public static void addBan(UUID player, String reason, int expires, UUID executor) throws SQLException {
+    public static void addBan(UUID player, String reason, long expires, UUID executor) throws SQLException {
         Validate.notNull(player, expires, executor);
         ProxyServer.getInstance().getLogger().info("debug: expires: " + expires);
-        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, " + expires + ", ?);");
+        PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?);");
         preparedStatement.setString(1, player.toString());
         preparedStatement.setString(2, reason);
-        preparedStatement.setString(3, executor.toString());
+        preparedStatement.setBigDecimal(3, BigDecimal.valueOf(expires));
+        preparedStatement.setString(4, executor.toString());
         preparedStatement.executeUpdate();
     }
 
@@ -187,9 +189,9 @@ public final class SqlUtils {
             int id = result.getInt("id");
             UUID player = UUID.fromString(result.getString("player"));
             String reason = result.getString("reason");
-            int expires = result.getInt("expires");
+            BigDecimal expires = result.getBigDecimal("expires");
             UUID executor = UUID.fromString(result.getString("executor"));
-            bans.put(new Ban(id, player, reason, expires, executor));
+            bans.put(new Ban(id, player, reason, expires.toBigInteger().longValueExact(), executor));
         }
         result.close();
         return bans;
