@@ -12,6 +12,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.*;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Party extends Command {
 
@@ -136,7 +137,41 @@ public class Party extends Command {
                 Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 try {
                     emptyPartyCheck(SqlUtils.getPartyLeader(party_id).toProxiedPlayer());
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
+            } else if (args[0].equalsIgnoreCase("list")) {
+                try {
+                    if (!SqlUtils.inParty(sender.getUniqueId())) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "You are not in party!"));
+                        return;
+                    }
+                } catch (SQLException e) {
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "Couldn't fetch party status!"));
+                    e.printStackTrace();
+                    return;
+                }
+                CollectionList<UUID> members;
+                int party_id;
+                try {
+                    party_id = SqlUtils.getPartyId(sender.getUniqueId()); // impossible
+                    members = SqlUtils.getPartyMembersAsUniqueId(party_id);
+                } catch (SQLException e) {
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "An error occurred while fetching party!"));
+                    e.printStackTrace();
+                    return;
+                }
+                AtomicReference<String> membersString = new AtomicReference<>(ChatColor.YELLOW + "Your party members: ");
+                members.forEach(uuid -> {
+                    try {
+                        boolean connected = SqlUtils.isPlayerConnected(uuid);
+                        membersString.set(membersString.get() + (connected ? ChatColor.GREEN : ChatColor.RED) + "   * " + PlayerUtils.getName(uuid));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+                Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                Utils.sendMessage(sender, new TextComponent(membersString.get()));
+                Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
             } else if (args[0].equalsIgnoreCase("disband")) {
                 int party_id;
                 try {
