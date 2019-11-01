@@ -27,7 +27,8 @@ public class Party extends Command {
                 return;
             }
         }
-        final ProxiedPlayer sender = (ProxiedPlayer) sender0; 
+        final ProxiedPlayer sender = (ProxiedPlayer) sender0;
+        emptyPartyCheck(sender);
         String help =
                 ChatColor.BLUE + "--------------------------------------------------\n" +
                         ChatColor.GREEN + "Party Commands:\n" +
