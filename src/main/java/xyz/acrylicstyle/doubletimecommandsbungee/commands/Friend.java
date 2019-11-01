@@ -12,6 +12,7 @@ import net.md_5.bungee.api.plugin.Command;
 import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedPlayer2;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 
@@ -294,8 +295,13 @@ public class Friend extends Command {
     }
 
     private void getProxiedOfflinePlayer(UUID f5, Collection<TextComponent> stackedMessages) {
-        ProxiedPlayer pf5 = ProxyServer.getInstance().getPlayer(f5);
-        assert pf5 != null;
-        stackedMessages.add(new TextComponent(PlayerUtils.getName(f5) + " " + (pf5.isConnected() ? ChatColor.AQUA + "is playing on " + pf5.getServer().getInfo().getName() : ChatColor.RED + "is currently offline")));
+        Player player;
+        try {
+            player = SqlUtils.getPlayer(f5);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+        stackedMessages.add(new TextComponent(PlayerUtils.getName(f5) + " " + (player.isConnected() ? ChatColor.AQUA + "is playing on " + player.getConnectedServer() : ChatColor.RED + "is currently offline")));
     }
 }

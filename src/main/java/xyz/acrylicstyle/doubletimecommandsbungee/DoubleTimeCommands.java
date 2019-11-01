@@ -5,10 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
@@ -102,9 +99,20 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     }
 
     @EventHandler
+    public void onServerConnected(ServerConnectedEvent event) {
+        try {
+            SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getPlayer().getServer().getInfo().getName());
+        } catch (SQLException e) {
+            ProxyServer.getInstance().getLogger().warning("An error occurred while setting connection");
+            e.printStackTrace();
+        }
+    }
+
+    @EventHandler
     public void onLogin(LoginEvent event) {
         try {
             SqlUtils.createPlayer(event.getConnection().getUniqueId(), Ranks.DEFAULT, event.getConnection().getName());
+            SqlUtils.setConnection(event.getConnection().getUniqueId(), ProxyServer.getInstance().getPlayer(event.getConnection().getUniqueId()).getServer().getInfo().getName());
             if (SqlUtils.isBanned(event.getConnection().getUniqueId())) return;
         } catch (SQLException e) {
             event.getConnection().disconnect(new TextComponent(ChatColor.RED + "An error occurred while processing your login, please report it to admins!"));

@@ -69,6 +69,7 @@ public final class SqlUtils {
                 "        id VARCHAR(100) NOT NULL,\n" +
                 "        experience BIGINT(255) NOT NULL default 0,\n" +
                 "        points BIGINT(255) NOT NULL default 0,\n" +
+                "        connected varchar(255) default '',\n" + // char(1) = boolean
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -154,6 +155,28 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_members where member=?;");
         preparedStatement.setString(1, member.toString());
         preparedStatement.executeUpdate();
+    }
+
+    public static boolean isPlayerConnected(UUID player) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select connected from players where player=?;");
+        preparedStatement.setString(1, player.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        String connected = result.getString("connected");
+        result.close();
+        return connected != null;
+    }
+
+    public static String getConnectedServer(UUID player) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select connected from players where player=?;");
+        preparedStatement.setString(1, player.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        String server = result.getString("connected");
+        result.close();
+        return server;
     }
 
     public static Party createParty(UUID leader) throws SQLException {
@@ -329,7 +352,7 @@ public final class SqlUtils {
         preparedStatement.setString(1, name);
         preparedStatement.setString(2, uuid.toString());
         preparedStatement.executeUpdate();
-        return new Player(uuid, rank, getFriends(uuid), getFriendRequests(uuid));
+        return new Player(uuid, rank, getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid));
     }
 
     public static void setPoints(UUID uuid, long points) throws SQLException {
@@ -392,6 +415,13 @@ public final class SqlUtils {
         long value = result.getBigDecimal("experience").longValueExact();
         result.close();
         return value;
+    }
+
+    public static void setConnection(UUID player, String server) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update players set connected=? where player=?;");
+        if (server != null) preparedStatement.setString(1, server); else preparedStatement.setNull(1, Types.VARCHAR);
+        preparedStatement.setString(2, player.toString());
     }
 
     public static String getName(UUID uuid) throws SQLException {
@@ -553,7 +583,7 @@ public final class SqlUtils {
     }
 
     public static Player getPlayer(UUID uuid) throws SQLException {
-        return new Player(uuid, getRank(uuid), getFriends(uuid), getFriendRequests(uuid));
+        return new Player(uuid, getRank(uuid), getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid));
     }
 
     // ----- Private stuff
