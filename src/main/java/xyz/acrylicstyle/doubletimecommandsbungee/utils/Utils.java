@@ -148,7 +148,15 @@ public class Utils {
         }));
     }
 
-    public static void sendMessage(ProxiedPlayer sender, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", "", message.toPlainText(), sender.getServer().getInfo());
+    public static void sendMessage(ProxiedPlayer player, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString(), message.toPlainText(), player.getServer().getInfo());
+    }
+
+    public static void sendMessage(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString(), message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+    }
+
+    public static void kickPlayer(xyz.acrylicstyle.doubletimecommandsbungee.types.Player player, BaseComponent message) {
+        ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString(), message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 }
