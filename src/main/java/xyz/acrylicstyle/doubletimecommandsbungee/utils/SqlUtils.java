@@ -220,7 +220,8 @@ public final class SqlUtils {
             String reason = result.getString("reason");
             BigDecimal expires = result.getBigDecimal("expires");
             UUID executor = UUID.fromString(result.getString("executor"));
-            bans.put(new Ban(id, player, reason, expires.longValueExact(), executor));
+            UUID unbanner = UUID.fromString(result.getString("unbanner"));
+            bans.put(new Ban(id, player, reason, expires.longValueExact(), executor, unbanner));
         }
         result.close();
         return bans;
@@ -229,12 +230,22 @@ public final class SqlUtils {
     public static Ban getBan(int id) throws SQLException {
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where id=" + id + " limit 1;");
-        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")));
+        if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), UUID.fromString(result.getString("unbanner")));
         return null;
     }
 
     public static boolean isBanned(UUID uuid) throws SQLException {
-        return getBan(uuid).first().getExpires() > System.currentTimeMillis();
+        CollectionList<Ban> bans = getBan(uuid);
+        return bans.first().getExpires() > System.currentTimeMillis() || bans.valuesArray()[bans.size()].getExpires() == -1;
+    }
+
+    public static UUID getUniqueId(String name) throws SQLException {
+        Statement statement = connection.get().createStatement();
+        ResultSet result = statement.executeQuery("select player from players where id='" + name + "';");
+        result.next();
+        UUID uuid = UUID.fromString(result.getString("player"));
+        result.close();
+        return uuid;
     }
 
     public static Player getPlayer(UUID uuid) throws SQLException {

@@ -8,13 +8,15 @@ public class Ban {
     private final String reason;
     private final long expires;
     private final UUID executor;
+    private final UUID unbanner;
 
-    public Ban(int id, UUID player, String reason, long expires, UUID executor) {
+    public Ban(int id, UUID player, String reason, long expires, UUID executor, UUID unbanner) {
         this.id = id;
         this.player = player;
         this.reason = reason;
         this.expires = expires;
         this.executor = executor;
+        this.unbanner = unbanner;
     }
 
     public final int getBanId() { return this.id; }
@@ -22,4 +24,5 @@ public class Ban {
     public final String getReason() { return this.reason == null ? "None" : this.reason; }
     public final long getExpires() { return this.expires; }
     public final UUID getExecutor() { return this.executor; }
+    public final UUID getUnbanner() { return this.unbanner; }
 }
