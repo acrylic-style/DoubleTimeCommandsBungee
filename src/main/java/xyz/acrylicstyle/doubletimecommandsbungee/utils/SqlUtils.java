@@ -212,7 +212,7 @@ public final class SqlUtils {
     public static CollectionList<Ban> getBan(@NonNull UUID uuid) throws SQLException {
         Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
-        ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires;"); // DESC
+        ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires DESC;"); // DESC
         CollectionList<Ban> bans = new CollectionList<>();
         while (result.next()) {
             int id = result.getInt("id");
