@@ -141,6 +141,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             });
             Collections.shuffle(servers, new Random()); // shuffle all servers
             event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
+            SqlUtils.setConnection(event.getPlayer().getUniqueId(), null);
             if (SqlUtils.isBanned(event.getPlayer().getUniqueId())) return;
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
@@ -148,7 +149,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 if (player != null) player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
             });
         } catch (Exception e) {
-            ProxyServer.getInstance().getLogger().warning("Couldn't send disconnect message!");
+            ProxyServer.getInstance().getLogger().warning("Couldn't handle disconnection!");
             e.printStackTrace();
         }
     }
