@@ -141,6 +141,9 @@ public class Party extends Command {
                 ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 ps.sendMessage(new TextComponent(ChatColor.YELLOW + "You declined the party invite."));
                 ps.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                try {
+                    emptyPartyCheck(SqlUtils.getPartyLeader(party_id).toProxiedPlayer());
+                } catch (Exception ignored) {}
             } else if (args[0].equalsIgnoreCase("disband")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 int party_id;
@@ -222,6 +225,9 @@ public class Party extends Command {
                         e.getCause().printStackTrace();
                     }
                 });
+                try {
+                    emptyPartyCheck(SqlUtils.getPartyLeader(party_id).toProxiedPlayer());
+                } catch (Exception ignored) {}
             } else if (args[0].equalsIgnoreCase("warp")) {
                 ProxiedPlayer ps = (ProxiedPlayer) sender;
                 int party_id;
@@ -359,6 +365,7 @@ public class Party extends Command {
                             player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                             player.sendMessage(new TextComponent(ChatColor.YELLOW + "Your party invite from " + PlayerUtils.getName(ps) + ChatColor.RESET + ChatColor.YELLOW + " has expired."));
                             player.sendMessage(new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            emptyPartyCheck((ProxiedPlayer) sender);
                         } catch(SQLException e) {
                             ProxyServer.getInstance().getLogger().severe("Error while handling expired friend request:");
                             e.printStackTrace();
