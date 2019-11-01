@@ -189,10 +189,11 @@ public class Utils {
             new CollectionList<>(Arrays.asList(args)).foreach((arg, index) -> {
                 if (index >= i) message[0] += arg;
             });
+            final String name = PlayerUtils.getName(player.getUniqueId());
             SqlUtils.getPartyMembersAsUniqueId(party_id).forEach(uuid -> {
                 try {
                     Player player2 = SqlUtils.getPlayer(uuid);
-                    Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "Party > " + PlayerUtils.getName(uuid) + ChatColor.WHITE + ": " + message[0]));
+                    Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "Party > " + name + ChatColor.WHITE + ": " + message[0]));
                     Utils.playSound(player2, "ENTITY_EXPERIENCE_ORB_PICKUP");
                 } catch (SQLException e) {
                     e.printStackTrace();

@@ -16,6 +16,6 @@ public class PartyChat extends Command {
             sender0.sendMessage(new TextComponent(ChatColor.RED + "This command must be run from in-game."));
             return;
         }
-        Utils.partyChat((ProxiedPlayer) sender0, args, 1);
+        Utils.partyChat((ProxiedPlayer) sender0, args, 0);
     }
 }

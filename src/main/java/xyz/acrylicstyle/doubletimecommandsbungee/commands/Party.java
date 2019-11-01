@@ -325,7 +325,7 @@ public class Party extends Command {
                 } catch (Exception ignored) {
                 }
             } else if (args[0].equalsIgnoreCase("chat")) {
-                Utils.partyChat(sender, args, 2);
+                Utils.partyChat(sender, args, 1);
             } else if (args[0].equalsIgnoreCase("warp")) {
                 int party_id;
                 try {
