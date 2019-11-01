@@ -150,7 +150,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             if (bans.size() <= 0) return;
             xyz.acrylicstyle.doubletimecommandsbungee.types.Ban lastBan = banIndex.get() > -1 ? bans.get(banIndex.get()) : bans.first();
             String reason = lastBan.getReason();
-            int expires = lastBan.getExpires();
+            long expires = lastBan.getExpires();
             long currentTimestamp = System.currentTimeMillis();
             long days = Math.round(((float) (expires-currentTimestamp)/86400000F)*10L)/10;
             if (expires > 0 && expires <= currentTimestamp) return;
