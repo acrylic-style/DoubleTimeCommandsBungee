@@ -117,6 +117,17 @@ public final class SqlUtils {
         return isInParty;
     }
 
+    public static boolean inParty(int party_id, UUID player) throws SQLException {
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_members where member=? and party_id=?;");
+        preparedStatement.setString(1, player.toString());
+        preparedStatement.setInt(2, party_id);
+        ResultSet result = preparedStatement.executeQuery();
+        boolean isInParty = result.next();
+        result.close();
+        return isInParty;
+    }
+
     public static Player getPartyLeader(int party_id) throws SQLException {
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select leader from parties where party_id=?;");
@@ -251,6 +262,14 @@ public final class SqlUtils {
         boolean yes = result.next();
         result.close();
         return yes;
+    }
+
+    public static void promotePartyMember(int party_id, UUID member) throws SQLException {
+        Validate.notNull(member);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update parties set leader=? where party_id=?;");
+        preparedStatement.setString(1, member.toString());
+        preparedStatement.setInt(2, party_id);
+        preparedStatement.executeUpdate();
     }
 
     public static void addPartyMember(int party_id, UUID member) throws SQLException {

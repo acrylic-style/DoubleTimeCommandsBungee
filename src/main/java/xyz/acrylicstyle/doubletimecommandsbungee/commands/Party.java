@@ -172,6 +172,79 @@ public class Party extends Command {
                 Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
                 Utils.sendMessage(sender, new TextComponent(membersString.get()));
                 Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+            } else if (args[0].equalsIgnoreCase("promote")) {
+                int party_id;
+                try {
+                    if (args.length <= 1) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "Please specify player to promote to the party leader!"));
+                        return;
+                    }
+                    if (!SqlUtils.inParty(sender.getUniqueId())) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "You are not in party!"));
+                        return;
+                    }
+                    UUID player;
+                    try {
+                        player = SqlUtils.getUniqueId(args[1]);
+                    } catch (SQLException e) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "Couldn't find player!"));
+                        return;
+                    }
+                    party_id = SqlUtils.getPartyId(sender.getUniqueId());
+                    if (!SqlUtils.inParty(party_id, player)) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "They're not in your party!"));
+                        return;
+                    }
+                    if (!SqlUtils.isPartyLeader(party_id, sender.getUniqueId())) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "You are not party leader!"));
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                        return;
+                    }
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.YELLOW + "You promoted " + PlayerUtils.getName(player) + ChatColor.YELLOW + " to party leader!"));
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                    SqlUtils.getPartyMembersAsUniqueId(party_id).filter(p -> !p.equals(sender.getUniqueId())).forEach(uuid -> {
+                        try {
+                            final Player player2 = SqlUtils.getPlayer(uuid);
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.GRAY + PlayerUtils.getName(sender) + ChatColor.RESET + ChatColor.YELLOW + " has promoted " + PlayerUtils.getName(player) + ChatColor.YELLOW + " to the party leader!"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            e.getCause().printStackTrace();
+                        }
+                    });
+                    SqlUtils.promotePartyMember(party_id, player);
+                } catch (SQLException e) {
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "Couldn't fetch party status!"));
+                    e.printStackTrace();
+                }
+            } else if (args[0].equalsIgnoreCase("hijack")) {
+                if (!Utils.must(Ranks.ADMIN, sender)) return;
+                int party_id;
+                try {
+                    if (!SqlUtils.inParty(sender.getUniqueId())) {
+                        Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "You are not in party!"));
+                        return;
+                    }
+                    party_id = SqlUtils.getPartyId(sender.getUniqueId());
+                    SqlUtils.getPartyMembersAsUniqueId(party_id).forEach(uuid -> {
+                        try {
+                            final Player player2 = SqlUtils.getPlayer(uuid);
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                            Utils.sendMessage(player2, new TextComponent(PlayerUtils.getName(sender) + ChatColor.YELLOW + " has hijacked your party!"));
+                            Utils.sendMessage(player2, new TextComponent(ChatColor.BLUE + "--------------------------------------------------"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            e.getCause().printStackTrace();
+                        }
+                    });
+                    SqlUtils.promotePartyMember(party_id, sender.getUniqueId());
+                } catch (SQLException e) {
+                    Utils.sendMessage(sender, new TextComponent(ChatColor.RED + "Couldn't fetch party status!"));
+                    e.printStackTrace();
+                }
             } else if (args[0].equalsIgnoreCase("disband")) {
                 int party_id;
                 try {
