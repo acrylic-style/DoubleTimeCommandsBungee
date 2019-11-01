@@ -78,6 +78,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().registerChannel("commons:transfer");
         ProxyServer.getInstance().registerChannel("helper:message");
         ProxyServer.getInstance().registerChannel("helper:kick");
+        ProxyServer.getInstance().registerChannel("helper:connect");
     }
 
     @Override
