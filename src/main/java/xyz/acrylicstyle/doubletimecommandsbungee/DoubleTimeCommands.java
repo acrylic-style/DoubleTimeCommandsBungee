@@ -115,7 +115,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Title: " + ChatColor.AQUA + incident.getName()));
                 event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Summary: " + ChatColor.AQUA + incident.getMessage()));
                 event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Status: " + Utils.getStatus(incident.getStatus())));
-                event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz" + ChatColor.RESET + ChatColor.YELLOW + " for the more information."));
+                event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz/incidents/" + incident.getId() + ChatColor.RESET + ChatColor.YELLOW + " for the more information."));
                 event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
             } else if (unresolvedIncidents.size() >= 2) {
                 event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
