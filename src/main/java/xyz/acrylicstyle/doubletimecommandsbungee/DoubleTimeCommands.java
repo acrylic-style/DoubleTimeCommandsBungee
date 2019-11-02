@@ -106,6 +106,12 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         try {
+            ArrayList<ServerInfo> servers = new ArrayList<>();
+            ProxyServer.getInstance().getServers().forEach((server, info) -> {
+                if ((server.startsWith("LOBBY") || server.startsWith("lobby"))) servers.add(info);
+            });
+            Collections.shuffle(servers, new Random()); // shuffle all servers
+            event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
             SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
         } catch (SQLException e) {
             ProxyServer.getInstance().getLogger().warning("An error occurred while setting connection");
@@ -127,8 +133,11 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         try {
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
             friends.forEach(uuid -> {
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
-                if (player != null) player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+                try {
+                    Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             });
         } catch (Exception e) {
             ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
@@ -139,18 +148,15 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onLeave(PlayerDisconnectEvent event) {
         try {
-            ArrayList<ServerInfo> servers = new ArrayList<>();
-            ProxyServer.getInstance().getServers().forEach((server, info) -> {
-                if ((server.startsWith("LOBBY") || server.startsWith("lobby"))) servers.add(info);
-            });
-            Collections.shuffle(servers, new Random()); // shuffle all servers
-            event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
             SqlUtils.setConnection(event.getPlayer().getUniqueId(), null);
             if (SqlUtils.isBanned(event.getPlayer().getUniqueId())) return;
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
-                if (player != null) player.sendMessage(new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
+                try {
+                    Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             });
         } catch (Exception e) {
             ProxyServer.getInstance().getLogger().warning("Couldn't handle disconnection!");

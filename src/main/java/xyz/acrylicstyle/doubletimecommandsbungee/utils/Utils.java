@@ -92,7 +92,7 @@ public class Utils {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         Ranks actual = PlayerUtils.getRank(player.getUniqueId());
         if (required.ordinal() < actual.ordinal()) {
-            player.sendMessage(new TextComponent(ChatColor.RED + "You must be " + required.name().toLowerCase(Locale.ROOT) + " or higher to use this command!"));
+            Utils.sendMessage(player, new TextComponent(ChatColor.RED + "You must be " + required.name().toLowerCase(Locale.ROOT) + " or higher to use this command!"));
             return false;
         }
         return true;
