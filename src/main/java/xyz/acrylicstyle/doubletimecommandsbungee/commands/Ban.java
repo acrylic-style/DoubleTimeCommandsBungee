@@ -76,7 +76,7 @@ public class Ban extends Command {
 				return;
 			}
 			try {
-				long expires;
+				int expires;
 				if (args[3].equalsIgnoreCase("d")) {
 					expires = Integer.parseInt(args[2]) * Utils.DAY;
 				} else if (args[3].equalsIgnoreCase("h")) {

@@ -8,12 +8,21 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import util.Collection;
 import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.DoubleTimeCommands;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Incident;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -107,8 +116,8 @@ public class Utils {
         Utils.ban(uuid, reason, -1, executor); // -1 means never
     }
 
-    public static void ban(UUID uuid, String reason, long expires, UUID executor) throws SQLException {
-        SqlUtils.addBan(uuid, reason, (int) expires, executor);
+    public static void ban(UUID uuid, String reason, int expires, UUID executor) throws SQLException {
+        SqlUtils.addBan(uuid, reason, expires, executor);
     }
 
     public static <T extends CommandSender> void sendError(T player, Errors error) {
@@ -206,6 +215,65 @@ public class Utils {
         } catch (Exception e) {
             Utils.sendMessage(player, new TextComponent(ChatColor.RED + "Couldn't send message! Please try again later!"));
             e.printStackTrace();
+        }
+    }
+
+    private static JSONObject callAPI(URL url) throws IOException, ParseException {
+        BufferedReader br;
+        String line;
+        String text = "";
+        try (InputStream is = url.openStream()) {
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                text += line;
+            }
+        } catch (IOException mue) {
+            mue.printStackTrace();
+        }
+        return getJSON(text);
+    }
+
+    private static JSONObject getJSON(String s) throws ParseException {
+        return (JSONObject) new JSONParser().parse(s);
+    }
+
+    private static CollectionList<Incident> getIncidents() throws IOException, ParseException {
+        try {
+            JSONObject object = callAPI(new URL("https://status.acrylicstyle.xyz/api/v1/incidents"));
+            CollectionList<Incident> incidents = new CollectionList<>();
+            object.getJSONArray("data").forEach(obj -> {
+                JSONObject jsonObj = (JSONObject) obj;
+                int id = jsonObj.getInt("id");
+                int user_id = jsonObj.getInt("user_id");
+                int component_id = jsonObj.getInt("component_id");
+                String name = jsonObj.getString("name");
+                int status = jsonObj.getInt("status");
+                int visible = jsonObj.getInt("visible");
+                boolean sticked = jsonObj.getBoolean("sticked");
+                boolean notifications = jsonObj.getBoolean("notifications");
+                String message = jsonObj.getString("message");
+                boolean is_resolved = jsonObj.getBoolean("is_resolved");
+                incidents.add(new Incident(id, user_id, component_id, name, status, visible, sticked, notifications, message, is_resolved));
+            });
+            return incidents;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static CollectionList<Incident> getUnresolvedIncidents() throws IOException, ParseException {
+        return getIncidents().filter(incident -> !incident.isResolved()).clone();
+    }
+
+    public static String getStatus(int status) {
+        switch (status) {
+            case 0: return ChatColor.AQUA + "Scheduled";
+            case 1: return ChatColor.YELLOW + "Investigating";
+            case 2: return ChatColor.GOLD + "Identified";
+            case 3: return ChatColor.GREEN + "Watching";
+            case 4: return ChatColor.GREEN + "Fixed";
+            default: return ChatColor.GRAY + "<Undefined>";
         }
     }
 }

@@ -13,6 +13,7 @@ import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.commands.*;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Incident;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
@@ -106,6 +107,22 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         try {
+            CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
+            if (unresolvedIncidents.size() == 1) {
+                Incident incident = unresolvedIncidents.first();
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Incident " + ChatColor.RED + "#" + incident.getId() + ChatColor.YELLOW + " is happening right now:"));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Title: " + incident.getName()));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Message: " + incident.getMessage()));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Status: " + Utils.getStatus(incident.getStatus())));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Please see https://status.acrylicstyle.xyz for the more information."));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+            } else if (unresolvedIncidents.size() >= 2) {
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "There are " + unresolvedIncidents.size() + " incidents happening now!"));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.YELLOW + "Please see https://status.acrylicstyle.xyz for the more information."));
+                event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+            }
             ArrayList<ServerInfo> servers = new ArrayList<>();
             ProxyServer.getInstance().getServers().forEach((server, info) -> {
                 if ((server.startsWith("LOBBY") || server.startsWith("lobby"))) servers.add(info);
@@ -113,8 +130,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             Collections.shuffle(servers, new Random()); // shuffle all servers
             event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
             SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
-        } catch (SQLException e) {
-            ProxyServer.getInstance().getLogger().warning("An error occurred while setting connection");
+        } catch (Exception e) {
+            ProxyServer.getInstance().getLogger().warning("An error occurred while handling connection event (ServerConnectedEvent)");
             e.printStackTrace();
         }
     }
