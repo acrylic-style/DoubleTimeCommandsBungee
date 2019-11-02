@@ -147,19 +147,27 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             e.printStackTrace();
             return;
         }
-        try {
-            CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
-            friends.forEach(uuid -> {
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
                 try {
-                    Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
-                } catch (SQLException e) {
+                    if (!SqlUtils.isPlayerConnected(event.getConnection().getUniqueId())) return;
+                    CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
+                    friends.forEach(uuid -> {
+                        try {
+                            Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (Exception e) {
+                    ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
                     e.printStackTrace();
                 }
-            });
-        } catch (Exception e) {
-            ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
-            e.printStackTrace();
-        }
+            }
+        };
+        timer.schedule(timerTask, 1000*2);
     }
 
     @EventHandler
