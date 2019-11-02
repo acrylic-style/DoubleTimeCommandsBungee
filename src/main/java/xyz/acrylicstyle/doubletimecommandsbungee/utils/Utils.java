@@ -251,11 +251,11 @@ public class Utils {
                 String name = (String) jsonObj.get("name");
                 int status = (int) (long) jsonObj.get("status");
                 int visible = (int) (long) jsonObj.get("visible");
-                boolean sticked = (boolean) jsonObj.get("sticked");
+                boolean stickied = (boolean) jsonObj.get("stickied");
                 boolean notifications = (boolean) jsonObj.get("notifications");
                 String message = (String) jsonObj.get("message");
                 boolean is_resolved = (boolean) jsonObj.get("is_resolved");
-                incidents.add(new Incident(id, user_id, component_id, name, status, visible, sticked, notifications, message, is_resolved));
+                incidents.add(new Incident(id, user_id, component_id, name, status, visible, stickied, notifications, message, is_resolved));
             });
             return incidents;
         } catch (Exception e) {
