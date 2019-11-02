@@ -156,7 +156,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                     CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
                     friends.forEach(uuid -> {
                         try {
-                            Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+                            if (SqlUtils.isPlayerConnected(uuid)) Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -178,7 +178,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
                 try {
-                    Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
+                    if (SqlUtils.isPlayerConnected(uuid)) Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getPlayer().getName() + " left."));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
