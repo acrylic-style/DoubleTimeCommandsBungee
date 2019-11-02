@@ -15,6 +15,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class SqlUtils {
+    private static String host = null;
+    private static String database = null;
+    private static String user = null;
+    private static String password = null;
+
+    // ----- Public stuff
+
     public static void loadDriver() throws ClassNotFoundException {
         if (init.get()) throw new IllegalStateException("Driver is already loaded!");
         Class.forName("com.mysql.jdbc.Driver");
@@ -95,7 +102,17 @@ public final class SqlUtils {
                 ");");
     }
 
+    public static void ping() throws SQLException {
+        try {
+            Statement statement = connection.get().createStatement();
+            statement.execute("select version();");
+        } catch (SQLException e) {
+            connect(host, database, user, password);
+        }
+    }
+
     public static boolean isPartyLeader(UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         Integer party_id = getPartyId(player);
         if (party_id == null) return false;
@@ -103,11 +120,13 @@ public final class SqlUtils {
     }
 
     public static boolean isPartyLeader(int party_id, UUID player) throws SQLException {
+        ping();
         Validate.notNull(party_id, player);
         return getPartyLeader(party_id).getUniqueId().equals(player);
     }
 
     public static boolean inParty(UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_members where member=?;");
         preparedStatement.setString(1, player.toString());
@@ -118,6 +137,7 @@ public final class SqlUtils {
     }
 
     public static boolean inParty(int party_id, UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_members where member=? and party_id=?;");
         preparedStatement.setString(1, player.toString());
@@ -129,6 +149,7 @@ public final class SqlUtils {
     }
 
     public static Player getPartyLeader(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select leader from parties where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -140,6 +161,7 @@ public final class SqlUtils {
     }
 
     public static void disbandParty(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from parties where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -153,6 +175,7 @@ public final class SqlUtils {
     }
 
     public static void resetParty() throws SQLException {
+        ping();
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from parties where true;");
         preparedStatement.executeUpdate();
         preparedStatement = connection.get().prepareStatement("delete from party_invites where true;");
@@ -162,6 +185,7 @@ public final class SqlUtils {
     }
 
     public static void leaveParty(UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_members where member=?;");
         preparedStatement.setString(1, member.toString());
@@ -169,6 +193,7 @@ public final class SqlUtils {
     }
 
     public static boolean isPlayerConnected(UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select connected from players where player=?;");
         preparedStatement.setString(1, player.toString());
@@ -180,6 +205,7 @@ public final class SqlUtils {
     }
 
     public static String getConnectedServer(UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select connected from players where player=?;");
         preparedStatement.setString(1, player.toString());
@@ -191,6 +217,7 @@ public final class SqlUtils {
     }
 
     public static Party createParty(UUID leader) throws SQLException {
+        ping();
         Validate.notNull(leader);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into parties values (default, ?);");
         preparedStatement.setString(1, leader.toString());
@@ -202,6 +229,7 @@ public final class SqlUtils {
     }
 
     public static CollectionList<Player> getPartyInvites(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_invites where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -214,6 +242,7 @@ public final class SqlUtils {
     }
 
     public static CollectionList<Integer> getPartyInvites(UUID player) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_invites where member=?;");
         preparedStatement.setString(1, player.toString());
@@ -226,6 +255,7 @@ public final class SqlUtils {
     }
 
     public static CollectionList<UUID> getPartyInvitesAsUniqueId(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_invites where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -238,6 +268,7 @@ public final class SqlUtils {
     }
 
     public static void removePartyInvite(int party_id, UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from party_invites where party_id=? and member=?;");
         preparedStatement.setInt(1, party_id);
@@ -246,6 +277,7 @@ public final class SqlUtils {
     }
 
     public static void addPartyInvite(int party_id, UUID member) throws SQLException {
+        ping();
         Validate.notNull(party_id, member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into party_invites values (?, ?);");
         preparedStatement.setInt(1, party_id);
@@ -254,6 +286,7 @@ public final class SqlUtils {
     }
 
     public static boolean inPartyInvite(int party_id, UUID member) throws SQLException {
+        ping();
         Validate.notNull(party_id, member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select * from party_invites where party_id=? and member=?;");
         preparedStatement.setInt(1, party_id);
@@ -265,6 +298,7 @@ public final class SqlUtils {
     }
 
     public static void promotePartyMember(int party_id, UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update parties set leader=? where party_id=?;");
         preparedStatement.setString(1, member.toString());
@@ -273,6 +307,7 @@ public final class SqlUtils {
     }
 
     public static void addPartyMember(int party_id, UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into party_members values (?, ?);");
         preparedStatement.setInt(1, party_id);
@@ -281,6 +316,7 @@ public final class SqlUtils {
     }
 
     public static Party getParty(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         UUID leader = getPartyLeader(party_id).getUniqueId();
         CollectionList<Player> partyMembers = getPartyMembers(party_id);
@@ -288,6 +324,7 @@ public final class SqlUtils {
     }
 
     public static Party getParty(UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         Integer partyId = getPartyId(member);
         if (partyId == null) return null;
@@ -297,6 +334,7 @@ public final class SqlUtils {
     }
 
     public static Party getPartyFromLeader(UUID leader) throws SQLException {
+        ping();
         Validate.notNull(leader);
         Integer partyId = getPartyIdFromParties(leader);
         if (partyId == null) return null;
@@ -306,6 +344,7 @@ public final class SqlUtils {
     }
 
     public static Integer getPartyId(UUID member) throws SQLException {
+        ping();
         Validate.notNull(member);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from party_members where member=?;");
         preparedStatement.setString(1, member.toString());
@@ -319,6 +358,7 @@ public final class SqlUtils {
     }
 
     public static Integer getPartyIdFromParties(UUID leader) throws SQLException {
+        ping();
         Validate.notNull(leader);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select party_id from parties where leader=?;");
         preparedStatement.setString(1, leader.toString());
@@ -332,6 +372,7 @@ public final class SqlUtils {
     }
 
     public static CollectionList<Player> getPartyMembers(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_members where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -344,6 +385,7 @@ public final class SqlUtils {
     }
 
     public static CollectionList<UUID> getPartyMembersAsUniqueId(int party_id) throws SQLException {
+        ping();
         Validate.notNull(party_id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select member from party_members where party_id=?;");
         preparedStatement.setInt(1, party_id);
@@ -356,6 +398,7 @@ public final class SqlUtils {
     }
 
     public static Player createPlayer(UUID uuid, Ranks rank, String name) throws SQLException {
+        ping();
         Validate.notNull(uuid, rank);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into players (player, rank, id)\n" +
                 "select * from (select ?, ?, ?) as tmp\n" +
@@ -375,6 +418,7 @@ public final class SqlUtils {
     }
 
     public static void setPoints(UUID uuid, long points) throws SQLException {
+        ping();
         Validate.notNull(uuid, points);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set points=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(points));
@@ -382,6 +426,7 @@ public final class SqlUtils {
     }
 
     public static void addPoints(UUID uuid, long points) throws SQLException {
+        ping();
         Validate.notNull(uuid, points);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select points from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
@@ -395,6 +440,7 @@ public final class SqlUtils {
     }
 
     public static long getPoints(UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select points from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
@@ -406,6 +452,7 @@ public final class SqlUtils {
     }
 
     public static void setExperience(UUID uuid, long experience) throws SQLException {
+        ping();
         Validate.notNull(uuid, experience);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set experience=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(experience));
@@ -413,6 +460,7 @@ public final class SqlUtils {
     }
 
     public static void addExperience(UUID uuid, long experience) throws SQLException {
+        ping();
         Validate.notNull(uuid, experience);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
@@ -426,6 +474,7 @@ public final class SqlUtils {
     }
 
     public static long getExperience(UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
@@ -437,6 +486,7 @@ public final class SqlUtils {
     }
 
     public static void setConnection(UUID player, String server) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set connected=? where player=?;");
         if (server != null) preparedStatement.setString(1, server); else preparedStatement.setNull(1, Types.VARCHAR);
@@ -445,6 +495,7 @@ public final class SqlUtils {
     }
 
     public static String getName(UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select id from players where player=? limit 1;");
         preparedStatement.setString(1, uuid.toString());
@@ -457,17 +508,20 @@ public final class SqlUtils {
 
     @Nullable
     public static CollectionList<UUID> getFriends(@NonNull UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friends where player=", "player2");
     }
 
     @Nullable
     public static CollectionList<UUID> getFriendRequests(@NonNull UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         return getUUIDs(uuid, "select player2 from friend_requests where player=", "player2");
     }
 
     static void addBan(@NonNull UUID player, @Nullable String reason, @NonNull long expires, @NonNull UUID executor) throws SQLException {
+        ping();
         Validate.notNull(player, expires, executor);
         ProxyServer.getInstance().getLogger().info("debug: expires: " + (expires != -1 ? System.currentTimeMillis() +expires : -1));
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into bans values (default, ?, ?, ?, ?, ?, default);");
@@ -480,6 +534,7 @@ public final class SqlUtils {
     }
 
     public static void unban(@NonNull UUID player, @NonNull UUID unbanner) throws SQLException {
+        ping();
         Validate.notNull(player);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update bans set expires=0, unbanner=? where player=?;");
         preparedStatement.setString(1, unbanner.toString());
@@ -488,6 +543,7 @@ public final class SqlUtils {
     }
 
     public static void updateBan(@NonNull int id, @Nullable UUID player, @Nullable String reason, @Nullable Long expires, @Nullable UUID executor, @Nullable UUID unbanner) throws SQLException {
+        ping();
         Validate.notNull(id);
         PreparedStatement preparedStatement = connection.get().prepareStatement("update bans set player=?, reason=?, expires=?, executor=?, unbanner=? where id=?;");
         if (player != null) preparedStatement.setString(1, player.toString()); else preparedStatement.setString(1, null);
@@ -500,6 +556,7 @@ public final class SqlUtils {
     }
 
     public static void addFriend(UUID player1, UUID player2) throws SQLException {
+        ping();
         Validate.notNull(player1, player2);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friends values (?, ?);");
         preparedStatement.setString(1, player1.toString());
@@ -508,6 +565,7 @@ public final class SqlUtils {
     }
 
     public static void removeFriend(UUID player1, UUID player2) throws SQLException {
+        ping();
         Validate.notNull(player1, player2);
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friends where player=? and player2=?;");
         preparedStatement.setString(1, player1.toString());
@@ -516,6 +574,7 @@ public final class SqlUtils {
     }
 
     public static void addFriendRequest(UUID player1, UUID player2) throws SQLException {
+        ping();
         Validate.notNull(player1, player2);
         PreparedStatement preparedStatement = connection.get().prepareStatement("insert into friend_requests values (?, ?);");
         preparedStatement.setString(1, player1.toString());
@@ -524,6 +583,7 @@ public final class SqlUtils {
     }
 
     public static void removeFriendRequest(UUID player1, UUID player2) throws SQLException {
+        ping();
         Validate.notNull(player1, player2);
         PreparedStatement preparedStatement = connection.get().prepareStatement("delete from friend_requests where player=? and player2=?;");
         preparedStatement.setString(1, player1.toString());
@@ -532,11 +592,13 @@ public final class SqlUtils {
     }
 
     public static void clearFriendRequests() throws SQLException {
+        ping();
         connection.get().createStatement().executeUpdate("delete from friend_requests where true;");
     }
 
     @NonNull
     static Ranks getRank(@NonNull UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
@@ -555,11 +617,13 @@ public final class SqlUtils {
     }
 
     public static void setRank(@NonNull UUID uuid, @NonNull Ranks rank) throws SQLException {
+        ping();
         connection.get().createStatement().executeUpdate("update players set rank='" + rank.name() + "' where player='" + uuid.toString() + "';");
     }
 
     @NonNull
     public static CollectionList<Ban> getBan(@NonNull UUID uuid) throws SQLException {
+        ping();
         Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where player='" + uuid.toString() + "' order by expires DESC;"); // DESC
@@ -579,6 +643,7 @@ public final class SqlUtils {
     }
 
     public static Ban getBan(int id) throws SQLException {
+        ping();
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select * from bans where id=" + id + " limit 1;");
         if (result.next()) return new Ban(result.getInt("id"), UUID.fromString(result.getString("player")), result.getString("reason"), result.getBigDecimal("bannedAt").longValueExact(), result.getBigDecimal("expires").longValueExact(), UUID.fromString(result.getString("executor")), result.getString("unbanner"));
@@ -586,6 +651,7 @@ public final class SqlUtils {
     }
 
     public static boolean isBanned(UUID uuid) throws SQLException {
+        ping();
         CollectionList<Ban> bans = getBan(uuid);
         try {
             if (bans.first() == null) return false;
@@ -594,6 +660,7 @@ public final class SqlUtils {
     }
 
     public static UUID getUniqueId(String name) throws SQLException {
+        ping();
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select player from players where id='" + name + "';");
         result.next();
@@ -603,12 +670,14 @@ public final class SqlUtils {
     }
 
     public static Player getPlayer(UUID uuid) throws SQLException {
+        ping();
         return new Player(uuid, getRank(uuid), getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid));
     }
 
     // ----- Private stuff
 
     private static CollectionList<UUID> getUUIDs(UUID uuid, String query, String s) throws SQLException {
+        ping();
         Statement statement = connection.get().createStatement();
         CollectionList<UUID> uuids = new CollectionList<>();
         ResultSet result = statement.executeQuery(query + "'" + uuid.toString() + "';");
