@@ -245,12 +245,12 @@ public class Utils {
             CollectionList<Incident> incidents = new CollectionList<>();
             ((JSONArray)object.get("data")).forEach(obj -> {
                 JSONObject jsonObj = (JSONObject) obj;
-                int id = (int) jsonObj.get("id");
-                int user_id = (int) jsonObj.get("user_id");
-                int component_id = (int) jsonObj.get("component_id");
+                int id = (int) (long) jsonObj.get("id");
+                int user_id = (int) (long) jsonObj.get("user_id");
+                int component_id = (int) (long) jsonObj.get("component_id");
                 String name = (String) jsonObj.get("name");
-                int status = (int) jsonObj.get("status");
-                int visible = (int) jsonObj.get("visible");
+                int status = (int) (long) jsonObj.get("status");
+                int visible = (int) (long) jsonObj.get("visible");
                 boolean sticked = (boolean) jsonObj.get("sticked");
                 boolean notifications = (boolean) jsonObj.get("notifications");
                 String message = (String) jsonObj.get("message");
