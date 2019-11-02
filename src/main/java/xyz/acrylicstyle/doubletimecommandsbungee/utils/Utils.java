@@ -270,10 +270,10 @@ public class Utils {
 
     public static String getStatus(int status) {
         switch (status) {
-            case 0: return ChatColor.AQUA + "Scheduled";
-            case 1: return ChatColor.YELLOW + "Investigating";
+            case 0: return ChatColor.DARK_PURPLE + "Scheduled";
+            case 1: return ChatColor.BLUE + "Investigating";
             case 2: return ChatColor.GOLD + "Identified";
-            case 3: return ChatColor.GREEN + "Watching";
+            case 3: return ChatColor.DARK_GREEN + "Watching";
             case 4: return ChatColor.GREEN + "Fixed";
             default: return ChatColor.GRAY + "<Undefined>";
         }
