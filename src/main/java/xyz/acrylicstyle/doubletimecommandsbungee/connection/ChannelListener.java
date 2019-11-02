@@ -31,7 +31,7 @@ public class ChannelListener implements Listener {
             try {
                 String subchannel = in.readUTF();
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
-                ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(e.getSender().toString()).getServer().getInfo();
                 String input = in.readUTF();
                 Utils.transferPlayer(ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)), input);
                 sendToBukkit(e.getTag(), subchannel, "", server);
