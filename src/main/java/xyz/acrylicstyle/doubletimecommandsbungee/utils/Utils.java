@@ -8,7 +8,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import util.Collection;
@@ -237,22 +238,23 @@ public class Utils {
         return (JSONObject) new JSONParser().parse(s);
     }
 
+    @SuppressWarnings("unchecked")
     private static CollectionList<Incident> getIncidents() throws IOException, ParseException {
         try {
             JSONObject object = callAPI(new URL("https://status.acrylicstyle.xyz/api/v1/incidents"));
             CollectionList<Incident> incidents = new CollectionList<>();
-            object.getJSONArray("data").forEach(obj -> {
+            ((JSONArray)object.get("data")).forEach(obj -> {
                 JSONObject jsonObj = (JSONObject) obj;
-                int id = jsonObj.getInt("id");
-                int user_id = jsonObj.getInt("user_id");
-                int component_id = jsonObj.getInt("component_id");
-                String name = jsonObj.getString("name");
-                int status = jsonObj.getInt("status");
-                int visible = jsonObj.getInt("visible");
-                boolean sticked = jsonObj.getBoolean("sticked");
-                boolean notifications = jsonObj.getBoolean("notifications");
-                String message = jsonObj.getString("message");
-                boolean is_resolved = jsonObj.getBoolean("is_resolved");
+                int id = (int) jsonObj.get("id");
+                int user_id = (int) jsonObj.get("user_id");
+                int component_id = (int) jsonObj.get("component_id");
+                String name = (String) jsonObj.get("name");
+                int status = (int) jsonObj.get("status");
+                int visible = (int) jsonObj.get("visible");
+                boolean sticked = (boolean) jsonObj.get("sticked");
+                boolean notifications = (boolean) jsonObj.get("notifications");
+                String message = (String) jsonObj.get("message");
+                boolean is_resolved = (boolean) jsonObj.get("is_resolved");
                 incidents.add(new Incident(id, user_id, component_id, name, status, visible, sticked, notifications, message, is_resolved));
             });
             return incidents;
