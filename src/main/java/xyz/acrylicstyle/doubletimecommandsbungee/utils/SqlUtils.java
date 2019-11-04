@@ -31,6 +31,10 @@ public final class SqlUtils {
     public static Connection connect(String host, String database, String user, String password) throws SQLException {
         if (!init.get()) throw new IllegalStateException("Driver isn't loaded! (Did you call SqlUtils#loadDriver?)");
         String url =  "jdbc:mysql://" + host + "/" + database;
+        SqlUtils.host = host;
+        SqlUtils.database = database;
+        SqlUtils.user = user;
+        SqlUtils.password = password;
         connection.set(DriverManager.getConnection(url, user, password));
         sync();
         return connection.get();
