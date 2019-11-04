@@ -40,7 +40,7 @@ public class Utils {
      * @param consumer Consumer without any args. <b>It won't pass any arguments.</b>
      */
     public static void run(Consumer<?> consumer) {
-        ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> consumer.accept(null), 1, TimeUnit.NANOSECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Utils.getPlugin(), () -> consumer.accept(null), 1, TimeUnit.MICROSECONDS);
     }
 
     /**

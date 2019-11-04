@@ -15,6 +15,7 @@ import xyz.acrylicstyle.doubletimecommandsbungee.connection.ChannelListener;
 import xyz.acrylicstyle.doubletimecommandsbungee.providers.ConfigProvider;
 import xyz.acrylicstyle.doubletimecommandsbungee.types.Incident;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.Scheduler;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
@@ -25,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
     public static ConfigProvider config;
+    private static Scheduler<ProxiedPlayer> scheduler = new Scheduler<>();
 
     @Override
     public void onEnable() {
@@ -106,7 +108,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
-        Utils.run(c -> {
+        scheduler.schedule(player -> {
             try {
                 CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
                 if (unresolvedIncidents.size() == 1) {
@@ -135,7 +137,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 ProxyServer.getInstance().getLogger().warning("An error occurred while handling connection event (ServerConnectedEvent)");
                 e.printStackTrace();
             }
-        });
+        }, event.getPlayer(), 0);
     }
 
     @EventHandler
@@ -149,30 +151,23 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             e.printStackTrace();
             return;
         }
-        Utils.run(c -> {
-            Timer timer = new Timer();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
+        scheduler.schedule(c -> {
+            try {
+                if (!SqlUtils.isPlayerConnected(event.getConnection().getUniqueId())) return;
+                CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
+                friends.forEach(uuid -> {
                     try {
-                        if (!SqlUtils.isPlayerConnected(event.getConnection().getUniqueId())) return;
-                        CollectionList<UUID> friends = SqlUtils.getFriends(event.getConnection().getUniqueId());
-                        friends.forEach(uuid -> {
-                            try {
-                                if (SqlUtils.isPlayerConnected(uuid))
-                                    Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    } catch (Exception e) {
-                        ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
+                        if (SqlUtils.isPlayerConnected(uuid))
+                            Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + event.getConnection().getName() + " joined."));
+                    } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                }
-            };
-            timer.schedule(timerTask, 1000 * 2);
-        });
+                });
+            } catch (Exception e) {
+                ProxyServer.getInstance().getLogger().warning("Couldn't send join message!");
+                e.printStackTrace();
+            }
+        }, null, 0);
     }
 
     @EventHandler
