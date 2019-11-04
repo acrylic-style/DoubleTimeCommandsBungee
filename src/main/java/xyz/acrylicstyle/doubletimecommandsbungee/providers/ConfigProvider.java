@@ -1,19 +1,15 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.providers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-
 import util.Collection;
 import util.CollectionList;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 public class ConfigProvider {
 
