@@ -190,9 +190,9 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     }
 
     @EventHandler
-    public void onPostLogin(PreLoginEvent event) {
+    public void onPostLogin(PostLoginEvent event) {
         try {
-            UUID uuid = event.getConnection().getUniqueId();
+            UUID uuid = event.getPlayer().getUniqueId();
             AtomicInteger banIndex = new AtomicInteger(-1);
             CollectionList<xyz.acrylicstyle.doubletimecommandsbungee.types.Ban> bans = SqlUtils.getBan(uuid);
             bans.foreach((ban, index) -> {
@@ -212,9 +212,9 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             stackedMessage.add(new TextComponent(ChatColor.GRAY + "Reason: " + ChatColor.WHITE + reason + "\n\n"));
             if (reason.equalsIgnoreCase("None")) stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Note: Reason was 'None', please report it to our staff!\n"));
             stackedMessage.add(new TextComponent(ChatColor.GRAY + "Ban ID: " + lastBan.getBanId()));
-            event.getConnection().disconnect(stackedMessage.toArray(new TextComponent[0]));
+            event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
         } catch (Exception e) {
-            event.getConnection().disconnect(new TextComponent(ChatColor.RED + "An error occurred while processing your login, please report this to admins!"));
+            event.getPlayer().disconnect(new TextComponent(ChatColor.RED + "An error occurred while processing your login, please report this to admins!"));
             e.printStackTrace();
         }
     }
