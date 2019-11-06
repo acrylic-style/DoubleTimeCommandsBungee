@@ -20,7 +20,7 @@ public class ChannelListener implements Listener {
             try {
                 String subchannel = in.readUTF(); // it'll be player's uuid see PluginChannelListener#sendToBungeeCord
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
-                ServerInfo server = ProxyServer.getInstance().getPlayer(e.getReceiver().toString()).getServer().getInfo();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
                 in.readUTF();
                 sendToBukkit(e.getTag(), subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
             } catch (IOException e1) {
@@ -31,7 +31,7 @@ public class ChannelListener implements Listener {
             try {
                 String subchannel = in.readUTF();
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
-                ServerInfo server = ProxyServer.getInstance().getPlayer(e.getSender().toString()).getServer().getInfo();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
                 String input = in.readUTF();
                 Utils.transferPlayer(ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)), input);
                 sendToBukkit(e.getTag(), subchannel, "", server);
