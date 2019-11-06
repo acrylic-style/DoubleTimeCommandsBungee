@@ -34,7 +34,7 @@ public class Scheduler<T> {
             values.remove(0);
             delays.remove(0);
             consumers.remove(0);
-            if (consumers.size() > 0) this.start();
+            if (consumers.size() > 0) new Poller().start();
         }
     }
 }
