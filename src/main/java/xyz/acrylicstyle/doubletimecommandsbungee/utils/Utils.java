@@ -204,6 +204,20 @@ public class Utils {
         }));
     }
 
+    public static void getAvailableGames(String gamePrefix, Callback<Integer> callback) {
+        ArrayList<ServerInfo> servers = new ArrayList<>();
+        ProxyServer.getInstance().getServers().forEach((server, info) -> {
+            if ((server.startsWith(gamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
+        });
+        AtomicInteger checked = new AtomicInteger();
+        AtomicInteger working = new AtomicInteger();
+        servers.forEach(info -> info.ping((result, error) -> {
+            checked.getAndIncrement();
+            if (error == null) working.getAndIncrement();
+            if (checked.get() >= servers.size()) callback.done(working.get(), null);
+        }));
+    }
+
     public static void sendMessage(ProxiedPlayer player, BaseComponent message) {
         sendMessage(player, "", message);
     }

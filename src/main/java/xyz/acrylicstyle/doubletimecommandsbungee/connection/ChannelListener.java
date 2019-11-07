@@ -36,6 +36,15 @@ public class ChannelListener implements Listener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        } else if (e.getTag().equalsIgnoreCase("dtc:availgames")) {
+            try {
+                String subchannel = in.readUTF();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel.split(",")[0])).getServer().getInfo();
+                String message = in.readUTF().toUpperCase();
+                Utils.getAvailableGames(message, (result, error) -> sendToBukkit(e.getTag(), subchannel, NumberFormat.getInstance().format(result), server));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         } else if (e.getTag().equalsIgnoreCase("commons:transfer")) {
             try {
                 String subchannel = in.readUTF();
