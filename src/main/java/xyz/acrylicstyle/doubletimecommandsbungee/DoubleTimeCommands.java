@@ -77,6 +77,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Ping());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PartyChat());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhereAmI());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new Limbo());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ChannelListener());
         ProxyServer.getInstance().registerChannel("dtc:rank");
         ProxyServer.getInstance().registerChannel("dtc:playing");
@@ -224,9 +225,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
     @EventHandler
     public void onServerKick(ServerKickEvent e) {
-        Utils.getRandomLobby((result, error) -> {
-            e.setCancelled(true);
-            e.setCancelServer(result);
-        });
+        e.setCancelled(true);
+        e.setCancelServer(ProxyServer.getInstance().getServerInfo("LIMBO"));
+        Utils.transferPlayerWithGamePrefix(e.getPlayer(), "LOBBY");
     }
 }
