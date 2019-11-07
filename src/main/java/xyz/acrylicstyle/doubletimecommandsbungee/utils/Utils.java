@@ -1,5 +1,6 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.utils;
 
+import net.md_5.bungee.api.Callback;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -157,6 +158,20 @@ public class Utils {
             }
             if (!connected.get() && before.equalsIgnoreCase(player.getServer().getInfo().getName()) && checked.get() >= servers.size())
                 player.sendMessage(new TextComponent(ChatColor.RED + "We couldn't find available server!"));
+        }));
+    }
+
+    public static void getPlayers(String gamePrefix, Callback<Integer> callback) {
+        ArrayList<ServerInfo> servers = new ArrayList<>();
+        ProxyServer.getInstance().getServers().forEach((server, info) -> {
+            if ((server.startsWith(gamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
+        });
+        AtomicInteger checked = new AtomicInteger();
+        AtomicInteger players = new AtomicInteger();
+        servers.forEach(info -> info.ping((result, error) -> {
+            checked.getAndIncrement();
+            if (error == null && result.getPlayers().getMax() > result.getPlayers().getOnline()) players.set(players.get() + result.getPlayers().getOnline());
+            if (checked.get() >= servers.size()) callback.done(players.get(), null);
         }));
     }
 
