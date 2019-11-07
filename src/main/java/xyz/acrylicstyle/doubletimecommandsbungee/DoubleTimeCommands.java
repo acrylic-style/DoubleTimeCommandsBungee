@@ -221,4 +221,12 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             e.printStackTrace();
         }
     }
+
+    @EventHandler
+    public void onServerKick(ServerKickEvent e) {
+        Utils.getRandomLobby((result, error) -> {
+            e.setCancelled(true);
+            e.setCancelServer(result);
+        });
+    }
 }

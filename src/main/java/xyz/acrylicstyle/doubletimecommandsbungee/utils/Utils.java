@@ -161,6 +161,23 @@ public class Utils {
         }));
     }
 
+    public static void getRandomLobby(Callback<ServerInfo> callback) {
+        ArrayList<ServerInfo> servers = new ArrayList<>();
+        ProxyServer.getInstance().getServers().forEach((server, info) -> {
+            if ((server.startsWith("LOBBY"))) servers.add(info);
+        });
+        AtomicBoolean connected = new AtomicBoolean(false);
+        AtomicInteger checked = new AtomicInteger();
+        servers.forEach(info -> info.ping((result, error) -> {
+            checked.getAndIncrement();
+            if (error == null && !connected.get() && result.getPlayers().getMax() > result.getPlayers().getOnline()) {
+                connected.set(true);
+                callback.done(info, null);
+            }
+            if (!connected.get() && checked.get() >= servers.size()) callback.done(ProxyServer.getInstance().getServerInfo("LIMBO"), null);
+        }));
+    }
+
     public static void transferPlayerWithGamePrefix(ProxiedPlayer player, String gamePrefix) {
         ArrayList<ServerInfo> servers = new ArrayList<>();
         ProxyServer.getInstance().getServers().forEach((server, info) -> {
