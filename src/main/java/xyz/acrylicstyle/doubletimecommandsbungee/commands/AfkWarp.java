@@ -19,7 +19,7 @@ public class AfkWarp extends Command {
             return;
         }
         final ProxiedPlayer sender = (ProxiedPlayer) sender0;
-        if (!sender.getServer().getInfo().getName().startsWith("LIMBO")) return;
+        if (sender.getServer().getInfo().getName().startsWith("LIMBO")) return;
         sender.connect(ProxyServer.getInstance().getServerInfo("LIMBO"));
     }
 }
