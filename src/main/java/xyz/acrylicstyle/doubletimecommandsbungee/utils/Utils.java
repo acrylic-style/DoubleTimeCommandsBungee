@@ -190,7 +190,6 @@ public class Utils {
         AtomicInteger players = new AtomicInteger(-1);
         servers.forEach(info -> info.ping((result, error) -> {
             checked.getAndIncrement();
-            if (error != null) error.printStackTrace();
             if (error == null) players.set((players.get() == -1 ? 0 : players.get()) + result.getPlayers().getOnline());
             if (checked.get() >= servers.size()) callback.done(players.get(), null);
         }));
