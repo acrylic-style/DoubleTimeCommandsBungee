@@ -78,6 +78,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PartyChat());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhereAmI());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Limbo());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new AfkWarp());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ChannelListener());
         ProxyServer.getInstance().registerChannel("dtc:rank");
         ProxyServer.getInstance().registerChannel("dtc:playing");
