@@ -187,10 +187,11 @@ public class Utils {
             if ((server.startsWith(gamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
         });
         AtomicInteger checked = new AtomicInteger();
-        AtomicInteger players = new AtomicInteger();
+        AtomicInteger players = new AtomicInteger(-1);
         servers.forEach(info -> info.ping((result, error) -> {
             checked.getAndIncrement();
-            if (error == null && result.getPlayers().getMax() > result.getPlayers().getOnline()) players.set(players.get() + result.getPlayers().getOnline());
+            if (error != null) error.printStackTrace();
+            if (error == null) players.set((players.get() == -1 ? 0 : players.get()) + result.getPlayers().getOnline());
             if (checked.get() >= servers.size()) callback.done(players.get(), null);
         }));
     }
