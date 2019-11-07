@@ -182,12 +182,26 @@ public class Utils {
     }
 
     public static void getPlayers(String gamePrefix, Callback<Integer> callback) {
-        try {
-            callback.done(SqlUtils.countPlayersInServer(gamePrefix), null);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            callback.done(-1, e);
-        }
+        ArrayList<ServerInfo> servers = new ArrayList<>();
+        ProxyServer.getInstance().getServers().forEach((server, info) -> {
+            if ((server.startsWith(gamePrefix.toUpperCase(Locale.ROOT)))) servers.add(info);
+        });
+        AtomicInteger checked = new AtomicInteger();
+        AtomicBoolean successful = new AtomicBoolean();
+        servers.forEach(info -> info.ping((result, error) -> {
+            if (successful.get()) return;
+            checked.getAndIncrement();
+            if (error == null) {
+                successful.set(true);
+                try {
+                    callback.done(SqlUtils.countPlayersInServer(gamePrefix), null);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    callback.done(-1, e);
+                }
+            }
+            if (checked.get() >= servers.size()) callback.done(-1, null);
+        }));
     }
 
     public static void sendMessage(ProxiedPlayer player, BaseComponent message) {
