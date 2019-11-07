@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ChannelListener implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
-        ProxyServer.getInstance().getLogger().info("Received message from bukkit, tag is: " + e.getTag());
+        //ProxyServer.getInstance().getLogger().info("Received message from bukkit, tag is: " + e.getTag());
         DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
         if (e.getTag().equalsIgnoreCase("dtc:rank")) {
             try {
