@@ -205,6 +205,7 @@ public class Utils {
         });
         AtomicInteger checked = new AtomicInteger();
         AtomicBoolean successful = new AtomicBoolean();
+        if (servers.size() <= 0) callback.done(-1, null);
         servers.forEach(info -> info.ping((result, error) -> {
             if (successful.get()) return;
             checked.getAndIncrement();
@@ -228,6 +229,7 @@ public class Utils {
         });
         AtomicInteger checked = new AtomicInteger();
         AtomicInteger working = new AtomicInteger();
+        if (servers.size() <= 0) callback.done(0, null);
         servers.forEach(info -> info.ping((result, error) -> {
             checked.getAndIncrement();
             if (error == null) working.getAndIncrement();
