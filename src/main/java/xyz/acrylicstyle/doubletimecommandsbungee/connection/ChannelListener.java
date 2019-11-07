@@ -16,8 +16,8 @@ public class ChannelListener implements Listener {
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
         ProxyServer.getInstance().getLogger().info("Received message from bukkit, tag is: " + e.getTag());
+        DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
         if (e.getTag().equalsIgnoreCase("dtc:rank")) {
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String subchannel = in.readUTF(); // it'll be player's uuid see PluginChannelListener#sendToBungeeCord
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
@@ -28,7 +28,6 @@ public class ChannelListener implements Listener {
                 e1.printStackTrace();
             }
         } else if (e.getTag().equalsIgnoreCase("dtc:playing")) {
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String subchannel = in.readUTF();
                 ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
@@ -38,7 +37,6 @@ public class ChannelListener implements Listener {
                 e1.printStackTrace();
             }
         } else if (e.getTag().equalsIgnoreCase("commons:transfer")) {
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String subchannel = in.readUTF();
                 ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
@@ -49,8 +47,18 @@ public class ChannelListener implements Listener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        } else if (e.getTag().equalsIgnoreCase("commons:transfer2")) {
+            try {
+                String subchannel = in.readUTF();
+                ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                String input = in.readUTF();
+                Utils.transferPlayerWithGamePrefix(ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)), input);
+                sendToBukkit(e.getTag(), subchannel, "", server);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         } else if (e.getTag().equalsIgnoreCase("helper:connect")) {
-            DataInputStream in = new DataInputStream(new ByteArrayInputStream(e.getData()));
             try {
                 String subchannel = in.readUTF();
                 String input = in.readUTF();
