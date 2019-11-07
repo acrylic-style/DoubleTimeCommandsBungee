@@ -30,7 +30,7 @@ public class ChannelListener implements Listener {
         } else if (e.getTag().equalsIgnoreCase("dtc:playing")) {
             try {
                 String subchannel = in.readUTF();
-                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel.split(",")[0])).getServer().getInfo();
                 String message = in.readUTF().toUpperCase();
                 Utils.getPlayers(message, (result, error) -> sendToBukkit(e.getTag(), subchannel, NumberFormat.getInstance().format(result), server));
             } catch (IOException e1) {
