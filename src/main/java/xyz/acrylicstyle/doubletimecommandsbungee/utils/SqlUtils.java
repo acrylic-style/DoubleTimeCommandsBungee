@@ -80,7 +80,7 @@ public final class SqlUtils {
                 "        id VARCHAR(100) NOT NULL,\n" +
                 "        experience BIGINT(255) NOT NULL default 0,\n" +
                 "        points BIGINT(255) NOT NULL default 0,\n" +
-                "        connected varchar(255) default null,\n" + // char(1) = boolean
+                "        connected varchar(255) default null,\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -121,6 +121,17 @@ public final class SqlUtils {
         Integer party_id = getPartyId(player);
         if (party_id == null) return false;
         return getPartyLeader(party_id).getUniqueId().equals(player);
+    }
+
+    public static int countPlayersInServer(String gamePrefix) throws SQLException {
+        ping();
+        Validate.notNull(gamePrefix);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select * from players where connected like ?;");
+        preparedStatement.setString(1, gamePrefix + "%");
+        ResultSet result = preparedStatement.executeQuery();
+        int results = 0;
+        while (result.next()) ++results;
+        return results;
     }
 
     public static boolean isPartyLeader(int party_id, UUID player) throws SQLException {
