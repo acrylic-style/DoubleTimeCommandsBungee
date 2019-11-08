@@ -294,6 +294,17 @@ public class Friend extends Command {
             e.printStackTrace();
             return;
         }
-        stackedMessages.add(new TextComponent(PlayerUtils.getName(f5) + " " + (player.isConnected() ? ChatColor.AQUA + "is playing on " + player.getConnectedServer() : ChatColor.RED + "is currently offline")));
+        stackedMessages.add(new TextComponent(PlayerUtils.getName(f5) + " " + (player.isConnected() ? ChatColor.AQUA + "is " + getGame(player.getConnectedServer()) : ChatColor.RED + "is currently offline")));
+    }
+
+    private String getGame(String game) {
+        if (game.toUpperCase().startsWith("LIMBO")) return "idle in Limbo";
+        else if (game.toUpperCase().startsWith("BEDWARS")) return "in a BedWars Game";
+        else if (game.toUpperCase().startsWith("RUSH")) return "in a BedWars Game";
+        else if (game.toUpperCase().startsWith("VANILLA")) return "in a Survival Server";
+        else if (game.toUpperCase().startsWith("ZOMBIEESCAPE")) return "in a Zombie Escape Game";
+        else if (game.toUpperCase().startsWith("HOTPOTATO")) return "in a Hot Potato Game";
+        else if (game.toUpperCase().startsWith("LOBBY")) return "in a Main Lobby";
+        else return "in unknown realm";
     }
 }
