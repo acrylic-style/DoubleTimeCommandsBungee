@@ -207,6 +207,15 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onPostLogin(PostLoginEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
+            if (ProxyServer.getInstance().getConfig().getPlayerLimit() <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
+                Collection<TextComponent> stackedMessage = new ArrayList<>();
+                stackedMessage.add(new TextComponent(ChatColor.YELLOW + "This server is currently full!"));
+                stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Get Sand or VIP at least to join this server!"));
+                stackedMessage.add(new TextComponent(""));
+                stackedMessage.add(new TextComponent(ChatColor.DARK_GRAY + "Don't worry, this isn't ban message."));
+                event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
+                return;
+            }
             AtomicInteger banIndex = new AtomicInteger(-1);
             CollectionList<xyz.acrylicstyle.doubletimecommandsbungee.types.Ban> bans = SqlUtils.getBan(uuid);
             bans.foreach((ban, index) -> {
