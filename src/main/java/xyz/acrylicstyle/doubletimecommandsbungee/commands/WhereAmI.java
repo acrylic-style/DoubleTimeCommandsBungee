@@ -19,6 +19,6 @@ public class WhereAmI extends Command {
             return;
         }
         ProxiedPlayer player = (ProxiedPlayer) sender;
-        player.sendMessage(new TextComponent(ChatColor.GREEN + "You are currently playing at Proxy: " + ChatColor.AQUA + DoubleTimeCommands.config.configuration.getString("proxyName", "<undefined>") + ChatColor.GREEN +  ", Game: " + ChatColor.AQUA + player.getServer().getInfo().getName() + ChatColor.GREEN + "!"));
+        player.sendMessage(new TextComponent(ChatColor.GREEN + "You are currently playing at Proxy: " + ChatColor.AQUA + DoubleTimeCommands.config.configuration.getString("proxyName", "<undefined>") + ChatColor.GREEN +  ", Game: " + ChatColor.AQUA + player.getServer().getInfo().getName() + ChatColor.GREEN + ", You are " + Friend.getGame(player.getServer().getInfo().getName())));
     }
 }

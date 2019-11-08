@@ -207,6 +207,10 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onPostLogin(PostLoginEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
+            if (SqlUtils.isPlayerConnected(uuid)) {
+                event.getPlayer().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "You are already connected to this server!"));
+                return;
+            }
             if (ProxyServer.getInstance().getConfig().getPlayerLimit() <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
                 Collection<TextComponent> stackedMessage = new ArrayList<>();
                 stackedMessage.add(new TextComponent(ChatColor.YELLOW + "This server is currently full!"));
