@@ -134,6 +134,15 @@ public final class SqlUtils {
         return results;
     }
 
+    public static int getOnlinePlayers() throws SQLException {
+        ping();
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select * from players where connected is not null;");
+        ResultSet result = preparedStatement.executeQuery();
+        int results = 0;
+        while (result.next()) ++results;
+        return results;
+    }
+
     public static boolean isPartyLeader(int party_id, UUID player) throws SQLException {
         ping();
         Validate.notNull(party_id, player);

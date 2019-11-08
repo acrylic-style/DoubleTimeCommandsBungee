@@ -112,6 +112,15 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     }
 
     @EventHandler
+    public void onProxyPing(ProxyPingEvent e) {
+        try {
+            e.getResponse().getPlayers().setOnline(SqlUtils.getOnlinePlayers());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         scheduler.schedule(player -> {
             try {
