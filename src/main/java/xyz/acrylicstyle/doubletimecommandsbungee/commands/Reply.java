@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Reply extends Command {
     public Reply() {
@@ -33,7 +34,12 @@ public class Reply extends Command {
         }
         Player player;
         try {
-            player = SqlUtils.getPlayer(SqlUtils.getLastMessageFrom(((ProxiedPlayer) sender).getUniqueId()));
+            UUID p = SqlUtils.getLastMessageFrom(((ProxiedPlayer) sender).getUniqueId());
+            if (p == null) {
+                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Nobody has messaged you in the past!"));
+                return;
+            }
+            player = SqlUtils.getPlayer(p);
         } catch (SQLException e) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Couldn't find player! " + ChatColor.GRAY + "(wait, it's weird. if you see this, please report it to the admins!)"));
             e.printStackTrace();

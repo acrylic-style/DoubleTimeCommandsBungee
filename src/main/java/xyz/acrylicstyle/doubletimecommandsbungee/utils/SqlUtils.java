@@ -285,7 +285,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("select lastMessageFrom from players where player=?;");
         preparedStatement.setString(1, player.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
+        if (!result.next()) return null;
         String player2 = result.getString("lastMessageFrom");
         result.close();
         return UUID.fromString(player2);
@@ -519,13 +519,13 @@ public final class SqlUtils {
         preparedStatement.setString(2, uuid.toString());
     }
 
-    public static long getExperience(UUID uuid) throws SQLException {
+    public static Long getExperience(UUID uuid) throws SQLException {
         ping();
         Validate.notNull(uuid);
         PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
+        if (!result.next()) return null;
         long value = result.getBigDecimal("experience").longValueExact();
         result.close();
         return value;
@@ -546,7 +546,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("select id from players where player=? limit 1;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
+        if (!result.next()) return null;
         String name = result.getString("id");
         result.close();
         return name;
@@ -648,7 +648,7 @@ public final class SqlUtils {
         Validate.notNull(uuid);
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select rank from players where player='" + uuid.toString() + "' limit 1;");
-        result.next();
+        if (!result.next()) return Ranks.DEFAULT;
         String rank1;
         try {
             rank1 = result.getString("rank");
