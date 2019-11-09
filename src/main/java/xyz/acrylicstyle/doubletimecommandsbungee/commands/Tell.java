@@ -53,7 +53,7 @@ public class Tell extends Command {
 			Utils.sendMessage((ProxiedPlayer) sender, new TextComponent(ChatColor.LIGHT_PURPLE + "To " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
 			Utils.sendMessage(player, new TextComponent(ChatColor.LIGHT_PURPLE + "From " + PlayerUtils.getName((ProxiedPlayer) sender) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
 			Utils.playSound(SqlUtils.getPlayer(player.getUniqueId()), "ENTITY_EXPERIENCE_ORB_PICKUP");
-			SqlUtils.setLastMessageFrom(((ProxiedPlayer) sender).getUniqueId(), player.getUniqueId());
+			SqlUtils.setLastMessageFrom(player.getUniqueId(), ((ProxiedPlayer) sender).getUniqueId());
 		}, sender, Errors.COULD_NOT_SEND_MESSAGE);
 	}
 }

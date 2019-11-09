@@ -287,6 +287,7 @@ public final class SqlUtils {
         ResultSet result = preparedStatement.executeQuery();
         if (!result.next()) return null;
         String player2 = result.getString("lastMessageFrom");
+        if (player2 == null) return null;
         result.close();
         return UUID.fromString(player2);
     }

@@ -97,7 +97,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onDisable() {
         try {
             Collection<ProxiedPlayer> ppls =  ProxyServer.getInstance().getPlayers();
-            ProxyServer.getInstance().getLogger().info("Processing " + ppls.size() + " before disabling plugin");
+            ProxyServer.getInstance().getLogger().info("Processing " + ppls.size() + " players before disabling plugin");
             ppls.forEach(player -> {
                 try {
                     SqlUtils.setConnection(player.getUniqueId(), null);
