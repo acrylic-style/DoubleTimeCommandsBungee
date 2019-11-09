@@ -297,7 +297,7 @@ public class Friend extends Command {
         stackedMessages.add(new TextComponent(PlayerUtils.getName(f5) + " " + (player.isConnected() ? ChatColor.AQUA + "is " + getGame(player.getConnectedServer()) : ChatColor.RED + "is currently offline")));
     }
 
-    public static String getGame(String game) {
+    static String getGame(String game) {
         if (game.toUpperCase().startsWith("LIMBO")) return "idle in Limbo";
         else if (game.toUpperCase().startsWith("BEDWARS")) return "in a BedWars Game";
         else if (game.toUpperCase().startsWith("RUSH")) return "in a BedWars Game";

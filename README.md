@@ -7,13 +7,15 @@
 
 ## What can I do with this plugin?
 * Database with MySQL (Required)
-* Private chat (without /r, reply command)
+* Private chat
   * /msg
   * /tell
   * /w
+  * /r (/reply)
 * Server switcher
   * /play
   * /transfer (if you use spigot plugin)
+  * /rejoin for rejoin to the server
 * Kick from proxy
   * /kick
 * Ban from proxy
@@ -51,6 +53,14 @@
   * Build Team (enum: BUILDTEAM)
   * Admin (enum: ADMIN)
   * Owner (enum: OWNER)
+* Limbo if you use any server for limbo
+  * You can specify limbo server at BungeeCord/config.yml
+  * `/afkwarp` for warp to the server named as `LIMBO`, does not work if player is already at limbo
+  * `/limbo` for herobrine who lives in limbo
+  * Warped to the limbo when kicked from server
+  * It does not work if not named limbo server as `LIMBO` or does not exist
+
+Note: All commands could be overridden by spigot plugins!
   
 ## Installation
 1. Download this plugin into your BungeeCord/plugins (not spigot)

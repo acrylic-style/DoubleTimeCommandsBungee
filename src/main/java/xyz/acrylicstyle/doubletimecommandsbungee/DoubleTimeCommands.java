@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
     public static ConfigProvider config;
-    private static Scheduler<ProxiedPlayer> scheduler = new Scheduler<>();
+    public static Scheduler<ProxiedPlayer> scheduler = new Scheduler<>();
 
     @Override
     public void onEnable() {
@@ -68,6 +68,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new SetNickname());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ResetNickname());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Tell());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new Reply());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Rank());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Ban());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Unban());
@@ -79,6 +80,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhereAmI());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Limbo());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new AfkWarp());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new Rejoin());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ChannelListener());
         ProxyServer.getInstance().registerChannel("dtc:rank");
         ProxyServer.getInstance().registerChannel("dtc:playing");

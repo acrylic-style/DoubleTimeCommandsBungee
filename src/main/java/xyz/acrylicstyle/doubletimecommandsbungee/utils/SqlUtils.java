@@ -81,6 +81,7 @@ public final class SqlUtils {
                 "        experience BIGINT(255) NOT NULL default 0,\n" +
                 "        points BIGINT(255) NOT NULL default 0,\n" +
                 "        connected varchar(255) default null,\n" +
+                "        lastMessageFrom varchar(36) default null,\n" + // uuid
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -276,6 +277,27 @@ public final class SqlUtils {
             invites.add(result.getInt("party_id"));
         }
         return invites;
+    }
+
+    public static UUID getLastMessageFrom(UUID player) throws SQLException {
+        ping();
+        Validate.notNull(player);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select lastMessageFrom from players where player=?;");
+        preparedStatement.setString(1, player.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        String player2 = result.getString("lastMessageFrom");
+        result.close();
+        return UUID.fromString(player2);
+    }
+
+    public static void setLastMessageFrom(@NonNull UUID player, @NonNull UUID player2) throws SQLException {
+        ping();
+        Validate.notNull(player, player2);
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update players set lastMessageFrom=? where player=?;");
+        preparedStatement.setString(1, player2.toString());
+        preparedStatement.setString(2, player.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static CollectionList<UUID> getPartyInvitesAsUniqueId(int party_id) throws SQLException {

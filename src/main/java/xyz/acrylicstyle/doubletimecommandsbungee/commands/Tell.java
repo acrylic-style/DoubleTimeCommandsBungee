@@ -1,18 +1,20 @@
 package xyz.acrylicstyle.doubletimecommandsbungee.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Errors;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Tell extends Command {
 	public Tell() {
@@ -29,9 +31,12 @@ public class Tell extends Command {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a player!"));
 			return;
 		}
-		ProxiedPlayer player = ProxyServer.getInstance().getPlayer(args[0]);
-		if (player == null) {
-			sender.sendMessage(new TextComponent(ChatColor.RED + "That player is currently offline."));
+		Player player;
+		try {
+			player = SqlUtils.getPlayer(SqlUtils.getUniqueId(args[0]));
+		} catch (SQLException e) {
+			sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Couldn't find player!"));
+			e.printStackTrace();
 			return;
 		}
 		if (args.length < 2) {
@@ -40,14 +45,15 @@ public class Tell extends Command {
 		}
 		final String[] message = {""};
 		if (!Utils.run((nope) -> {
-			List<String> cmdArgsList = new ArrayList<String>();
-			cmdArgsList.addAll(Arrays.asList(args));
+			List<String> cmdArgsList = new ArrayList<>(Arrays.asList(args));
 			cmdArgsList.remove(0);
 			for (String a : cmdArgsList) message[0] += a + " ";
 		}, sender, Errors.ARGS_ANALYSIS_FAILED)) return;
-		Utils.run((nope) -> {
-			sender.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "To " + PlayerUtils.getName(player) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
-			player.sendMessage(new TextComponent(ChatColor.LIGHT_PURPLE + "From " + PlayerUtils.getName((ProxiedPlayer) sender) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
+		Utils.run(() -> {
+			Utils.sendMessage((ProxiedPlayer) sender, new TextComponent(ChatColor.LIGHT_PURPLE + "To " + PlayerUtils.getName(player.getUniqueId()) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
+			Utils.sendMessage(player, new TextComponent(ChatColor.LIGHT_PURPLE + "From " + PlayerUtils.getName((ProxiedPlayer) sender) + ChatColor.WHITE + ": " + ChatColor.GRAY + message[0]));
+			Utils.playSound(SqlUtils.getPlayer(player.getUniqueId()), "ENTITY_EXPERIENCE_ORB_PICKUP");
+			SqlUtils.setLastMessageFrom(((ProxiedPlayer) sender).getUniqueId(), player.getUniqueId());
 		}, sender, Errors.COULD_NOT_SEND_MESSAGE);
 	}
 }
