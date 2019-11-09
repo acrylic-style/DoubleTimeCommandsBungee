@@ -29,7 +29,7 @@ public class Reply extends Command {
             return;
         }
         if (args.length < 1) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a player!"));
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify message!"));
             return;
         }
         Player player;
@@ -45,14 +45,9 @@ public class Reply extends Command {
             e.printStackTrace();
             return;
         }
-        if (args.length < 2) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Please specify a message!"));
-            return;
-        }
         final String[] message = {""};
         if (!Utils.run((nope) -> {
             List<String> cmdArgsList = new ArrayList<>(Arrays.asList(args));
-            cmdArgsList.remove(0);
             for (String a : cmdArgsList) message[0] += a + " ";
         }, sender, Errors.ARGS_ANALYSIS_FAILED)) return;
         Utils.run(() -> {
