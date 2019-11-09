@@ -96,6 +96,21 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     @Override
     public void onDisable() {
         try {
+            ProxyServer.getInstance().getPlayers().forEach(player -> {
+                try {
+                    SqlUtils.setConnection(player.getUniqueId(), null);
+                    CollectionList<UUID> friends = SqlUtils.getFriends(player.getUniqueId());
+                    friends.forEach(uuid -> {
+                        try {
+                            Utils.sendMessage(SqlUtils.getPlayer(uuid), new TextComponent(ChatColor.YELLOW + player.getName() + " left."));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
             SqlUtils.clearFriendRequests();
             SqlUtils.close();
         } catch (SQLException e) {

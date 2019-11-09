@@ -250,7 +250,12 @@ public class Utils {
     }
 
     public static void sendMessage(Player player, String subchannel, BaseComponent message) {
-        ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        try {
+            if (SqlUtils.isPlayerConnected(player.getUniqueId()))
+                ChannelListener.sendToBukkit("helper:message", player.getUniqueId().toString() + "," + subchannel, message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void kickPlayer(Player player, BaseComponent message) {
@@ -262,7 +267,12 @@ public class Utils {
     }
 
     public static void playSound(Player player, String sound) {
-        ChannelListener.sendToBukkit("helper:sound", player.getUniqueId().toString(), sound, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        try {
+            if (SqlUtils.isPlayerConnected(player.getUniqueId()))
+                ChannelListener.sendToBukkit("helper:sound", player.getUniqueId().toString(), sound, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void partyChat(ProxiedPlayer player, String[] args, int i) {
