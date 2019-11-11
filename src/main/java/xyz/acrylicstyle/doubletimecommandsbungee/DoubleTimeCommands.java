@@ -230,7 +230,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 event.getPlayer().disconnect(TextComponent.fromLegacyText(ChatColor.RED + "You are already connected to this server!"));
                 return;
             }
-            if (ProxyServer.getInstance().getConfig().getPlayerLimit() <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
+            int maxPlayers = ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers();
+            if (maxPlayers <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
                 Collection<TextComponent> stackedMessage = new ArrayList<>();
                 stackedMessage.add(new TextComponent(ChatColor.YELLOW + "This server is currently full!"));
                 stackedMessage.add(new TextComponent(ChatColor.YELLOW + "Get Sand or VIP at least to join this server!"));
