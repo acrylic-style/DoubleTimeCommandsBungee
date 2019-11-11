@@ -703,7 +703,12 @@ public final class SqlUtils {
         try {
             if (bans.first() == null) return false;
         } catch (Exception e) { return false; }
-        return bans.first().getExpires() > System.currentTimeMillis() || bans.valuesArray()[bans.size()].getExpires() == -1;
+        try {
+            return bans.first().getExpires() > System.currentTimeMillis() || bans.last().getExpires() == -1;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static UUID getUniqueId(String name) throws SQLException {
