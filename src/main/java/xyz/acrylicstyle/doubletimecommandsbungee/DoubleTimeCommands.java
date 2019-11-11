@@ -143,21 +143,23 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onServerConnected(ServerConnectedEvent event) {
         scheduler.schedule(player -> {
             try {
-                CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
-                if (unresolvedIncidents.size() == 1) {
-                    Incident incident = unresolvedIncidents.first();
-                    event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Incident " + ChatColor.RED + "#" + incident.getId() + ChatColor.YELLOW + " is happening right now:"));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Title: " + ChatColor.AQUA + incident.getName()));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Summary: " + ChatColor.AQUA + incident.getMessage()));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Status: " + Utils.getStatus(incident.getStatus())));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz/incidents/" + incident.getId() + " " + ChatColor.RESET + ChatColor.YELLOW + "for the more information."));
-                    event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
-                } else if (unresolvedIncidents.size() >= 2) {
-                    event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "There are " + unresolvedIncidents.size() + " incidents happening now!"));
-                    event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz" + ChatColor.RESET + ChatColor.YELLOW + " for the more information."));
-                    event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                if (!event.getPlayer().getServer().getInfo().getName().startsWith("LIMBO")) {
+                    CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
+                    if (unresolvedIncidents.size() == 1) {
+                        Incident incident = unresolvedIncidents.first();
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Incident " + ChatColor.RED + "#" + incident.getId() + ChatColor.YELLOW + " is happening right now:"));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Title: " + ChatColor.AQUA + incident.getName()));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Summary: " + ChatColor.AQUA + incident.getMessage()));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Status: " + Utils.getStatus(incident.getStatus())));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz/incidents/" + incident.getId() + " " + ChatColor.RESET + ChatColor.YELLOW + "for the more information."));
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                    } else if (unresolvedIncidents.size() >= 2) {
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "There are " + unresolvedIncidents.size() + " incidents happening now!"));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz" + ChatColor.RESET + ChatColor.YELLOW + " for the more information."));
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                    }
                 }
                 ArrayList<ServerInfo> servers = new ArrayList<>();
                 ProxyServer.getInstance().getServers().forEach((server, info) -> {
