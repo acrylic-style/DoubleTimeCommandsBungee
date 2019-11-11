@@ -237,6 +237,13 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 stackedMessage.add(new TextComponent(""));
                 stackedMessage.add(new TextComponent(ChatColor.DARK_GRAY + "Don't worry, this isn't ban message."));
                 event.getPlayer().disconnect(stackedMessage.toArray(new TextComponent[0]));
+                scheduler.schedule(player -> {
+                    try {
+                        SqlUtils.setConnection(event.getPlayer().getUniqueId(), null);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }, event.getPlayer(), 250);
                 return;
             }
             AtomicInteger banIndex = new AtomicInteger(-1);
