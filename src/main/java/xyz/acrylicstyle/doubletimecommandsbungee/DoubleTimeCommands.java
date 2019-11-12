@@ -143,7 +143,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onServerConnected(ServerConnectedEvent event) {
         scheduler.schedule(player -> {
             try {
-                if (!event.getPlayer().getServer().getInfo().getName().startsWith("LIMBO")) {
+                if (event.getPlayer().getServer().getInfo().getName().startsWith("LOBBY")) {
                     CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
                     if (unresolvedIncidents.size() == 1) {
                         Incident incident = unresolvedIncidents.first();
@@ -277,6 +277,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
     @EventHandler
     public void onServerKick(ServerKickEvent e) {
+        if (e.getKickedFrom().equals(e.getPlayer().getServer().getInfo())) return;
         e.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "You were kicked from game with reason: " + ChatColor.WHITE + e.getKickReasonComponent()[0].toPlainText()));
         e.setCancelled(true);
         e.setCancelServer(ProxyServer.getInstance().getServerInfo("LIMBO"));
