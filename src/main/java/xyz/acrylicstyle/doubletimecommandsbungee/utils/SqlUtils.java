@@ -470,6 +470,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set points=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(points));
         preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static void addPoints(UUID uuid, long points) throws SQLException {
@@ -484,6 +485,7 @@ public final class SqlUtils {
         preparedStatement = connection.get().prepareStatement("update players set points=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(points1 + points));
         preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static long getPoints(UUID uuid) throws SQLException {
@@ -504,6 +506,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("update players set experience=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(experience));
         preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static void addExperience(UUID uuid, long experience) throws SQLException {
@@ -518,6 +521,7 @@ public final class SqlUtils {
         preparedStatement = connection.get().prepareStatement("update players set experience=? where player=?;");
         preparedStatement.setBigDecimal(1, BigDecimal.valueOf(experience1 + experience));
         preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
     }
 
     public static Long getExperience(UUID uuid) throws SQLException {

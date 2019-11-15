@@ -54,6 +54,7 @@ public class AddExperience extends Command {
         }
         try {
             SqlUtils.addExperience(uuid, points);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Added " + SqlUtils.getName(uuid) + " experience by " + points));
         } catch (SQLException e) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "An error occurred while adding points!"));
             e.printStackTrace();

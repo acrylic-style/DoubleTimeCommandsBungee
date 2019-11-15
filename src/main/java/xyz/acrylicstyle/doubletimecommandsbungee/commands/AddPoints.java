@@ -54,6 +54,7 @@ public class AddPoints extends Command {
         }
         try {
             SqlUtils.addPoints(uuid, points);
+            sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Added " + SqlUtils.getName(uuid) + " points by " + points));
         } catch (SQLException e) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "An error occurred while adding points!"));
             e.printStackTrace();
