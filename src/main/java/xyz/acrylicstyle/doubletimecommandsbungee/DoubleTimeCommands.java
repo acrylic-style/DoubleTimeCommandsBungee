@@ -180,7 +180,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                 ProxyServer.getInstance().getLogger().warning("An error occurred while handling connection event (ServerConnectedEvent)");
                 e.printStackTrace();
             }
-        }, event.getPlayer(), 0);
+        }, event.getPlayer(), 250);
     }
 
     @EventHandler
