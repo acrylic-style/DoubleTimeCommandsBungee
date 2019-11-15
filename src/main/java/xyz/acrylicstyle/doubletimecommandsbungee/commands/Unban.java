@@ -20,7 +20,7 @@ public class Unban extends Command {
 
 	@Override
 	public void execute(final CommandSender sender, String[] args) {
-		if (!Utils.must(Ranks.MODERATOR, sender)) return;
+		if (!Utils.must(Ranks.ADMIN, sender)) return;
 		if (args.length < 1) {
 			sender.sendMessage(new TextComponent(ChatColor.RED + "You need 1 more argument! <player>"));
 			return;

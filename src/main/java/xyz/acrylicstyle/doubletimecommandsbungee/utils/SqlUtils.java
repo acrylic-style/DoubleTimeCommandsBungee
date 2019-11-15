@@ -715,7 +715,7 @@ public final class SqlUtils {
         ping();
         Statement statement = connection.get().createStatement();
         ResultSet result = statement.executeQuery("select player from players where id='" + name + "';");
-        result.next();
+        if (!result.next()) return null;
         UUID uuid = UUID.fromString(result.getString("player"));
         result.close();
         return uuid;
