@@ -6,9 +6,11 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
+import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.UUID;
 
@@ -20,7 +22,6 @@ public class ChannelListener implements Listener {
         if (e.getTag().equalsIgnoreCase("dtc:rank")) {
             try {
                 String subchannel = in.readUTF(); // it'll be player's uuid see PluginChannelListener#sendToBungeeCord
-                ProxyServer.getInstance().getLogger().info("Subchannel: " + subchannel);
                 ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
                 in.readUTF();
                 sendToBukkit(e.getTag(), subchannel, PlayerUtils.getRank(UUID.fromString(subchannel)).name().toUpperCase(), server);
@@ -43,6 +44,44 @@ public class ChannelListener implements Listener {
                 String message = in.readUTF().toUpperCase();
                 Utils.getAvailableGames(message, (result, error) -> sendToBukkit(e.getTag(), subchannel, NumberFormat.getInstance().format(result), server));
             } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("dtc:points")) {
+            try {
+                String subchannel = in.readUTF();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                in.readUTF();
+                sendToBukkit(e.getTag(), subchannel, Long.toString(SqlUtils.getPoints(UUID.fromString(subchannel))), server);
+            } catch (IOException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("dtc:experience")) {
+            try {
+                String subchannel = in.readUTF();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                in.readUTF();
+                sendToBukkit(e.getTag(), subchannel, Long.toString(SqlUtils.getExperience(UUID.fromString(subchannel))), server);
+            } catch (IOException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("dtc:addpoints")) {
+            try {
+                String subchannel = in.readUTF();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                String message = in.readUTF();
+                SqlUtils.addPoints(UUID.fromString(subchannel), Long.parseLong(message));
+                sendToBukkit(e.getTag(), subchannel, "", server);
+            } catch (IOException | SQLException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("dtc:addexperience")) {
+            try {
+                String subchannel = in.readUTF();
+                ServerInfo server = ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo();
+                String message = in.readUTF();
+                SqlUtils.addExperience(UUID.fromString(subchannel), Long.parseLong(message));
+                sendToBukkit(e.getTag(), subchannel, "", server);
+            } catch (IOException | SQLException e1) {
                 e1.printStackTrace();
             }
         } else if (e.getTag().equalsIgnoreCase("commons:transfer")) {

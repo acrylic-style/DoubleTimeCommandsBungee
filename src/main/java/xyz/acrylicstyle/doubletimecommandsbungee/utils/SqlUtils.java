@@ -492,7 +492,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("select points from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
+        if (!result.next()) return 0L;
         long value = result.getBigDecimal("points").longValueExact();
         result.close();
         return value;
@@ -526,7 +526,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("select experience from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
-        if (!result.next()) return null;
+        if (!result.next()) return 0L;
         long value = result.getBigDecimal("experience").longValueExact();
         result.close();
         return value;
