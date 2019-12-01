@@ -262,6 +262,12 @@ public class Utils {
         ChannelListener.sendToBukkit("helper:kick", player.getUniqueId().toString() + ",", message.toPlainText(), ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
 
+    public static void kickPlayer(UUID uuid, BaseComponent message) {
+        ProxyServer.getInstance().getServers().values().forEach(server -> {
+            ChannelListener.sendToBukkit("helper:kick", uuid.toString() + ",", message.toPlainText(), server);
+        });
+    }
+
     public static void connect(Player player, String server) {
         ChannelListener.sendToBukkit("helper:connect", player.getUniqueId().toString(), server, ProxyServer.getInstance().getServerInfo(player.getConnectedServer()));
     }
