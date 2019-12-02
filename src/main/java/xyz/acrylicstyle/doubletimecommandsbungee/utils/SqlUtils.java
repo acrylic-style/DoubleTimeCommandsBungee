@@ -149,7 +149,7 @@ public final class SqlUtils {
         PreparedStatement preparedStatement = connection.get().prepareStatement("select customPrefix from players where player=?;");
         preparedStatement.setString(1, uuid.toString());
         ResultSet result = preparedStatement.executeQuery();
-        result.next();
+        if (!result.next()) return null;
         return result.getString("customPrefix");
     }
 

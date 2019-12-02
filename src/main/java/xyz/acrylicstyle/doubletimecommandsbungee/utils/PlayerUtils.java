@@ -22,7 +22,7 @@ public class PlayerUtils {
 	public static String getName(UUID player) {
 		try {
 			Ranks rank = SqlUtils.getRank(player);
-			return rank.getPrefix() + " " + SqlUtils.getName(player);
+			return (SqlUtils.getCustomPrefix(player) == null ? rank.getPrefix() : SqlUtils.getCustomPrefix(player)) + " " + SqlUtils.getName(player);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return ChatColor.GRAY + "UUID=" + player;
