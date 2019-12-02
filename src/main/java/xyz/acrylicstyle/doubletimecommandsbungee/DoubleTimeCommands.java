@@ -19,7 +19,10 @@ import xyz.acrylicstyle.doubletimecommandsbungee.utils.Scheduler;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -167,6 +170,14 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                         event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "There are " + unresolvedIncidents.size() + " incidents happening now!"));
                         event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "Please see " + ChatColor.AQUA + ChatColor.UNDERLINE + "https://status.acrylicstyle.xyz" + ChatColor.RESET + ChatColor.YELLOW + " for the more information."));
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------------------------------------"));
+                    }
+                    File changeLogsFile = new File("./plugins/DoubleTimeCommands/changelogs.txt");
+                    if (changeLogsFile.canRead() && changeLogsFile.isFile()) {
+                        String changeLogs = new String(Files.readAllBytes(Paths.get(changeLogsFile.getPath())));
+                        String latestChangeLog = changeLogs.split("=====")[0];
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "---------- Latest Changes ----------"));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', latestChangeLog)));
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "------------------------------------"));
                     }
                 }
                 ArrayList<ServerInfo> servers = new ArrayList<>();
