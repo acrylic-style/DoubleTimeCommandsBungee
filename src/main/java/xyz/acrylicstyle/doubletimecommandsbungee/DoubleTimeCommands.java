@@ -174,9 +174,14 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                     File changeLogsFile = new File("./plugins/DoubleTimeCommands/changelogs.txt");
                     if (changeLogsFile.canRead() && changeLogsFile.isFile()) {
                         String changeLogs = new String(Files.readAllBytes(Paths.get(changeLogsFile.getPath())));
-                        String latestChangeLog = changeLogs.split("=====")[0];
+                        String[] changeLogsArray = changeLogs.split("=====");
+                        String latestChangeLog = changeLogsArray[0];
+                        if (changeLogsArray.length >= 2) latestChangeLog += changeLogsArray[1];
+                        if (changeLogsArray.length >= 3) latestChangeLog += changeLogsArray[2];
+                        if (changeLogsArray.length >= 4) latestChangeLog += changeLogsArray[3];
+                        if (changeLogsArray.length >= 5) latestChangeLog += changeLogsArray[4];
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "---------- Latest Changes ----------"));
-                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', latestChangeLog)));
+                        event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', latestChangeLog.substring(0, latestChangeLog.length()-1))));
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "------------------------------------"));
                     }
                 }
