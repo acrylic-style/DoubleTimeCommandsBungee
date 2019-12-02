@@ -34,7 +34,7 @@ public class Tell extends Command {
         Player player;
         try {
             player = SqlUtils.getPlayer(SqlUtils.getUniqueId(args[0]));
-            if (SqlUtils.isPlayerConnected(player.getUniqueId())) {
+            if (!SqlUtils.isPlayerConnected(player.getUniqueId())) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "This player is currently offline."));
                 return;
             }

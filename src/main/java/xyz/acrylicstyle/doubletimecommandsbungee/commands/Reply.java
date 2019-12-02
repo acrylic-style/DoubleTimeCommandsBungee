@@ -40,7 +40,7 @@ public class Reply extends Command {
                 return;
             }
             player = SqlUtils.getPlayer(p);
-            if (SqlUtils.isPlayerConnected(player.getUniqueId())) {
+            if (!SqlUtils.isPlayerConnected(player.getUniqueId())) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "This player is currently offline."));
                 return;
             }
