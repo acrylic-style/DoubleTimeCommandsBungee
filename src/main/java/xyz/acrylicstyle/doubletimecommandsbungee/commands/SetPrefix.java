@@ -28,7 +28,7 @@ public class SetPrefix extends Command {
         try {
             if (args.length >= 2) {
                 if (!Utils.must(Ranks.ADMIN, sender)) return;
-                uuid = SqlUtils.getUniqueId(args[2]);
+                uuid = SqlUtils.getUniqueId(args[1]);
                 if (uuid == null) {
                     sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Couldn't find player!"));
                     return;

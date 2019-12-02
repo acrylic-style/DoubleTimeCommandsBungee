@@ -22,7 +22,7 @@ public class ResetPrefix extends Command {
 		try {
 			if (args.length >= 1) {
 				if (!Utils.must(Ranks.ADMIN, sender)) return;
-				uuid = SqlUtils.getUniqueId(args[1]);
+				uuid = SqlUtils.getUniqueId(args[0]);
 				if (uuid == null) {
 					sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Couldn't find player!"));
 					return;
