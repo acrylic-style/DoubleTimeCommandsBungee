@@ -42,6 +42,7 @@ public class Reply extends Command {
             player = SqlUtils.getPlayer(p);
             if (SqlUtils.isPlayerConnected(player.getUniqueId())) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "This player is currently offline."));
+                return;
             }
         } catch (SQLException e) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Couldn't find player! " + ChatColor.GRAY + "(wait, it's weird. if you see this, please report it to the admins!)"));
