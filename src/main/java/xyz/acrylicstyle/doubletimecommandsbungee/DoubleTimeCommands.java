@@ -68,8 +68,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().getPluginManager().registerListener(this, this);
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Party());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Friend());
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new SetNickname());
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ResetNickname());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new SetPrefix());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ResetPrefix());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Tell());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Reply());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new Rank());
@@ -102,6 +102,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         ProxyServer.getInstance().registerChannel("helper:kick");
         ProxyServer.getInstance().registerChannel("helper:connect");
         ProxyServer.getInstance().registerChannel("helper:sound");
+        ProxyServer.getInstance().registerChannel("dtc:getPlayer");
     }
 
     @Override

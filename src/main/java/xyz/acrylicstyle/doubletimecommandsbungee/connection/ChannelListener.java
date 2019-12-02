@@ -5,6 +5,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import util.DataSerializer;
+import xyz.acrylicstyle.doubletimecommandsbungee.types.Player;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.PlayerUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.SqlUtils;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Utils;
@@ -113,6 +115,21 @@ public class ChannelListener implements Listener {
                 ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).connect(ProxyServer.getInstance().getServerInfo(input));
                 sendToBukkit(e.getTag(), subchannel, "", ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo()); // just for clear callback
             } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getTag().equalsIgnoreCase("dtc:getPlayer")) {
+            try {
+                String subchannel = in.readUTF();
+                in.readUTF();
+                Player player = SqlUtils.getPlayer(UUID.fromString(subchannel));
+                DataSerializer dataSerializer = DataSerializer.newInstance();
+                dataSerializer.set("points", player.getPoints());
+                dataSerializer.set("experience", player.getExperience());
+                dataSerializer.set("uuid", player.getUniqueId());
+                dataSerializer.set("customPrefix", player.getCustomPrefix());
+                dataSerializer.set("rank", player.getRank().name());
+                sendToBukkit(e.getTag(), subchannel, dataSerializer.serialize(), ProxyServer.getInstance().getPlayer(UUID.fromString(subchannel)).getServer().getInfo()); // just for clear callback
+            } catch (SQLException | IOException e1) {
                 e1.printStackTrace();
             }
         }

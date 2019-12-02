@@ -6,9 +6,12 @@ import util.CollectionList;
 import xyz.acrylicstyle.doubletimecommandsbungee.connection.ProxiedOfflinePlayer;
 import xyz.acrylicstyle.doubletimecommandsbungee.utils.Ranks;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Player {
+public class Player implements Serializable {
+    private final static long serialVersionUID = 1;
+
     private final UUID player;
     private final Ranks rank;
     private final long experience;
@@ -17,8 +20,9 @@ public class Player {
     private final CollectionList<UUID> friendRequests;
     private final boolean connected;
     private final String connectedServer;
+    private final String customPrefix;
 
-    public Player(UUID player, Ranks rank, long experience, long points, CollectionList<UUID> friends, CollectionList<UUID> friendRequests, boolean connected, String connectedServer) {
+    public Player(UUID player, Ranks rank, long experience, long points, CollectionList<UUID> friends, CollectionList<UUID> friendRequests, boolean connected, String connectedServer, String customPrefix) {
         this.player = player;
         this.rank = rank;
         this.experience = experience;
@@ -27,6 +31,7 @@ public class Player {
         this.friendRequests = friendRequests;
         this.connected = connected;
         this.connectedServer = connectedServer;
+        this.customPrefix = customPrefix;
     }
 
     public final UUID getPlayer() { return this.player; }
@@ -40,4 +45,5 @@ public class Player {
     public final ProxiedOfflinePlayer toProxiedOfflinePlayer() { return new ProxiedOfflinePlayer(this.player); }
     public final boolean isConnected() { return this.connected; }
     public final String getConnectedServer() { return this.connectedServer; }
+    public final String getCustomPrefix() { return this.customPrefix; }
 }

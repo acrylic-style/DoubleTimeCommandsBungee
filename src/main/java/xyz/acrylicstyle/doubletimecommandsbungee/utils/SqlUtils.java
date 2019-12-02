@@ -82,6 +82,7 @@ public final class SqlUtils {
                 "        points BIGINT(255) NOT NULL default 0,\n" +
                 "        connected varchar(255) default null,\n" +
                 "        lastMessageFrom varchar(36) default null,\n" + // uuid
+                "        customPrefix varchar(255) default null,\n" +
                 "        PRIMARY KEY (player)\n" +
                 "    );");
         statement.executeUpdate("CREATE TABLE if not exists friends (\n" +
@@ -107,7 +108,7 @@ public final class SqlUtils {
                 ");");
     }
 
-    public static void ping() throws SQLException {
+    private static void ping() throws SQLException {
         try {
             Statement statement = connection.get().createStatement();
             statement.execute("select version();");
@@ -133,6 +134,23 @@ public final class SqlUtils {
         int results = 0;
         while (result.next()) ++results;
         return results;
+    }
+
+    public static void setCustomPrefix(String prefix, UUID uuid) throws SQLException {
+        ping();
+        PreparedStatement preparedStatement = connection.get().prepareStatement("update players set customPrefix=? where player=?;");
+        preparedStatement.setString(1, prefix);
+        preparedStatement.setString(2, uuid.toString());
+        preparedStatement.executeUpdate();
+    }
+
+    public static String getCustomPrefix(UUID uuid) throws SQLException {
+        ping();
+        PreparedStatement preparedStatement = connection.get().prepareStatement("select customPrefix from players where player=?;");
+        preparedStatement.setString(1, uuid.toString());
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+        return result.getString("customPrefix");
     }
 
     public static int getOnlinePlayers() throws SQLException {
@@ -461,7 +479,7 @@ public final class SqlUtils {
         preparedStatement.setString(1, name);
         preparedStatement.setString(2, uuid.toString());
         preparedStatement.executeUpdate();
-        return new Player(uuid, rank, getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid));
+        return new Player(uuid, rank, getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid), getCustomPrefix(uuid));
     }
 
     public static void setPoints(UUID uuid, long points) throws SQLException {
@@ -727,7 +745,7 @@ public final class SqlUtils {
 
     public static Player getPlayer(UUID uuid) throws SQLException {
         ping();
-        return new Player(uuid, getRank(uuid), getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid));
+        return new Player(uuid, getRank(uuid), getExperience(uuid), getPoints(uuid), getFriends(uuid), getFriendRequests(uuid), isPlayerConnected(uuid), getConnectedServer(uuid), getCustomPrefix(uuid));
     }
 
     // ----- Private stuff
