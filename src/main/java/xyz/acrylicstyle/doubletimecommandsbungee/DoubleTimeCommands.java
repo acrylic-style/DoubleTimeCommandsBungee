@@ -181,7 +181,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                         if (changeLogsArray.length >= 3) { latestChangeLog += changeLogsArray[2]; latestChangeLog = latestChangeLog.substring(0, latestChangeLog.length()-1); }
                         if (changeLogsArray.length >= 4) { latestChangeLog += changeLogsArray[3]; latestChangeLog = latestChangeLog.substring(0, latestChangeLog.length()-1); }
                         if (changeLogsArray.length >= 5) { latestChangeLog += changeLogsArray[4]; latestChangeLog = latestChangeLog.substring(0, latestChangeLog.length()-1); }
-                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "---------- Latest Changes ----------"));
+                        event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "----------- Latest Changes -----------"));
                         event.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', latestChangeLog)));
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "------------------------------------"));
                     }
