@@ -35,8 +35,11 @@
   * /hub
   * /l
   * /zoo
-* Where am I (shows current proxy, and server)
+* Where am I (shows current proxy, game, and server)
   * /whereami
+* Custom Prefixes
+  * /setprefix <new prefix> \[player\]
+  * /resetprefix \[player\]
 * Ranks
   * Default (enum: DEFAULT)
   * Sand (enum: SAND)
@@ -53,7 +56,11 @@
   * Build Team (enum: BUILDTEAM)
   * Admin (enum: ADMIN)
   * Owner (enum: OWNER)
-* Limbo if you use any server for limbo
+* Show change logs if present
+  * Create changelogs.txt at plugin folder to show
+  * Split each change logs with `=====`
+  * Last 5 change logs will be shown
+* Limbo if you have
   * You can specify limbo server at BungeeCord/config.yml
   * `/afkwarp` for warp to the server named as `LIMBO`, does not work if player is already at limbo
   * `/limbo` for herobrine who lives in limbo
