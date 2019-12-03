@@ -38,7 +38,7 @@
 * Where am I (shows current proxy, game, and server)
   * /whereami
 * Custom Prefixes
-  * /setprefix <new prefix> \[player\]
+  * /setprefix \<new prefix\> \[player\]
   * /resetprefix \[player\]
 * Ranks
   * Default (enum: DEFAULT)
