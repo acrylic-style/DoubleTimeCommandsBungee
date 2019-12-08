@@ -306,7 +306,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         e.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "You were kicked from game with reason: " + ChatColor.WHITE + e.getKickReasonComponent()[0].toPlainText()));
         e.setCancelled(true);
         if (e.getPlayer().getServer().getInfo().getName().startsWith("LOBBY")) return;
-        e.setCancelServer(ProxyServer.getInstance().getServerInfo("LIMBO"));
+        // e.setCancelServer(ProxyServer.getInstance().getServerInfo("LIMBO"));
         scheduler.schedule(player -> Utils.transferPlayerWithGamePrefix(e.getPlayer(), "LOBBY"), e.getPlayer(), 250);
     }
 }
