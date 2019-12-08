@@ -33,6 +33,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
     @Override
     public void onEnable() {
+        Locale.setDefault(Locale.ENGLISH);
         try {
             config = new ConfigProvider("./plugins/DoubleTimeCommands/config.yml");
         } catch (IOException e) {
@@ -302,9 +303,9 @@ public class DoubleTimeCommands extends Plugin implements Listener {
 
     @EventHandler
     public void onServerKick(ServerKickEvent e) {
-        e.setKickReasonComponent(TextComponent.fromLegacyText(""));
         if (e.getKickedFrom().equals(e.getPlayer().getServer().getInfo())) return;
         e.getPlayer().sendMessage(TextComponent.fromLegacyText(ChatColor.YELLOW + "You were kicked from game with reason: " + ChatColor.WHITE + e.getKickReasonComponent()[0].toPlainText()));
+        e.setKickReasonComponent(TextComponent.fromLegacyText(""));
         e.setCancelled(true);
         if (e.getPlayer().getServer().getInfo().getName().startsWith("LOBBY")) return;
         // e.setCancelServer(ProxyServer.getInstance().getServerInfo("LIMBO"));
