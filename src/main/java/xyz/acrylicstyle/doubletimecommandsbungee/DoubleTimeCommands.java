@@ -3,7 +3,6 @@ package xyz.acrylicstyle.doubletimecommandsbungee;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -24,7 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DoubleTimeCommands extends Plugin implements Listener {
@@ -188,12 +190,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "------------------------------------"));
                     }
                 }
-                ArrayList<ServerInfo> servers = new ArrayList<>();
-                ProxyServer.getInstance().getServers().forEach((server, info) -> {
-                    if ((server.startsWith("LOBBY") || server.startsWith("lobby"))) servers.add(info);
-                });
-                Collections.shuffle(servers, new Random()); // shuffle all servers
-                event.getPlayer().setReconnectServer(new CollectionList<>(servers).first());
+                event.getPlayer().setReconnectServer(null);
                 SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
             } catch (Exception e) {
                 ProxyServer.getInstance().getLogger().warning("An error occurred while handling connection event (ServerConnectedEvent)");
