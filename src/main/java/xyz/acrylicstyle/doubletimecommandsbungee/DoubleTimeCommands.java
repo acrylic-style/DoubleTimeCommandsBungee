@@ -257,6 +257,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
             UUID uuid = event.getPlayer().getUniqueId();
             if (SqlUtils.isPlayerConnected(uuid)) {
                 Utils.kickPlayer(uuid, new TextComponent(ChatColor.RED + "You've logged from another location!"));
+                Thread.sleep(1000);
             }
             int maxPlayers = ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers();
             if (maxPlayers <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
