@@ -158,6 +158,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onServerConnected(ServerConnectedEvent event) {
         scheduler.schedule(player -> {
             try {
+                event.getPlayer().setReconnectServer(null);
+                SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
                 if (event.getPlayer().getServer().getInfo().getName().startsWith("LOBBY")) {
                     CollectionList<Incident> unresolvedIncidents = Utils.getUnresolvedIncidents();
                     if (unresolvedIncidents.size() == 1) {
@@ -190,8 +192,6 @@ public class DoubleTimeCommands extends Plugin implements Listener {
                         event.getPlayer().sendMessage(new TextComponent(ChatColor.GOLD + "------------------------------------"));
                     }
                 }
-                event.getPlayer().setReconnectServer(null);
-                SqlUtils.setConnection(event.getPlayer().getUniqueId(), event.getServer().getInfo().getName());
             } catch (Exception e) {
                 ProxyServer.getInstance().getLogger().warning("An error occurred while handling connection event (ServerConnectedEvent)");
                 e.printStackTrace();
@@ -233,6 +233,7 @@ public class DoubleTimeCommands extends Plugin implements Listener {
     public void onLeave(PlayerDisconnectEvent event) {
         try {
             SqlUtils.setConnection(event.getPlayer().getUniqueId(), null);
+            event.getPlayer().setReconnectServer(null);
             if (SqlUtils.isBanned(event.getPlayer().getUniqueId())) return;
             CollectionList<UUID> friends = SqlUtils.getFriends(event.getPlayer().getUniqueId());
             friends.forEach(uuid -> {
@@ -253,8 +254,8 @@ public class DoubleTimeCommands extends Plugin implements Listener {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
             if (SqlUtils.isPlayerConnected(uuid)) {
-                Utils.kickPlayer(uuid, new TextComponent(ChatColor.RED + "You've logged from another location!"));
-                Thread.sleep(1000);
+                Utils.kickPlayer(uuid, new TextComponent(ChatColor.RED + "You've logged from another location! " + ChatColor.GRAY + "(Session has been reset)"));
+                SqlUtils.setConnection(event.getPlayer().getUniqueId(), null);
             }
             int maxPlayers = ProxyServer.getInstance().getConfigurationAdapter().getListeners().iterator().next().getMaxPlayers();
             if (maxPlayers <= SqlUtils.getOnlinePlayers() && SqlUtils.getPlayer(uuid).getRank() == Ranks.DEFAULT) {
