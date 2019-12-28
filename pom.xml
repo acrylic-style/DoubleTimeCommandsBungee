@@ -117,7 +117,7 @@
         <dependency>
             <groupId>xyz.acrylicstyle</groupId>
             <artifactId>Util</artifactId>
-            <version>0.2.6</version>
+            <version>0.5.1</version>
         </dependency>
     </dependencies>
 </project>
